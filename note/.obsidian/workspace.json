@@ -1,0 +1,154 @@
+{
+  "main": {
+    "id": "c989abdf861a6d77",
+    "type": "split",
+    "children": [
+      {
+        "id": "033a80a63912294f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "848b32ec80eec3e4",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b63c946ab4843239",
+    "type": "split",
+    "children": [
+      {
+        "id": "d879118272d42c91",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dd3a6503a854ad5e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "b0f385d9ff5dc52e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "0c49e178415ce2c6",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "90a32bfa0b587167",
+    "type": "split",
+    "children": [
+      {
+        "id": "e8d7ca25afecdd95",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "54468f184fc0c758",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "f37ee65056a0aec4",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "40530799c33a9f98",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "21871a90cc4f37b2",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "848b32ec80eec3e4",
+  "lastOpenFiles": [
+    "pub/p3_lgad_rad_sim.md",
+    "pub/p2_sic_3d.md",
+    "pub/p1_sic_pin.md",
+    "phys/particle_physics.md",
+    "comp/ml.md",
+    "comp/mac.md",
+    "comp/vsc.md",
+    "comp/raser.md",
+    "comp/git.md",
+    "comp/306_qc.md"
+  ]
+}
