@@ -1,0 +1,13 @@
+{
+	"nodes":[
+		{"id":"ec39bc5e6fea2e45","x":3398,"y":378,"width":88,"height":60,"type":"text","text":"SICAR"},
+		{"id":"e30f4bd939e0debf","x":3172,"y":378,"width":93,"height":60,"type":"text","text":"RASER"},
+		{"id":"2a2b28d7ae06deb1","x":3402,"y":203,"width":81,"height":55,"type":"text","text":"TEAM"},
+		{"id":"aafc88d57267887e","x":3611,"y":378,"width":99,"height":60,"type":"text","text":"TRACK"}
+	],
+	"edges":[
+		{"id":"03e9a65af9011bee","fromNode":"e30f4bd939e0debf","fromSide":"top","toNode":"2a2b28d7ae06deb1","toSide":"left"},
+		{"id":"99c398732beadf47","fromNode":"ec39bc5e6fea2e45","fromSide":"top","toNode":"2a2b28d7ae06deb1","toSide":"bottom"},
+		{"id":"981778c9301f41b0","fromNode":"aafc88d57267887e","fromSide":"top","toNode":"2a2b28d7ae06deb1","toSide":"right"}
+	]
+}
