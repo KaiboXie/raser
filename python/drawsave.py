@@ -53,26 +53,23 @@ def draw_unittest(my_d,ele_current,my_f,my_g4p,my_current):
     create_path("fig/")
     draw_plot(my_d,ele_current.CSA_ele,unit_test=True) # Draw current
 
-def save(ele_current):
-#    now = time.strftime("%Y_%m%d_%H%M")
-#    path = "fig/" + now + "/"
+def save(my_l,ele_current):
+    L=round(my_l.fz_abs)
     volt = array('d', [999.])
     time = array('d', [999.])
-#time= float(list(filter(None,list_c[j].split(",")))[0])
-    volt = array('d', [999.])
-    time = array('d', [999.])
-    fout = ROOT.TFile("sim-TCT.root", "RECREATE")
+    z = array('d', [999.])
+    fout = ROOT.TFile("sim-TCT"+str(L)+".root", "RECREATE")
     t_out = ROOT.TTree("tree", "signal")
     t_out.Branch("volt", volt, "volt/D")
     t_out.Branch("time", time, "time/D")
-#ele_current = raser.Amplifier(my_d, dset.amplifier)
+    t_out.Branch("z", z, "z/D")
     for i in range(ele_current.BB_ele.GetNbinsX()):
           time[0]=i*ele_current.time_unit
           volt[0]=ele_current.BB_ele[i]
+          z[0]=L
           t_out.Fill()
     t_out.Write()
     fout.Close()
-
 
 def savedata(my_d,output,batch_number,ele_current,my_g4p,start_n,my_f):
     " Save data to the file"
@@ -628,6 +625,23 @@ def draw_nocarrier3D(path, my_l):
     h.GetYaxis().SetTitleOffset(2.2)
     h.GetZaxis().SetTitleOffset(1.4)
     c1.SaveAs(path+"nocarrier_"\
+        +str(round(my_l.fx_rel,5))+"_"\
+        +str(round(my_l.fy_rel,5))+"_"\
+        +str(round(my_l.fz_rel,5))+".pdf")  
+
+def draw_nocarrier2D(path, my_l):
+    ROOT.gStyle.SetOptStat(0)
+    c1 = ROOT.TCanvas("c1","canvas2",200,10,1000,1000)
+    h = ROOT.TH2D("h","Pairs of carrier generation",\
+        int((my_l.x_right_most - my_l.x_left_most) / my_l.x_step), my_l.x_left_most, my_l.x_right_most,\
+        int((my_l.z_right_most - my_l.z_left_most) / my_l.z_step), my_l.z_left_most, my_l.z_right_most)
+    for i in range(len(my_l.track_position)):
+        h.Fill(my_l.track_position[i][0], my_l.track_position[i][2], my_l.ionized_pairs[i])
+    h.Draw("COLZ")
+    h.GetXaxis().SetTitle("Depth [um]")#[μm]
+    h.GetYaxis().SetTitle("Thick [um]")
+    c1.SetRightMargin(0.12)
+    c1.SaveAs(path+"nocarrier2D_"\
         +str(round(my_l.fx_rel,5))+"_"\
         +str(round(my_l.fy_rel,5))+"_"\
         +str(round(my_l.fz_rel,5))+".pdf")  
