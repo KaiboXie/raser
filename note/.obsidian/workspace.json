@@ -8,11 +8,19 @@
         "type": "tabs",
         "children": [
           {
-            "id": "848b32ec80eec3e4",
+            "id": "f869e25a50ee8614",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "canvas",
+              "state": {
+                "file": "org/team.canvas",
+                "viewState": {
+                  "x": 3500.928453932582,
+                  "y": 226.74554157303342,
+                  "zoom": -0.5047489245718628,
+                  "snapToGrid": false
+                }
+              }
             }
           }
         ]
@@ -65,7 +73,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 287.5
   },
   "right": {
     "id": "90a32bfa0b587167",
@@ -81,6 +89,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "org/team.canvas",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +106,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "org/team.canvas",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +128,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "org/team.canvas"
+              }
             }
           }
         ]
@@ -138,17 +150,17 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "848b32ec80eec3e4",
+  "active": "f869e25a50ee8614",
   "lastOpenFiles": [
-    "pub/p3_lgad_rad_sim.md",
-    "pub/p2_sic_3d.md",
-    "pub/p1_sic_pin.md",
-    "phys/particle_physics.md",
-    "comp/ml.md",
-    "comp/mac.md",
-    "comp/vsc.md",
-    "comp/raser.md",
-    "comp/git.md",
-    "comp/306_qc.md"
+    "info/Obsidian.md",
+    "media/jc_150_1.PNG",
+    "media/lgad_hpk_fig6.png",
+    "media/lgad_400k_fig6.png",
+    "daily/2023-01-03.md",
+    "org/team.canvas",
+    "info/git.md",
+    "jc/2018-09-28-JC79.md",
+    "jc/2018-08-31-JC75.md",
+    "jc/2018-08-10-JC74.md"
   ]
 }
