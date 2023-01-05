@@ -1,11 +1,11 @@
----
-title: 304 - Git Usage 
----
+# Git Usage 
 
 
-**Contents**
-* TOC
-{:toc}
+# 安装
+
+## Windows
+
+https://git-scm.com/download/win
 
 
 ## Set the username and e-mail address 
