@@ -79,6 +79,33 @@ $ rcode -p  <my-port-number> example_program(you can change port number to be yo
 This should open this example_program file on your local VSCode. 
 
 
+### Remote X11 service configuration
+
+1. Install Remote - SSH and Remote X11 (SSH) in local Vscode
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230112132545.png)
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230112132627.png)
+
+2.  Install Xming in local computer
+[Xming X Server for Windows - Official Website (straightrunning.com)](http://www.straightrunning.com/XmingNotes/)
+
+3. Configure X0.hosts:
+Default path: C:\Program Files (x86)\Xming
+(1).  Add the write permission for user: 右键文件属性->安全->编辑
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230112133130.png)
+(2) Insert the IP address of Remote Server:
+The one of IP address of AFS: 202.122.33.195
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230112133312.png)
+
+Note: If you login the AFS account by lxslc7.ihep.ac.cn, the IP address will be random changed.
+
+4. Configure DISPLAY in Remote Server
+Insert the line in ~/.bashrc:
+'''
+export DISPLAY={IP address of local computer}:0.0
+'''
+
+5. Restart local computer.
+
 ### Resolving conflict for multiple users  
 
 Conflict port number [1]: 
