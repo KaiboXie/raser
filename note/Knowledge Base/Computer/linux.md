@@ -1,28 +1,23 @@
----
-title: 301 - Linux Tips
----
 
+#  Linux Tips
 
-**Contents**
-* TOC
-{:toc}
-
+[[史欣]]
 
 ## Install ROOT as User 
 
-$ cd ~/tmp 
+> cd ~/tmp 
 
-$ wget  https://root.cern.ch/download/root_v5.34.36.source.tar.gz  #download root files
+> wget  https://root.cern.ch/download/root_v5.34.36.source.tar.gz  #download root files
 
-$ tar xf root_v5.34.36.source.tar.gz                               #Decompression files
+> tar xf root_v5.34.36.source.tar.gz                               #Decompression files
 
-$ cd root
+> cd root
 
-$ ./configure --prefix=$HOME/local                                 #check 
+> ./configure --prefix=$HOME/local                                 #check 
 
-$ make                                     #Corresponding to include
+> make                                     #Corresponding to include
 
-$ make install 
+> make install 
 
 
 
