@@ -17,7 +17,7 @@ Source code development at: <https://github.com/Microsoft/vscode>
 ![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230112132627.png)
 
 2.  Install Xming in local computer
-[Xming X Server for Windows - Official Website (straightrunning.com)](http://www.straightrunning.com/XmingNotes/)
+[Xming X Server for Windows download | SourceForge.net](https://sourceforge.net/projects/xming/)
 
 3. Configure X0.hosts:
 Default path: C:\Program Files (x86)\Xming
