@@ -1,7 +1,7 @@
 import geant4_pybind as g4b
 import sys
 import numpy as np
-
+import math
 
 class Beammonitor:
     def __init__(self, my_d, my_f, dset):
@@ -56,20 +56,25 @@ class Beammonitor:
 
         number=0
         for step in s_p_steps:
-            if(step>65 and step<80):
+            if(len(step)>50 and len(step)<80):
                 break
             number=number+1
         newtype_step=s_p_steps[number]      #new particle's step
         self.p_steps_current=[[[single_step[0],single_step[1],single_step[2]-self.init_tz_device]\
             for single_step in newtype_step]]
-
-        newtype_energy=[None for i in range(len(newtype_step))]
+        '''
+        p1,p2,c1,c2=0.3487,0.4488,0.1322,1.8162    #Irradiation damage
+        total_irradiation=0
+        c=total_irradiation/1e16
+        I=1-p1*(1-math.exp(-c/c1))-p2*(1-math.exp(-c/c2))
+        '''
+        newtype_energy=[0 for i in range(len(newtype_step))]
         for energy in s_energy_steps:
-            for i in range(number):
+            for i in range(len(newtype_step)):
                 if(len(energy)>i):
                     newtype_energy[i]+=energy[i]
         self.energy_steps=[newtype_energy]      #new particle's every step' energy
-
+        'self.energy_steps=[newtype_energy*I]'
 
         del s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps,s_events_angle
         
