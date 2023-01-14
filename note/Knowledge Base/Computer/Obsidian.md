@@ -2,6 +2,10 @@
 # 下载
 - Webpage: https://obsidian.md 
 
+# 帮助
+
+https://publish.obsidian.md/help-zh/由此开始
+
 # 插件
 
 Obsidian / Settings / Community Plugins / 
@@ -24,4 +28,5 @@ Obsidian / Settings / Community Plugins /
 
 ## 播放幻灯片
 
-安装插件： Advanced Slides 
+可以使用核心插件，打开 Slides 
+或者安装插件： Advanced Slides 
