@@ -61,3 +61,37 @@ Make what you forked synchronize with the original one [1]:
 
 参考并做了修改： 
 https://blog.csdn.net/qq_42764407/article/details/99678492
+
+---
+# git常见操作流程
+
+[[李星臣]]
+1. 一系列初始操作（仅在创建时使用）
+	- 建立本地git仓库
+		- git clone https://code.ihep.ac.cn/1902370441/raser.git （自己远程仓库的HTTPS）
+	- 与组里的git仓库建立连接
+		- git remote add raser https://code.ihep.ac.cn/raser/raser.git （组远程仓库的HTTPS）
+	- 配置账号和邮箱信息
+		- git config user.name "your-username"
+		- git config user.email "your-email-address"
+2. 从组里拉取最新代码操作
+	- git remote update
+	- git merge raser/main
+	- 若上一步报错有冲突
+		- git add .
+		- git stash
+		- git merge raser/main
+		- git stash pop
+3. 将自己更新的代码推到组的服务器上
+	- 点击你想更新的文件的加号，他就会从changes到staged changes里，然后在上面的框里给你更改的文件写上备注，最后再点击commit              ![git-operate-1.png|300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/git-operate-1.png)
+	- git remote update
+	- git merge raser/main (确保你更新了组里的最新版本)
+	- git push
+	- 打开你的远程git库，点击merge request，创建new merge request![git-operate-2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/git-operate-2.png)
+
+---
+# 常见报错与解答
+
+- ![git-error-2023-1-14.png|400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/git-error-2023-1-14.png) [[李星臣]]
+	- 需要在commit上面的窗口写一信息，该栏不能是空的![git-solve-2023-1-14.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/git-solve-2023-1-14.png)
+
