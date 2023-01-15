@@ -1,12 +1,4 @@
----
-title: 302 - MacOS Tips
----
-
-
-**Contents**
-* TOC
-{:toc}
-
+[[史欣]]
 
 ## Install ROOT from source 
 
