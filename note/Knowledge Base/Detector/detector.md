@@ -7,15 +7,11 @@ title: 201 - Particle Detector
 {:toc}
 
 ## What is the Detector for Particle Physics Experiment?
-Detectors widely used in particle physics experiments extract signals in the
-form of either photons or electrical current when particles pass through the detector material.
-In addition, precise timing resolution is demanded especially for experiments in modern era
-which is the characteristic different from others, for example,  some of key detectors
+Detectors widely used in particle physics experiments extract signals in the form of either photons or electrical current when particles pass through the detector material.
+In addition, precise timing resolution is demanded especially for experiments in modern era which is the characteristic different from others, for example,  some of key detectors
 used in astrophysics having long timing gate, human eyes etc.
-Capability of reproducing the event topology by means of hit position information
-is also commonly required for the particle detectors.   <br>
-
-Those detectors are classifiable from several perspective, and the following examples are some of the typical classification. <br>
+Capability of reproducing the event topology by means of hit position information is also commonly required for the particle detectors.   
+Those detectors are classifiable from several perspective, and the following examples are some of the typical classification. 
 
 
 ## Classification of detectors by signals:          

@@ -1,12 +1,4 @@
----
-title: RASER 
-use_math: true  
----
-
-**Contents**
-* TOC
-{:toc}
-
+[[史欣]] [[谭雨航]] [[杨涛]] [[赵宇]] [[Ryuta]] [[符晨曦]] 
 
 ## Introduction 
 
