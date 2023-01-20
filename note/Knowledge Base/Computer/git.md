@@ -88,4 +88,6 @@ Make what you forked synchronize with the original one [1]:
 
 - ![git-error-2023-1-14.png|400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/git-error-2023-1-14.png) [[李星臣]]
 	- 需要在commit上面的窗口写一信息，该栏不能是空的![git-solve-2023-1-14.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/git-solve-2023-1-14.png)
-
+- 创建文件之后才想到要ignore [[符晨曦]]
+	- git -rm --cached 想ignore的文件
+	- commit
