@@ -1,7 +1,7 @@
 
 # 简介 
 
-平面型肖特基4H-SiC探测器对γ射线(能量为662keV、1170keV 、1330keV)、α粒子（能量为5.486 MeV）、T粒子（能量为2.73 MeV）以及聚变中子（能量为2.45 MeV、14MeV）的电流信号响应以及在电流放大器（CAEN 1426）与电荷灵敏放大器(CIVIDIC Cx)上的脉冲信号输出
+平面型肖特基4H-SiC探测器对γ射线(能量为662keV、1170keV、1330keV)、α粒子（能量为5.486 MeV）、T粒子（能量为2.73 MeV）以及聚变中子（能量为2.45 MeV、14MeV）的电流信号响应以及在电流放大器（CAEN 1426）与电荷灵敏放大器(CIVIDIC Cx)上的脉冲信号输出
 
 
 ![4H-SiC Reactor.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/4H-SiC%20Reactor.png)
