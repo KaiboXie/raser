@@ -1,12 +1,6 @@
----
-title: 305 - Machine Learning 
-use_math: true
----
+# Machine Learning 
 
-**Contents**
-* TOC
-{:toc}
-
+[[赵宇]]
 
 ## Machine Learning 
 ### Support Vector Machines(SVMs)
