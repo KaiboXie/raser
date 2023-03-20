@@ -45,6 +45,9 @@ usage_1_1() {
     #printf "\n\t%-5s  %-40s\n"  "1.1.3Ring"    "get time resolution for Ring-PIN" 
     #printf "\n"
 
+    printf "\n\t%-5s  %-40s\n"  "1.1.1Alpha_gamma"    "alpha or gamma SiC-PIN basic information for RASER simulation ..." 
+    printf "\n"
+
     printf "\n\t%-5s  %-40s\n"  "1.1.7"    "NJU-SiC-PIN beam monitor" 
     printf "\n"
 }
@@ -64,7 +67,7 @@ usage_1_3() {
     printf "\n\t%-5s  %-40s\n"  "1.3.5"    "Build 1D SICAR LGAD structure"
     printf "\n\t%-5s  %-40s\n"  "1.3.6"    "Simulate 1D SICAR LGAD I-V"
     printf "\n\t%-5s  %-40s\n"  "1.3.7"    "Simulate 1D SICAR LGAD C-V"
-    printf "\n"
+    printf "\n\t%-5s  %-40s\n"  "1.3.8"    "Simulate 1D NJU-PIN I-V Defect"
 }
 
 usage_2_1() { 
@@ -196,6 +199,10 @@ case $option in
         ./python/add_noise_raser.py output/pin3D/Ring-PIN/_d=52.0_v=-500.0_tmp=300.0_thick=100.0_radius=None 1
         ;;
 
+    1.1.1Alpha_gamma) echo "alpha or gamma SiC-PIN basic information for RASER simulation ..."
+    raser "./python/gsignal.py det_name=NJU-PIN-reactor parfile=paras/setting.json reactor" 
+        ;;
+
     1.1.7) echo "SiC-PIN beam monitor" 
         raser "./python/gsignal.py det_name=NJU-PIN-Beam-monitor parfile=paras/setting.json beammonitor" 
         ;;
@@ -262,6 +269,10 @@ case $option in
 
     1.3.7) echo "Simulate 1D SICAR1 LGAD C-V ..."
         ./python/run_batchjob.py devsim "solve_cv_lgad.py"
+        ;;
+            
+    1.3.8) echo "Simulate 1D NJU-PIN I-V Defect ..."
+        raser devsim "solve_iv_nju_defect.py"
         ;;
         esac
 }
