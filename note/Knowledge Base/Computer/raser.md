@@ -145,7 +145,7 @@ subgraph Setting
 end
 
 subgraph Detector
-长宽/温度
+长宽/温度 & 电流数据
 end
 
 subgraph FEniCS
@@ -157,7 +157,7 @@ subgraph Geant4
 end
 
 subgraph CalCurrent
-载流子路径 & 载流子信号 & 增益载流子 & 电流数据
+载流子路径 & 载流子信号 & 增益载流子
 style 增益载流子 fill:#ff0
 end
 
