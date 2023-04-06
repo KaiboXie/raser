@@ -1,135 +1,29 @@
-[[史欣]] [[谭雨航]] [[杨涛]] [[赵宇]] [[Ryuta]] [[符晨曦]] [[刘凯]] [[肖素玉]] 
-
-## Introduction 
-
-**RA**diation **SE**miconducto**R** 
-
-
-## UserGuide 
-
-### Planner 3D  
-- An example python code to use raser:
-
-> $ python example.py det_model=planar3D parfile=setting.json
- 
- - example.py 
-
-```python 
-import raser
-args = sys.argv[1:]
-dset = raser.Setting(args)
-
-my_d = raser.R3dDetector(dset)
-my_f = raser.FenicsCal(my_d, dset.fenics)
-my_g4p = raser.Particles(my_d, my_f, dset)
-my_current = raser.CalCurrent(my_d, my_f, my_g4p, dset)
-ele_current = raser.Amplifier(my_d, dset.amplifer)
-```
- - setting.json 
-  
-```json
-[{
-"steplength" : "1",
-"name" : "planar3D",
-
-"lx" : "50",
-"ly" : "50",
-"lz" : "10",
-"doping" : "10", 
-"voltage" : "-100",
-"temp" : "300.0",
-
-"mesh" : "32",
-"xyscale" : "1",
-
-"maxstep" : "10",
-"g4_vis" : "0",
-"par_inx" : "25",
-"par_iny" : "25",
-"par_inz" : "17000",
-"par_outx" : "25",
-"par_outy" : "25",
-"par_outz" : "0",
-
-"t_rise" : "1",
-"t_fall" : "1",
-"trans_imp" : "1",
-"CDet" : "1",
-"BBW" : "1",
-"BBGain" : "10",
-"BB_imp" : "1",
-"OscBW" : "1"
-}]
-```
-
-###  TCT Simulation 
-> $ python example.py det_model=silicon_lgad2D parfile=setting.json laser_model=TPA laser_file=laser.json
-
- - example.py 
-
-```python 
-import raser
-args = sys.argv[1:]
-dset = Setting(args)
-
-my_d = R2dDetector(dset.detector)
-my_f = FenicsCal2D(my_d)
-my_l = TCTTracks(my_d,dset.laser)
-my_l.getTrackProfile2D(0.5,0.5,0.5)
-my_current = CalCurrent2DTCT(my_l,my_f,my_d)
-ele_current = Amplifier(my_d, dset.amplifer)
-```
-
- - laser.json
-
-```json
-[{
-"laser_model" : "TPA",
-"direction" : "edge",
-
-"alpha" : 987,
-"beta_2" : 1.5E-11,
-"refractionIndex" : 3.51,
-
-"wavelength" : 1.55e-6,
-"tau" : 60e-15,
-"power" : 5e-11,
-"widthBeamWaist" : 1e-6,
-"l_Rayleigh" : 15.7e-6,
-
-"r_step" : 1,
-"h_step" : 10
-}]
-```
-## Detector Physics 
-
-## Computing Algorithm 
-
-## Development History 
-
 提出与解答问题请使用“代码”格式。
 
-最后更新：2022/06/23
+最后更新：2023/04/03
 
 〇、程序运行顺序
-python/run_batchjob.py[跑循环，变换参数调用gsignal.py]
+python/run_batchjob.py（提交作业，将gsignal.py执行的计算任务发送给计算集群）
 {
-	python/gsignal.py[主程序]
-	*python/TCTtest.py[TCT主程序]*
+	python/gsignal.py（主程序）
+	*python/TCTtest.py（TCT主程序）*
 	{
-		raser/setting.py[设置参数]
-		raser/geometry.py[设置探测器]
-		raser/pyfenics.py[计算探测器内部电场]
-		raser/g4particles.py[在Geant4中生成实验器材，并模拟粒子穿行路径]
-		*raser/source.py[生成TCT激光源，模拟光束并产生光生载流子]*
-		raser/calcurrent.py[计算载流子产生及漂移]
-			raser/model.py[载流子漂移与增益的模型]
-		raser/elecurrent.py[计算电路对产生信号的处理]
+		raser/setting.py（设置参数，支持以下各类的实现）
+		raser/geometry.py（设置探测器基本物理与几何参数）
+		raser/pyfenics.py（计算探测器内部电场与加权场）
+		raser/g4particles.py（在Geant4中生成实验器材模型，并模拟粒子穿行路径）
+			raser/g4beam_monitor.py
+			raser/g4reactor.py
+			（针对不同物理目标的特化Geant4模块）
+		*raser/source.py（生成TCT激光源，模拟光束并产生光生载流子）*
+		raser/calcurrent.py（计算载流子产生及漂移）
+			raser/model.py（常用的数学与物理模型）
+		raser/elecurrent.py（计算电路对产生信号的处理）
 	}
-	python/drawsave.py[储存gsignal.py产生的数据并画图]
+	python/drawsave.py（储存gsignal.py产生的数据并画图）
 }
-python/add_noise_raser.py[给循环产生的数据增加噪声，并计算时间分辨]
-python/time_scan.py[循环上程序并得到时间分辨与变化参数的关系]
+python/add_noise_raser.py（给批量作业数据增加噪声，并计算时间分辨）
+python/time_scan.py（给出时间分辨与某一指定的参数的关系）
 
 一、RASER库
 1、Setting类
@@ -145,7 +39,7 @@ subgraph Setting
 end
 
 subgraph Detector
-长宽/温度 & 电流数据
+长宽/温度
 end
 
 subgraph FEniCS
@@ -157,7 +51,7 @@ subgraph Geant4
 end
 
 subgraph CalCurrent
-载流子路径 & 载流子信号 & 增益载流子
+载流子路径 & 载流子信号 & 增益载流子 & 电流数据
 style 增益载流子 fill:#ff0
 end
 
@@ -233,6 +127,8 @@ mesh网格：基于给定函数空间，分出有限元法需要的网格。3d�
     Fu,22/6/22,Q:目前想到的方案有：将极值前后的电势直接置为与邻接电极相同，并将导数不连续点视	同电极，或对电场进行预检查，发现有此类现象弹出warning
     Tan,22/6/23,A:可以了解一下TCAD是怎么解决的，看有没有类似的方法。
 
+    Fu,23/4/3:在23/3/21的更新中已经对平板型器件的未耗尽情况做了预先演算，以实现对未耗尽平板器件电荷收集效率的模拟；非平板型的器件需要解具有形如exp(-U/V_T)耦合项到泊松方程变体，FEniCS无法直接实现。
+
 4、g4particle.py
 Geant4允许用户扩展主程序中创建的类，在构造方法中传入参数，在Start方法中定义待记录数据，在End方法中收集这些数据。
 
@@ -279,7 +175,7 @@ Tan,22/6/23,A:没啥用，例子里面有就照抄过来了。
 MyEventAction类给定粒子起点和终点，计算粒子瞄准路径和实际射出路径所张角度
 
 ```
-Fu,22/6/22,Q:RecordDevice有什么作用？这个方法真正被执行是在下一个类中，为什么要在这个类中定义？、
+Fu,22/6/22,Q:RecordDevice有什么作用？这个方法真正被执行是在下一个类中，为什么要在这个类中定义？
 Tan,22/6/23,A:见下。
 ```
 
@@ -310,7 +206,7 @@ Fu,22/6/22,Q:TCT的高密度载流子还满足不互相影响、不互相复合�
 
 ```
 Fu,22/6/22,Q:磁迁移率有没有与普通迁移率类似的模型？
-Tan,22/6/23,A:磁影响小，暂时不考虑。
+Tan,22/6/23,A:（一般运行环境下）磁影响小，暂时不考虑。
 ```
 
 (1)载流子列表生成
@@ -332,7 +228,7 @@ Tan,22/6/23,A:单个事例有筛选条件，希望尽量找到粒子径迹较大
 
 ```
 Fu,22/6/22,Q:有磁场时这样处理正确吗？
-Tan,22/6/23,A:不考虑磁场
+Tan,22/6/23,A:（一般运行环境下）不考虑磁场
 ```
 
 ​		并由速度和路径求得时间
@@ -344,17 +240,8 @@ Tan,22/6/23,A:不考虑磁场
 ​		drift_end_condition检查粒子是否应该结束漂移，若是则结束循环
 ​	
 (2)' 载流子增益及增益载流子漂移
-对每步载流子漂移，额外增加一步：
-根据平均电场，利用增益率模型计算载流子在某处产生的增益载流子数量。
-为避免大量雪崩载流子的实际计算，将粒子每步漂移当做一次指数倍增过程。
-
-```
-Fu,22/6/22,Q:对于固定的漂移步长，这对吗？
-Tan,22/6/23,A:不太清楚，不过感觉你这里的解释感觉不通畅。并没有解释如何避免大量雪崩载流子的实际计算。
-```
-
-然后将这些增益载流子送去漂移，起始时间为对应的增益发生时间
-
+对每个载流子的漂移过程漂移，额外增加一步：
+根据积分的总和增益率（事先计算；若过大或者破坏了增益连续性条件，则视为器件已击穿并报错），令载流子在增益区下底面产生增益载流子对，数量等于增益率，以避免大量雪崩过程的实际计算。然后将这些增益载流子送去漂移，起始时间为对应的增益发生时间。
 
 (3)电流存储
 通过get_current将电流信息存储到MyDetector中。
@@ -372,11 +259,11 @@ Tan,22/6/23,A:不太清楚，不过感觉你这里的解释感觉不通畅。并
 在批量运行模式下，主程序会针对每个入射粒子，生成对应的CalCurrent对象与EleCurrent对象，将电流信号存储为.csv文件。
 
 2、run_batchjob.py
-提交作业（至多20个）到计算节点进行批量运行。
-作业为自动生成的.sh指令文件，每个作业执行一次以批量运行模式运行的主程序gsignal.py。
+提交作业到计算节点进行批量运行。
+作业为自动生成的.job指令文件，每个作业执行一次以批量运行模式运行的主程序gsignal.py。
 每个作业会被分配若干事例。
 如：总事例数40000，每个作业被分配到2000个，1号作业对应Geant4的1号至2000号事例，2号作业对应2001号至4000号，以此类推。
-另有扫描模式，此模式中不同作业执行的主程序，其配置会被改变（通过生成不同的.json文件改变）。如scan_voltage，会将总事例数分为十份，每份输入给-50V至-500V不同偏压的探测器。
+另有扫描模式，此模式中不同作业执行的主程序，其配置会被改变（通过生成不同的.json文件改变）。如scan_voltage，会将总事例数分为十份，每份输入给不同偏压的探测器。
 
 3、add_noise_raser.py
 由各组信号的上升时间分布得到时间分辨。
@@ -413,11 +300,8 @@ TCT的参数配置也一并放在配置文件中。
 对单个事例，需要先唤起singularity镜像再运行。
 对批量作业，程序中自带镜像配置。
 
-批量作业通过下面的路径提交，可以使用指令 hep_q -u username 查看作业运行情况，但需先添加环境变量，即执行如下指令：
+批量作业通过下面的路径提交，可以使用指令 hep_q -u username 查看作业运行情况，但需先添加环境变量，即直接执行如下指令或在~/.bashrc中配置：
 export PATH=$PATH:/afs/.ihep.ac.cn/soft/common/sysgroup/hepjob-4.0-dev/bin/
 
-## Acknowledgment 
-
-## References 
 
 
