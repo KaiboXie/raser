@@ -16,6 +16,7 @@ usage() {
     printf "\n\t%-9s  %-40s"    "1.4"       "beam monitor"
     printf "\n\t%-9s  %-40s"    "1.5"       "TOKAMAK"
     printf "\n\t%-9s  %-40s\n"  "1.6"       "Ring-PIN"
+    printf "\n\t%-9s  %-40s\n"  "1.7"       "Si_Strip"
 
     printf "\n\t%-9s  %-40s"    "2.1"       "SiC-LGAD"
     printf "\n\t%-9s  %-40s\n"  "2.2"       "Si-LGAD"
@@ -59,6 +60,7 @@ usage_1_3() {
     printf "\n\t%-5s  %-40s\n"  "1.3.8"    "Simulate 1D NJU-PIN I-V Deep level Defect"
     printf "\n\t%-5s  %-40s\n"  "1.3.9"    "Improve Simulate 1D NJU-PIN I-V"
     printf "\n\t%-5s  %-40s\n"  "1.3.10"   "Simulate 3D NJU-PIN I-V"
+    printf "\n\t%-5s  %-40s\n"  "1.3.11"   "Simulate irradiated NJU-PIN"
 }
 
 usage_1_4() { 
@@ -75,6 +77,11 @@ usage_1_6() {
     printf "\n\t%-5s  %-40s\n"  "1.6.1"    "ring electrode SiC-PIN basic information for RASER simulation ..." 
     printf "\n\t%-5s  %-40s\n"  "1.6.2"    "batch model with total number, split with step number" 
     printf "\n\t%-5s  %-40s\n"  "1.6.3"    "get time resolution for Ring-PIN" 
+    printf "\n"
+}
+
+usage_1_7() { 
+    printf "\n\t%-5s  %-40s\n"  "1.7.1"    "Si strip for RASER simulation ..." 
     printf "\n"
 }
 
@@ -225,8 +232,16 @@ case $option in
         ./python/run_batchjob.py devsim "solve_iv_pin.py"
         ;;
 
+    1.3.3T) echo "Simulate 1D NJU-PIN I-V ..."
+        ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN IV=True v_max=800"
+        ;;
+
     1.3.4) echo "Simulate 1D NJU-PIN C-V ..."
         ./python/run_batchjob.py devsim "solve_cv_pin.py"
+        ;;
+
+    1.3.4T) echo "Simulate 1D NJU-PIN C-V..."
+        ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN CV=True v_max=400"
         ;;
 
     1.3.5) echo "Build 1D SICAR1 LGAD structure ..."
@@ -237,10 +252,18 @@ case $option in
         ./python/run_batchjob.py devsim "solve_iv_lgad.py"
         ;;
 
+    1.3.6T) echo "Simulate 1D SICAR1 LGAD I-V ..."
+        ./python/run_batchjob.py devsim "devsim_solve.py device=1D_SICAR1_LGAD IV=True v_max=800"
+        ;;
+
     1.3.7) echo "Simulate 1D SICAR1 LGAD C-V ..."
         ./python/run_batchjob.py devsim "solve_cv_lgad.py"
         ;;
-            
+
+    1.3.7T) echo "Simulate 1D SICAR1 LGAD C-V..."
+        ./python/run_batchjob.py devsim "devsim_solve.py device=1D_SICAR1_LGAD CV=True v_max=400"
+        ;;
+
     1.3.8) echo "Simulate 1D NJU-PIN I-V Defect ..."
         for ((i=0;i<19;i++))
         do
@@ -258,17 +281,71 @@ case $option in
                 #raser "./python/solve_iv_nju_defect.py $i" 
             fi
         done
-        ;;
-    1.3.9) echo "Plot 1D NJU-PIN I-V with Respect to Defect ..."
         raser "./python/plot-Z12-Nt.py"
         raser "./python/plot-Z12-sigma.py"
         raser "./python/plot-EH67-Nt.py"
         raser "./python/plot-EH67-sigma.py"
         ;;
-    1.3.10) echo "Irradiated pin ..."
+
+    1.3.8T) echo "Simulate 1D NJU-PIN I-V Defect ..."
+        N_t=1e12
+        sigma_n=3e-12
+        sigma_p=2e-12
+        N_t_HS6=0
+        sigma_n_HS6=0
+        sigma_p_HS6=0
+
+        N_t_array=(1e12 1e13 1e14 1e15 1e16)
+        for ((i=0;i<5;i++))
+        do
+            ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN IV=True v_max=800 N_t=${N_t_array[i]} sigma_n=$sigma_n sigma_p=$sigma_p N_t_HS6=$N_t_HS6 sigma_n_HS6=$sigma_n_HS6 sigma_p_HS6=$sigma_p_HS6"
+        done
+        sigma_n_array=(3e-12 3e-13 3e-14 3e-15 3e-16)
+        for ((i=0;i<5;i++))
+        do
+            ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN IV=True v_max=800 N_t=$N_t sigma_n=${sigma_n_array[i]} sigma_p=$sigma_p N_t_HS6=$N_t_HS6 sigma_n_HS6=$sigma_n_HS6 sigma_p_HS6=$sigma_p_HS6"
+        done
+
+        N_t=0
+        sigma_n=0
+        sigma_p=0
+        N_t_HS6=1e13
+        sigma_n_HS6=2e-17
+        sigma_p_HS6=3e-17
+
+        N_t_HS6_array=(1e12 1e13 1e14 1e15 1e16)
+        for ((i=0;i<5;i++))
+        do
+            ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN IV=True defect=True v_max=800 N_t=$N_t sigma_n=$sigma_n sigma_p=$sigma_p N_t_HS6=${N_t_HS6_array[i]} sigma_n_HS6=$sigma_n_HS6 sigma_p_HS6=$sigma_p_HS6"
+        done
+        sigma_n_HS6_array=(3e-12 3e-13 3e-14 3e-15 3e-16)
+        for ((i=0;i<5;i++))
+        do
+            ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN IV=True defect=True v_max=800 N_t=$N_t sigma_n=$sigma_n sigma_p=$sigma_p N_t_HS6=$N_t_HS6 sigma_n_HS6=${sigma_n_HS6_array[i]} sigma_p_HS6=$sigma_p_HS6"
+        done
+
+        ;;
+
+    1.3.8T2) echo "Plot 1D NJU-PIN I-V Defect ..."
+        raser "./python/plot-defect.py"
+        ;;
+
+    1.3.9) echo "improve simulate 1D NJU-PIN I-V ..."
+        raser "./python/nju_pin_5mm_2Dmesh.py"        
+        ;;
+        
+    1.3.10) echo "Simulate 3D NJU-PIN I-V"
+        raser "./python/pin_3d_iv.py"
+        ;;
+    
+    1.3.11) echo "Simulate irradiated NJU PIN"
         ./python/run_batchjob.py devsim "solve_iv_irr.py"
         ./python/run_batchjob.py devsim "solve_cv_irr.py"
         ;;
+
+    1.3.11T) echo "Simulate irradiated NJU PIN I-V C-V..."
+        ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN irradiation=True IV=True v_max=800"
+        ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN irradiation=True CV=True v_max=400"
         esac
 }
 
@@ -305,6 +382,14 @@ case $option in
 
     1.6.3) echo "get time resolution for Ring-PIN"
         ./python/add_noise_raser.py output/pin3D/Ring-PIN/_d=52.0_v=-500.0_tmp=300.0_thick=100.0_radius=None 1
+        ;;
+        esac
+}
+
+sub_1_7(){
+case $option in 
+    1.7.1) echo "1.7.1"   "Si strip for RASER simulation ..."
+        raser "./python/gsignal.py det_name=Si_Strip parfile=paras/setting.json Si_Strip"
         ;;
         esac
 }
@@ -566,6 +651,16 @@ case $option in
         ;;
     1.6.*) echo "RASER simulate Ring-PIN"
         sub_1_6 option
+        ;;
+
+    1.7) echo "RASER simulate Si_Strip"
+        usage_1_7
+        echo "Please enter your option: " 
+        read option 
+        sub_1_7 option 
+        ;;
+    1.7.*) echo "RASER simulate Si_Strip"
+        sub_1_7 option
         ;;
 
     2.1) echo "RASER simulate SiC-LGAD"
