@@ -143,10 +143,10 @@ def CreateSRH1(device, region):
     sigma_p=2e-12
     N_t=0
     v_T=1e7
-    devsim.add_db_entry(material="global",   parameter="sigma_n",     value=sigma_n,   unit="s/cm^2",     description="sigma_n")
-    devsim.add_db_entry(material="global",   parameter="sigma_p",     value=sigma_p,   unit="s/cm^2",     description="sigma_p")
-    devsim.add_db_entry(material="global",   parameter="N_t",     value=N_t,   unit="cm^(-3)",     description="N_t")
-    devsim.add_db_entry(material="global",   parameter="v_T",     value=v_T,   unit="cm/s",     description="v_T")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="sigma_n",     value=sigma_n,   unit="s/cm^2",     description="sigma_n")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="sigma_p",     value=sigma_p,   unit="s/cm^2",     description="sigma_p")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="N_t",     value=N_t,   unit="cm^(-3)",     description="N_t")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="v_T",     value=v_T,   unit="cm/s",     description="v_T")
     R_z="(sigma_n*sigma_p*v_T*N_t*(Electrons*Holes - n_i^2))/(sigma_n*(Electrons - n1*exp(1.6e-19/(k_T0))) + sigma_p*(Holes + p1*exp(1.6e-19/(k_T0))))"
     CreateNodeModel(device, region, "R_z", R_z)
     for i in ("Electrons", "Holes"):
@@ -160,10 +160,10 @@ def CreateSRH2(device, region):
     sigma_p_HS6=3e-17
     N_t_HS6=0
     v_T=1e7
-    devsim.add_db_entry(material="global",   parameter="sigma_n_HS6",     value=sigma_n_HS6,   unit="s/cm^2",     description="sigma_n_HS6")
-    devsim.add_db_entry(material="global",   parameter="sigma_p_HS6",     value=sigma_p_HS6,   unit="s/cm^2",     description="sigma_p_HS6")
-    devsim.add_db_entry(material="global",   parameter="N_t_HS6",     value=N_t_HS6,   unit="cm^(-3)",     description="N_t_HS6")
-    devsim.add_db_entry(material="global",   parameter="v_T",     value=v_T,   unit="cm/s",     description="v_T")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="sigma_n_HS6",     value=sigma_n_HS6,   unit="s/cm^2",     description="sigma_n_HS6")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="sigma_p_HS6",     value=sigma_p_HS6,   unit="s/cm^2",     description="sigma_p_HS6")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="N_t_HS6",     value=N_t_HS6,   unit="cm^(-3)",     description="N_t_HS6")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="v_T",     value=v_T,   unit="cm/s",     description="v_T")
     R_h6="(sigma_n_HS6*sigma_p_HS6*v_T*N_t_HS6*(Electrons*Holes - n_i^2))/(sigma_n_HS6*(Electrons - n1*exp(4.8e-22/(k_T0))) + sigma_p_HS6*(Holes + p1*exp(4.8e-22/(k_T0))))"
     CreateNodeModel(device, region, "R_h6", R_h6)
     for i in ("Electrons", "Holes"):
@@ -302,12 +302,65 @@ def CreateImpactGeneration(device, region):
         CreateImpactGenerationSiliconCarbide(device, region)
 
 def CreateTunnelingAndAvalanche(device,region):
-    R_BTBT="1e2*abs(ElectricField)^2.5"#*exp(-ElectricField/1e10)
+    cutoff_angle = 4 #degree
+    sin_cutoff_angle = math.sin(math.radians(cutoff_angle))
+    cos_cutoff_angle = math.cos(math.radians(cutoff_angle))
+    if not InEdgeModelList(device, region, "ElectricField_0001"):
+        CreateEdgeModel(device, region, "ElectricField_0001", "abs(ElectricField+1)*{0}".format(cos_cutoff_angle))
+    if not InEdgeModelList(device, region, "ElectricField_1120"):
+        CreateEdgeModel(device, region, "ElectricField_1120", "abs(ElectricField+1)*{0}".format(sin_cutoff_angle))
+    if not InEdgeModelList(device, region, "n_B"):
+        CreateEdgeModel(device, region, "n_B", "abs(ElectricField+1) / pow( pow( ElectricField_1120/n_b_1120 , 2) + pow( ElectricField_0001/n_b_0001 , 2) , 0.5)")
+    if not InEdgeModelList(device, region, "p_B"):
+        CreateEdgeModel(device, region, "p_B", "abs(ElectricField+1) / pow( pow( ElectricField_1120/p_b_1120 , 2) + pow( ElectricField_0001/p_b_0001 , 2) , 0.5)")
+    if not InEdgeModelList(device, region, "n_a_aniso"):
+        CreateEdgeModel(device, region, "n_a_aniso", "pow( n_a_1120, pow( n_B*ElectricField_1120/n_b_1120/abs(ElectricField+1), 2) ) * pow( n_a_0001, pow( n_B*ElectricField_0001/n_b_0001/abs(ElectricField+1), 2) )")
+    if not InEdgeModelList(device, region, "p_a_aniso"):
+        CreateEdgeModel(device, region, "p_a_aniso", "pow( p_a_1120, pow( p_B*ElectricField_1120/p_b_1120/abs(ElectricField+1), 2) ) * pow( p_a_0001, pow( p_B*ElectricField_0001/p_b_0001/abs(ElectricField+1), 2) )")
+    if not InEdgeModelList(device, region, "n_A"):
+        CreateEdgeModel(device, region, "n_A", "log(n_a_0001/n_b_1120)")
+    if not InEdgeModelList(device, region, "p_A"):
+        CreateEdgeModel(device, region, "p_A", "log(p_a_0001/p_b_1120)")
+    if not InEdgeModelList(device, region, "n_b_aniso"):
+        CreateEdgeModel(device, region, "n_b_aniso", "n_B * pow( 1-pow(n_A,2)* pow( (n_B*ElectricField_1120*ElectricField_0001)/(abs(ElectricField+1)*n_b_1120*n_b_0001), 2), 0.5)")
+    if not InEdgeModelList(device, region, "p_b_aniso"):
+        CreateEdgeModel(device, region, "p_b_aniso", "p_B * pow( 1-pow(p_A,2)* pow( (p_B*ElectricField_1120*ElectricField_0001)/(abs(ElectricField+1)*p_b_1120*p_b_0001), 2), 0.5)")
+    gamma_str = "tanh(0.19/(2*0.0257))/tanh(0.19/(2*0.0257*T/T0))"
+    Ion_coeff_n  = "ifelse(abs(ElectricField)>1e4, {0} * n_a_aniso * exp( - {1} * n_b_aniso / (abs(ElectricField)+1)), 1)".format(gamma_str,gamma_str)
+    Ion_coeff_p  = "ifelse(abs(ElectricField)>1e4, {0} * p_a_aniso * exp( - {1} * p_b_aniso / (abs(ElectricField)+1)), 1)".format(gamma_str,gamma_str)
+    Ion_coeff_rate = "(Ion_coeff_n*(abs(ElectronCurrent))+Ion_coeff_p*(abs(HoleCurrent)))/q"
+    CreateEdgeModel(device, region, "Ion_coeff_n", Ion_coeff_n)
+    CreateEdgeModelDerivatives(device, region, "Ion_coeff_n", Ion_coeff_n, "Potential")
+    CreateEdgeModel(device, region, "Ion_coeff_p", Ion_coeff_p)
+    CreateEdgeModelDerivatives(device, region, "Ion_coeff_p", Ion_coeff_p, "Potential")
+    
+    R_BTBT="3.11*abs(ElectricField)^2.5*exp(abs(ElectricField)/3e4)"
     CreateEdgeModel(device,region,"R_BTBT",R_BTBT)
     CreateEdgeModelDerivatives(device,region,"R_BTBT",R_BTBT,"Potential")
     ImpactGen_n = "+q*(%s+R_BTBT)"%(Ion_coeff_rate)
     ImpactGen_p = "-q*(%s+R_BTBT)"%(Ion_coeff_rate)
 
+    CreateEdgeModel(device, region, "ImpactGen_n", ImpactGen_n)
+    CreateEdgeModelDerivatives(device, region, "ImpactGen_n", ImpactGen_n, "Potential")
+    CreateEdgeModelDerivatives(device, region, "ImpactGen_n", ImpactGen_n, "Electrons")
+    CreateEdgeModelDerivatives(device, region, "ImpactGen_n", ImpactGen_n, "Holes")
+    
+    CreateEdgeModel(device, region, "ImpactGen_p", ImpactGen_p)
+    CreateEdgeModelDerivatives(device, region, "ImpactGen_p", ImpactGen_p, "Potential")
+    CreateEdgeModelDerivatives(device, region, "ImpactGen_p", ImpactGen_p, "Electrons")
+    CreateEdgeModelDerivatives(device, region, "ImpactGen_p", ImpactGen_p, "Holes")
+
+def CreateInitialNetGeneration(device, region):
+
+    Gn = "-q * USRH"
+    Gp = "+q * USRH"
+
+    CreateNodeModel(device, region, "ElectronGeneration", Gn)
+    CreateNodeModel(device, region, "HoleGeneration", Gp)
+
+    for i in ("Electrons", "Holes"):
+        CreateNodeModelDerivative(device, region, "ElectronGeneration", Gn, i)
+        CreateNodeModelDerivative(device, region, "HoleGeneration", Gp, i)
 
 def CreateNetGeneration(device, region):
 
@@ -320,8 +373,13 @@ def CreateNetGeneration(device, region):
     #Gn = "-q * (USRH - 1e18*x*x)"
     #Gp = "+q * (USRH - 1e18*x*x)"
 
-    Gn = "-q * (USRH+R_z+R_h6-1e12)"
-    Gp = "+q * (USRH+R_z+R_h6-1e12)"
+    if devsim.get_material(device=device, region=region) == "SiliconCarbide":
+        Gn = "-q * (USRH+R_z+R_h6-1e12)"
+        Gp = "+q * (USRH+R_z+R_h6-1e12)"
+
+    else:
+        Gn = "-q * (USRH-1e12)"
+        Gp = "+q * (USRH-1e12)"
 
     CreateNodeModel(device, region, "ElectronGeneration", Gn)
     CreateNodeModel(device, region, "HoleGeneration", Gp)
@@ -423,7 +481,6 @@ def CreateECE(device, region, mu_n):
              )
 
 
-
 def CreateHCE(device, region, mu_p):
     CreateHoleCurrent(device, region, mu_p)
     PCharge = "q * Holes"
@@ -431,6 +488,38 @@ def CreateHCE(device, region, mu_p):
     CreateNodeModelDerivative(device, region, "PCharge", PCharge, "Holes")
     
     CreateImpactGeneration(device, region)
+    devsim.equation(device=device, region=region, name="HoleContinuityEquation", variable_name="Holes",
+             time_node_model = "PCharge",
+             edge_model="HoleCurrent", variable_update="positive", 
+             node_model="HoleGeneration", 
+             edge_volume_model="ImpactGen_p"
+             )
+
+def CreateECE_improved(device, region, mu_n):
+    CreateElectronCurrent(device, region, mu_n)
+
+    NCharge = "-q * Electrons"
+    CreateNodeModel(device, region, "NCharge", NCharge)
+    CreateNodeModelDerivative(device, region, "NCharge", NCharge, "Electrons")
+
+    #CreateImpactGeneration(device, region)
+    CreateTunnelingAndAvalanche(device, region)
+    devsim.equation(device=device, region=region, name="ElectronContinuityEquation", variable_name="Electrons",
+             time_node_model = "NCharge",
+             edge_model="ElectronCurrent", variable_update="positive", 
+             node_model="ElectronGeneration", 
+             edge_volume_model="ImpactGen_n"
+             )
+
+
+def CreateHCE_improved(device, region, mu_p):
+    CreateHoleCurrent(device, region, mu_p)
+    PCharge = "q * Holes"
+    CreateNodeModel(device, region, "PCharge", PCharge)
+    CreateNodeModelDerivative(device, region, "PCharge", PCharge, "Holes")
+    
+    #CreateImpactGeneration(device, region)
+    CreateTunnelingAndAvalanche(device, region)
     devsim.equation(device=device, region=region, name="HoleContinuityEquation", variable_name="Holes",
              time_node_model = "PCharge",
              edge_model="HoleCurrent", variable_update="positive", 
@@ -483,7 +572,13 @@ def CreateDriftDiffusionIrradiated(device, region, mu_n="mu_n", mu_p="mu_p"):
     CreateECE(device, region, mu_n)
     CreateHCE(device, region, mu_p)
 
-
+def CreateImprovedDriftDiffusion(device,region,mu_n="mu_n",mu_p="mu_p"):
+    CreatePE(device,region)
+    CreateBernoulli(device,region)
+    CreateSRH(device,region)
+    CreateInitialNetGeneration(device,region)
+    CreateECE_improved(device,region,mu_n)
+    CreateHCE_improved(device,region,mu_p)
 
 def CreateDriftDiffusionAtContact(device, region, contact, is_circuit=False): 
     '''
