@@ -74,25 +74,48 @@ devsim.set_parameter(name = "extended_equation", value=True)
 
 # Initial DC solution
 Initial.InitialSolution(device, region)
-devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-5, maximum_iterations=50)
+devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=30)
 
 ### Drift diffusion simulation at equilibrium
 Initial.DriftDiffusionInitialSolution(device, region)
-devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-5, maximum_iterations=50)
+devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
 
-#set paramater of Z1/2
+#set paramater of Nt and sigma
 list_Nt = [1e12, 1e13, 1e14, 1e15, 1e16, 1e17]
 list_sigman = [3e-12, 3e-13, 3e-14, 3e-15, 3e-16, 3e-17]
-list_sigmap = [2e-12, 2e-13, 2e-14, 2e-15, 2e-16, 2e-17]
+#list_sigmap = [2e-12, 2e-13, 2e-14, 2e-15, 2e-16, 2e-17]
 
 i = int(sys.argv[1])
-#### Ramp the bias to Reverse
-N_t=list_Nt[i]
-sigma_n=list_sigman[i]
-sigma_p=list_sigman[i]
-devsim.add_db_entry(material="global",   parameter="sigma_n",     value=sigma_n,   unit="s/cm^2",     description="sigma_n")
-devsim.add_db_entry(material="global",   parameter="sigma_p",     value=sigma_p,   unit="s/cm^2",     description="sigma_p")
-devsim.add_db_entry(material="global",   parameter="N_t",     value=N_t,   unit="cm^(-3)",     description="N_t")
+print(i)
+if (i<=3):
+    N_t=list_Nt[i+1]
+    sigma_n=3e-12
+    sigma_p=2e-12
+    devsim.add_db_entry(material="global",   parameter="sigma_n",     value=sigma_n,   unit="s/cm^2",     description="sigma_n")
+    devsim.add_db_entry(material="global",   parameter="sigma_p",     value=sigma_p,   unit="s/cm^2",     description="sigma_p")
+    devsim.add_db_entry(material="global",   parameter="N_t",     value=N_t,   unit="cm^(-3)",     description="N_t")
+elif (3<i<9):
+    N_t=1e12
+    sigma_n=list_sigman[i-4]
+    sigma_p=2e-12
+    devsim.add_db_entry(material="global",   parameter="sigma_n",     value=sigma_n,   unit="s/cm^2",     description="sigma_n")
+    devsim.add_db_entry(material="global",   parameter="sigma_p",     value=sigma_p,   unit="s/cm^2",     description="sigma_p")
+    devsim.add_db_entry(material="global",   parameter="N_t",     value=N_t,   unit="cm^(-3)",     description="N_t")
+elif (8<i<14):
+    N_t_HS6=list_Nt[i-8]
+    sigma_n_HS6=2e-17
+    sigma_p_HS6=3e-17
+    devsim.add_db_entry(material="global",   parameter="sigma_n_HS6",     value=sigma_n_HS6,   unit="s/cm^2",     description="sigma_n_HS6")
+    devsim.add_db_entry(material="global",   parameter="sigma_p_HS6",     value=sigma_p_HS6,   unit="s/cm^2",     description="sigma_p_HS6")
+    devsim.add_db_entry(material="global",   parameter="N_t_HS6",     value=N_t_HS6,   unit="cm^(-3)",     description="N_t_HS6")
+else :
+    N_t_HS6=1e13
+    sigma_n_HS6=list_sigman[i-14]
+    sigma_p_HS6=2e-16
+    devsim.add_db_entry(material="global",   parameter="sigma_n_HS6",     value=sigma_n_HS6,   unit="s/cm^2",     description="sigma_n_HS6")
+    devsim.add_db_entry(material="global",   parameter="sigma_p_HS6",     value=sigma_p_HS6,   unit="s/cm^2",     description="sigma_p_HS6")
+    devsim.add_db_entry(material="global",   parameter="N_t_HS6",     value=N_t_HS6,   unit="cm^(-3)",     description="N_t_HS6")
+
 
 reverse_v = 0.0
 reverse_voltage = []
@@ -110,9 +133,9 @@ header = ["Voltage","Current"]
 writer = csv.writer(f)
 writer.writerow(header)
 
-while reverse_v < 500.0:
+while reverse_v < 800.0:
     devsim.set_parameter(device=device, name=Physics.GetContactBiasName("top"), value=0-reverse_v)
-    devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-5, maximum_iterations=50)
+    devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-10, maximum_iterations=30)
     Physics.PrintCurrents(device, "top")
     Physics.PrintCurrents(device, "bot")
     reverse_top_electron_current= devsim.get_contact_current(device=device, contact="top", equation="ElectronContinuityEquation")
@@ -130,7 +153,7 @@ while reverse_v < 500.0:
         #break
     reverse_v += 1
 f.close()
-
+'''
 fig1=matplotlib.pyplot.figure()
 ax1 = fig1.add_subplot(111)
 matplotlib.pyplot.xlabel('Depth [cm]')
@@ -139,9 +162,10 @@ matplotlib.pyplot.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
 ax1.legend(loc='upper right')
 fig1.show()
 fig1.savefig("./output/devsim/nju_pin_reverse_electricfield%d.png"%i)
-
+'''
 print(reverse_voltage)
 print(reverse_top_current)
+'''
 fig2=matplotlib.pyplot.figure()
 ax2 = fig2.add_subplot(111)
 matplotlib.pyplot.semilogy(reverse_voltage, reverse_top_current)
@@ -149,5 +173,5 @@ matplotlib.pyplot.xlabel('Voltage (V)')
 matplotlib.pyplot.ylabel('Current (A)')
 matplotlib.pyplot.axis([min(reverse_voltage), max(reverse_voltage), 1e-9, 1e-2])
 fig2.savefig("./output/devsim/nju_pin_reverse_iv%d.png"%i)
-
+'''
 devsim.close_db() 

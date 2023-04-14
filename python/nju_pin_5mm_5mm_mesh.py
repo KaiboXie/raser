@@ -8,6 +8,7 @@ from raser import Node
 import matplotlib
 #matplotlib.use('Agg')
 import matplotlib.pyplot
+import math
 
 # NJU PIN 5mm*5mm 
 
@@ -27,7 +28,6 @@ def Create1DMesh(device, region):
     devsim.add_1d_region   (mesh="dio", material="SiliconCarbide", region=region, tag1="top", tag2="bot")
     devsim.finalize_mesh(mesh="dio")
     devsim.create_device(mesh="dio", device=device)
-
 
 def SetDoping(device, region, bulk_doping="5.2e13"):
     '''
@@ -66,7 +66,7 @@ def main():
 
     Create1DMesh(device=device, region=region)
     SetDoping(device=device, region=region)
-    Draw_Doping(device=device, region=region, path="./output/devsim/nju_pin_doping.png")
+    Draw_Doping(device=device, region=region, path="./output/devsim/1D_NJU_PIN_doping.png")
 
 if __name__ == '__main__':
     main()
