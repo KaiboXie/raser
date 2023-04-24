@@ -30,3 +30,28 @@ Obsidian / Settings / Community Plugins /
 
 可以使用核心插件，打开 Slides 
 或者安装插件： Advanced Slides 
+
+## 项目管理
+
+安装插件： Projects 
+
+![OB-Projects.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/OB-Projects.png)
+
+
+右键点击Projects 目录打开创建项目管理
+
+
+![OB-Projects-Setup.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/OB-Projects-Setup.png)
+
+使用默认设置即可：
+
+![OB-Project-window.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/OB-Project-window.png)
+
+打开项目管理： 
+
+![OB-Pro-open.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/OB-Pro-open.png)
+
+
+项目展示：
+
+![Pro-Example.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Pro-Example.png)
