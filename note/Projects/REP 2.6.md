@@ -1,11 +1,21 @@
 ---
+REP: 2.6
+Title: SiC Defect Simulation
 Author: 姜松廷
-Status: 
-Type: Mind
+Status: in progress
+Type: Software
 Created: 2023-04-09
 ---
 
-目的
+
+# SiC Defect Simulation
+
+[[姜松廷]]
+
+
+
+## 目的
+
 ---
 一、研究缺陷的目的：
 	在工艺生产中，必然会由于不同的工艺而产生各种各样的缺陷，通过RASER可以仿真这些缺陷都会对实际器件产生怎样的影响，验证具有某种缺陷的器件是否是我们在实际中能制造或者使用的器件。（简单考虑）在此基础上，还可以研究缺陷的产生机理，以及还会产生那些我们没有发现的缺陷及如何表征它们来证明它们确实在器件当中存在。
