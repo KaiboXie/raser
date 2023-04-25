@@ -28,12 +28,17 @@ Obsidian / Settings / Community Plugins /
 
 ## 播放幻灯片
 
-可以使用核心插件，打开 Slides 
-或者安装插件： Advanced Slides 
+安装插件：Advanced Slides 
+https://mszturc.github.io/obsidian-advanced-slides/
+
+![OB-Advanced-Slides.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/OB-Advanced-Slides.png)
+
+
 
 ## 项目管理
 
 安装插件： Projects 
+https://github.com/marcusolsson/obsidian-projects
 
 ![OB-Projects.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/OB-Projects.png)
 
