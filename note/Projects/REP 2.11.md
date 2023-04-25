@@ -1,12 +1,17 @@
 ---
+REP: 2.11
+Title: Si strip simulation 
 Author: 李星臣
 Status: 
-Type:  
+Type: Software
 Created: 2023-04-11
 ---
 
 
-# REP 207 - Si strip simulation 
+# Si strip simulation 
+
+[[李星臣]]
+
 
 ## Introduction 
 硅微条探测器具有极好的位置分辨率，近年来，世界各大高能物理实验室几乎都采用它作为顶点探测器

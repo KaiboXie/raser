@@ -1,11 +1,17 @@
 ---
+REP: 2.5
+Title: Improvement of Physics models in DEVSIM simulation
 Author: 李再一
 Status: 
 Type: Software 
 Created: 2023-04-05
 ---
 
-# REP 201 - Improvement of Physics models in DEVSIM simulation
+# Improvement of Physics models in DEVSIM simulation
+
+[[李再一]]
+
+
 
 ## 为什么要改进器件仿真中的物理模型？
 器件的电学特性仿真是基于开源软件DEVSIM，利用Python添加物理模型并求解方程。在已有的仿真中，基于我们完全理解的物理模型，C-V特性曲线与实验数据基本一致，但是I-V特性曲线差别很大，相差大约16个数量级，等效于在载流子的复合率上大约有$10^{12}$的差别。
