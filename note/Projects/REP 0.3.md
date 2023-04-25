@@ -1,13 +1,17 @@
 ---
+REP: 0.3
+Title: Distributed Research Scheme
 Author: 史欣 
-Status: In progress 
+Status: Active
 Type: Orgnization 
 Created: 2023-04-21
+Last update: 2023-04-25
 ---
 
 
-# REP 003 -  Distributed Research Scheme 
+# Distributed Research Scheme 
 
+[[史欣]]
 
 ## Scope of orgnization structure 
 - Team Leader 
