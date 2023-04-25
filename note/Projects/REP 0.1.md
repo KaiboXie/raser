@@ -1,12 +1,17 @@
 ---
+REP: 0.1
+Title: REP Goal and Guidelines
 Author: 史欣
-Status: 
+Status: Active
 Type: Orgnization 
 Created: 2023-04-01
+Last update: 2023-04-25
 ---
 
 
-# REP 001 - REP Goal and Guidelines 
+# REP Goal and Guidelines 
+
+[[史欣]]
 
 ## What is a REP? 
 

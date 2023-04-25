@@ -1,9 +1,16 @@
 ---
-Author: 史欣、张希媛、王聪聪
-Status: In progress
-Type: Hardware
-Created: 2023-04-24
+REP: 1.2
+Title: SICAR1 Fabrication
+Author: 张希媛、王聪聪 
+Status: Active
+Type: Hardware 
+Created: 2022-10-01
+Updated: 2023-04-25
 ---
+
+# SICAR1 Fabrication
+
+[[张希媛]], [[王聪聪]]
 
 
 - 刻蚀台面

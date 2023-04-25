@@ -1,13 +1,17 @@
 ---
+REP: 0.2
+Title: Use Memo style for team meeting
 Author: 徐子骏, 史欣 
-Status: Implemented 
+Status: Active
 Type: Orgnization 
-Created: 2023-04-21
+Created: 2023-04-01
+Last update: 2023-04-25
 ---
 
 
-# REP 002 -  Use Memo style for team meeting
+# Use Memo style for team meeting
 
+[[徐子骏]], [[史欣]] 
 
 ## What is the problem of PPT based meeting?
 
