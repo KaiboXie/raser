@@ -3,7 +3,7 @@ REP: 0.1
 Title: REP Goal and Guidelines
 Author: 史欣
 Status: Active
-Type: Orgnization 
+Type: Idea 
 Created: 2023-04-01
 Last update: 2023-04-25
 ---

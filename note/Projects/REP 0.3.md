@@ -3,7 +3,7 @@ REP: 0.3
 Title: Distributed Research Scheme
 Author: 史欣 
 Status: Active
-Type: Orgnization 
+Type: Idea 
 Created: 2023-04-21
 Last update: 2023-04-25
 ---

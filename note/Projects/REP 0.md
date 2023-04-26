@@ -3,7 +3,7 @@ REP: 0
 Title: Index of Raser Enhancement Proposals
 Author: 史欣
 Status: Active
-Type: Orgnization 
+Type: Idea 
 Created: 2023-04-01
 Last update: 2023-04-25
 ---
@@ -16,17 +16,16 @@ Last update: 2023-04-25
 
 ## Introduction 
 
-The idea of REP is borrowed from PEP (Python Enhancement Proposals). 
+The idea of REP is borrowed from PEP ([Python Enhancement Proposals](https://peps.python.org)). 
 This REP contains the index of all Raser Enhancement Proposals, know as REPs.  
 
 
 ## REP Number Scheme
 
-
-- O -- Orgnization (0.X)
-- H -- Hardware (1.X)
-- S -- Software (2.X)
-- P -- Publication (3.X)
+- Idea (0.X)
+- Hardware (1.X)
+- Software (2.X)
+- Publication (3.X)
 
 The reason to use digits is to allow natural increase for each digit naturally and possible break down into sub items in the future. 
 
