@@ -6,9 +6,11 @@ Created: 2023-04-24
 Post-History: 
 ---
 
-辐照缺陷对4H-SiC LGAD 的定时性能的影响机制研究
+辐照缺陷对4H-SiC LGAD/PIN 的定时性能的影响机制研究
 
-硬件支持：[[REP 1.4]]
+硬件支持：[[REP 1.4]]  PIN器件
+                  [[REP 1.3]]  SICAR1 fabriacaiton
+                  [[REP 1.6]]  SICAR2 边角料测试
 软件支持：
 1. DEVSIM仿真辐照前后的4H-SiC PIN器件的微观缺陷/物理模型对漏电流机制影响[[REP 2.5]]
 2. DEVSIM仿真辐照前后的4H-SiC PIN器件的宏观缺陷对漏电流机制影响机制研究[[REP 2.6]]
