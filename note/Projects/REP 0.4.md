@@ -3,7 +3,7 @@ REP: 0.4
 Title: Obsidian Based Project Management
 Author: 史欣 
 Status: Active
-Type: Orgnization 
+Type: Idea 
 Created: 2023-04-23
 Last update: 2023-04-25
 ---

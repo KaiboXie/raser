@@ -3,7 +3,7 @@ REP: 0.2
 Title: Use Memo style for team meeting
 Author: 徐子骏, 史欣 
 Status: Active
-Type: Orgnization 
+Type: Idea 
 Created: 2023-04-01
 Last update: 2023-04-25
 ---
