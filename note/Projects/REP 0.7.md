@@ -1,18 +1,44 @@
 ---
-Author: 张希媛， 李再一，姜松廷
-Status: in progress
-Type: Physics 
-Created: 2023-04-24
-Post-History: 
+REP: 0.7
+Title: RAdiation SEmicondoctoR - RASER 
+Author: 史欣、刘凯、谭雨航、杨涛
+Status: Active
+Type: Idea
+Created: 2021-03-18
+Updated: 2023-04-25
 ---
 
 
-4H-SiC LGAD：研究低增益雪崩倍增模型
-doi:10.1016/0038-1101(70)90139-5
-doi:10.1109/TED.2006.881010
-doi:10.1109/TED.2008.926679
-doi:10.1063/1.1784520
+# RAdiation SEmicondoctoR - RASER
 
-1. 空穴与电子的离化系数与增益层电场的关系
-2. 通过实验验证适合4H-SiC LGAD的雪崩倍增模型
-3. 结合DEVISM，对其I-V，C-V进行模型矫正
+[[史欣]]
+
+
+## Log
+
+
+### 2021-03-19 
+
+Start to work on raser with docker. 
+
+### 2021-03-18 
+
+Discussed with Kai, Yuhang, Tao, decided to create the software. 
+
+Starting with KDetSim. 
+
+Candidate names:
+
+- Radiation Hard Semiconductor Devices Simulator
+- RHSDS
+ - RadDevSim
+ - RASER - RAdiatin SEmiconductoR
+- RADISIM
+- RASES - RAdiatin SEmiconductor Simulator
+- RADISC - RADIation Semiconductor Craft
+- SCDS - Silicon Carbide Detector Simulator
+- SIDESR - SIc DEtector SimulatoR 
+
+Need to be inclusive, not just SiC. 
+
+Talked with Chen, decided to user RASER. 
