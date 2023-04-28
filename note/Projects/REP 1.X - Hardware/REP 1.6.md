@@ -3,7 +3,7 @@ REP: 1.6
 Title: 辐照缺陷对4H-SiC LGAD/PIN 的定时性能的影响机制研究
 Author: 李再一
 Status: in progress
-Type: Idea 
+Type:  Hardware
 Created: 2023-04-28
 Updated: 
 ---
