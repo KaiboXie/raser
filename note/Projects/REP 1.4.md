@@ -16,3 +16,7 @@ Updated: 2023-04-25
 
 ![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230424091343.png)
 
+硬件支持：[[REP 1.4]]
+-  [x] 寄送1.5mm x 1.5mm 做DLTS
+-  [ ] 询问DLTS结果
+-  [ ] 辐照实验  

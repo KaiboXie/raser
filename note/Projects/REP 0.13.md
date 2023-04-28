@@ -1,7 +1,7 @@
 ---
-REP: 0.5
-Title: Low Gain Avalanche Diodes - LGAD
-Author: 史欣、杨涛
+REP: 0.13
+Title: Graphene on  SiC 
+Author: 王聪聪
 Status: Active
 Type: Idea
 Created: 2018-07-27
@@ -9,9 +9,9 @@ Updated: 2023-04-25
 ---
 
 
-# Low Gain Avalanche Diodes - LGAD 
+# Graphene on  SiC 
 
-[[史欣]],  [[杨涛]]
+[[王聪聪]]
 
 
 ## Log 
