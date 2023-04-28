@@ -1,5 +1,17 @@
+---
+REP: 0.15
+Title: 辐照损伤对硅微条探测器性能影响的机理研究
+Author: 肖素玉
+Status: Active
+Type: Idea
+Created: 2023-04-25
+Updated: 2023-04-28
+---
 
-辐照损伤对硅微条探测器性能影响的机理研究 
+
+# 辐照损伤对硅微条探测器性能影响的机理研究 
+
+
 
 ## 研究背景
 ![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230420112416.png)
