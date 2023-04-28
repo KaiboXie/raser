@@ -1,3 +1,12 @@
+---
+Author: 张希媛， 李再一，姜松廷
+Status: in progress
+Type: Idea 
+Created: 2023-04-24
+Updated: 2023-04-27
+---
+
+
 4H-SiC LGAD：研究低增益雪崩倍增模型
 doi:10.1016/0038-1101(70)90139-5
 doi:10.1109/TED.2006.881010
