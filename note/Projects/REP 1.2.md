@@ -5,7 +5,7 @@ Author: 张希媛、王聪聪
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-04-25
+Updated: 2023-04-28
 ---
 
 # SICAR1 Fabrication
