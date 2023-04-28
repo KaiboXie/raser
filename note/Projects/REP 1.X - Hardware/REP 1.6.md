@@ -3,11 +3,10 @@ REP: 1.6
 Title: 辐照缺陷对4H-SiC LGAD/PIN 的定时性能的影响机制研究
 Author: 李再一
 Status: in progress
-Type: Idea 
+Type:  Hardware
 Created: 2023-04-28
 Updated: 
 ---
-
 
 
 SICAR1，SICAR2 外延片的边角料进行切片 
@@ -24,3 +23,22 @@ SICAR1，SICAR2 外延片的边角料进行切片
 -  [ ] 调研并确认辐照样品的数目
 -  [ ]  调研并确认辐照剂量和标度方法
 
+辐照前后XRD对宏观缺陷的表征
+- [ ]  2theta-theta测试研究辐照对面外晶格大小的变化的影响
+    - [ ]  调研4H-SiC的晶体学结构，如晶格常数
+    - [ ] 了解XRD测试原理
+    - [ ] 2theta-theta测试（0-90°）
+    - [ ] 外延峰是否只有4H-SiC，是否存在3C-SiC 或者6H-SiC 等构型，是否有Si或者C杂质，从而判断SICAR1 和SICAR2 的外延质量
+    - [ ] 不同辐照强度对晶格常数是否发生明显的影响，是否随着辐照剂量的增大，而发生明显的变化
+    
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230428153920.png)
+
+-  [ ]  摇摆曲线测试研究辐照对结晶度变化的影响
+-  [ ]  RSM测试研究辐照对面内晶格结构的影响
+
+
+参考文献
+Properties of 3C-SiC Grown by Sublimation Epitaxy on Different Type of Substrates
+Microhardness of Electroless Composite Coating of Ni-P with SiC Nano-particles
+Properties of 3C-SiC Grown by Sublimation Epitaxy on Different Type of Substrates
+Microstructural study of ferromagnetic Fe-implanted 6H-SiC
