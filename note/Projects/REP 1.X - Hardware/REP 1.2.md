@@ -3,9 +3,10 @@ REP: 1.2
 Title: SICAR1 Fabrication
 Author: 张希媛、王聪聪 
 Status: Active
+Todo: 科琪上传第一次流片结果，何野测试IC和CV
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-04-25
+Updated: 2023-04-28
 ---
 
 # SICAR1 Fabrication
@@ -13,6 +14,25 @@ Updated: 2023-04-25
 [[张希媛]], [[王聪聪]]
 
 
+## 芯片外延
+
+
+
+## 芯片制作
+### 光刻版1.0设计（M1、M2、M3）
+[[王科琪]]
+- 整体效果：
+    ![photolithography.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography.png)
+- M1
+    ![M1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/7014bb4b7ac4846c4677685ea976e33.png)
+- M2
+    ![M2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/24d01f4c8216f032963ad5bf83012c0.png)
+
+- M3
+    ![M3.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/74c68ea12c0d1f5b3ad4f171863d8e7.png)
+
+### 第一次流片工艺
+[[王科琪]]， [[何野]]
 - 刻蚀台面
     - 涂光刻胶（负胶）
     - 光刻显影台面（M1）
@@ -25,7 +45,7 @@ Updated: 2023-04-25
     - 淀积N电极
     - 退火
 - 淀积钝化层
-    - PECVD淀积钝化层（182nm、364nm）
+    - PECVD淀积钝化层（364nm）
     - 光刻显影（M2）
     - 刻蚀氧化层
 -  制造Pad
@@ -34,6 +54,25 @@ Updated: 2023-04-25
     - 磁控溅射Pad（Al=500um）
     - Pad剥离
     - 低温退火
+### 第一次流片工艺流程图
+[[王科琪]]
+![process.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/e314bbfe289d745761c1e47f80207de.jpg)
+### 第一次流片问题与后期改进
+[[王科琪]]
+| 序号 | 问题 | 改进 |
+| : - : | : - : | : - : |
+| 1 | 电极出现白色圆点 | 调整退火与PECVD的顺序，先退火 |
+| 2 | 漂洗二氧化硅时，洗去过量的二氧化硅 | 
+| 3 | 晶圆表面有杂质 | 每一次工艺之前都要对晶圆进行清洗 |
+| 4 | 光刻版 | 增加钝化层；重新设计版标；修改欧姆接触电阻率测试版 |
+
+#### 第一次流片IV和CV测试
+[[何野]]
+#### 第一次欧姆接触测试
+[[何野]]
+### 第二次流片工艺
+[[何野]] , [[解凯博]]
+
 # Schedule 
 | 时间 | 1号晶圆 | 2号晶圆 | 3号晶圆 | 4号晶圆 |
 | : - : | : - : | : - : | : - : | : - : | 
