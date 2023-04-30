@@ -25,9 +25,11 @@ Updated: 2023-04-28
 
 ## 预期成果
 
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230430172257.png)
 - 实物装置：搭建edge-TCT测试系统 
 	1. NTK 375nm激光器
 	2. 聚焦筒镜
+	3. 移动平台 [[王泓博]] 
 - 文章成果：实现RASER模拟软件中对于edge-TCT测试方法功能 ==7月底之前== 
 	1. P4：Si LGAD edge-TCT实验与模拟检验 [[符晨曦]] [[王浩博]] 
 	2. SiC PIN 辐照前后，top-TCT
