@@ -34,5 +34,7 @@ Updated: 2023-04-28
 		1. 实验数据，算trapping time [[何野]] 
 		2. NGSpice电路读出 [[解凯博]] [[王浩博]] 
 		3. RASER模拟，DEVSIM辐照后的电场 [[石航瑞]] 
-
+	3. SiC PIN 辐照前后，beta
+		1. 实验数据 [[何野]] 
+		2. RASER模拟 [[石航瑞]] 
 
