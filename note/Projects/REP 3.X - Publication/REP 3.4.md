@@ -55,6 +55,15 @@ Updated: 2023-04-01
 
 ##  Log 
 
+
+### 2023-04-30
+
+Discussion about the reply to reviewers. 
+
+-  [ ] What's the key point of the paper?  
+-  [ ] Store the data to a central place on server 
+-  [ ] Add systematic and statistical error  
+
 ### 2023-02-21 
 
 http://arxiv.org/abs/2302.10020  Online

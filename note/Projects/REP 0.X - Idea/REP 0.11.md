@@ -1,5 +1,5 @@
 ---
-REP: 0.10
+REP: 0.11
 Title: 辐照缺陷对4H-SiC LGAD/PIN 的定时性能的影响机制研究
 Author: 张希媛， 李再一，姜松廷
 Status: in progress
@@ -7,6 +7,9 @@ Type: Idea
 Created: 2023-04-24
 Updated: 2023-04-27
 ---
+
+# 照缺陷对4H-SiC LGAD/PIN 的定时性能的影响机制研究
+
 
 
 
