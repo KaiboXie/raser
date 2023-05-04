@@ -17,7 +17,7 @@ Updated: 2023-04-25
 ## Overview 
 
 -  [x] Hardware 
-	-  [x] NJU SiC LGAD 
+	-  [x] NJU SiC LGAD [[REP 1.1]]
 -  [x] Software 
 	-  [x] Simulation: 
 -  [x] Presentation

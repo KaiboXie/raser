@@ -26,6 +26,13 @@ Updated: 2023-04-25
 	实物图
 ![T1_v1.0.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_v1.0.jpg)
 
+LTspice仿真结果：
+	输入信号：10μA的脉冲电流
+	![input.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230206143912.png)
+	输出信号：
+	![output.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230206143644.png)
+	
+
 - [ ] T1第一版的测试
 	- [ ] 355nm激光
 		未辐照5mm的SiC PIN测试结果：
