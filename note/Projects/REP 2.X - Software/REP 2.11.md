@@ -28,3 +28,20 @@ Created: 2023-04-11
 4.24-5.6
 - 完成同一电极在不同位置入射粒子下的电荷收集效率
 - strip加入红光tct扫描
+
+[[2023-04-10-TEAM]]
+-  [x] si strip模拟中计算电荷收集效率
+-  [x] 画图
+- 7电极电场电势和加权场![600](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/feild.png)
+- 电极中心间距110um，电极60um，在第四个电极中心到第四个空隙中心取五个点（360um,375um,390um,402.5um,415um）计算电荷收集效率（最后一个电极为同一粒子入射时平板电极的电荷收集效率）![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/360cce.png)
+- 电子从330um（顶）-440um（底）斜入射电荷收集效率![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/330-440.png)![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/drift_path.png)
+[[2023-04-03-TEAM]]
+-  [x] 将fenics解加权场改为二维
+-  [x] 完成fenics解strip多电极加权场设置
+-  [x] 完成多电极分别产生感应电流设置
+-  [x] 完成多电极同时读出设置
+-  [x] 画图
+5电极时加权场分布和电场![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%94%B5%E5%9C%BA%E5%8A%A0%E6%9D%83%E5%9C%BA.png)
+- ![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%94%B5%E5%9C%BA%E5%BC%BA%E5%BA%A6.png)
+- 第三个电极和第四个电极中间射入，各电极电流和漂移路径（每个电极宽60um，间隔50um）![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%81%8F1.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%81%8F2.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%81%8F3.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%81%8F4.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%81%8F5.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%81%8F%E6%BC%82%E7%A7%BB%E8%B7%AF%E5%BE%84.png)
+- 第三个电极中间射入，各电极电流和漂移路径（每个电极宽60um，间隔50um）![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%AD%E9%97%B41.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%AD%E9%97%B42.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%AD%E9%97%B43.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%AD%E9%97%B44.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%AD%E9%97%B45.png)![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%AD%E9%97%B4%E6%BC%82%E7%A7%BB%E8%B7%AF%E5%BE%84.png)
