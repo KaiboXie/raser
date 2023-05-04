@@ -33,19 +33,32 @@ Updated: 2023-04-28
 
 ### 第一次流片工艺
 [[王科琪]]， [[何野]]
+- 清洗![clean.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/clean.png)
 - 刻蚀台面
     - 涂光刻胶（负胶）
     - 光刻显影台面（M1）
     - 刻蚀台面（四块2cmX2cm的片子由纳米所代做）
+	![刻蚀1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%801.png)
+	![刻蚀2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%802.png)
+
+
 - 制造电极  
     - 涂光刻胶（负胶）
-    - 光刻显影P电极（M2）
+    - 光刻显影P电极（M2）![M2-1-3-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-3-50.jpg)
+    ![M2-1-2-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-2-50.jpg)
+
     - 电子束蒸发Ni/Ti/Al=60/30/80nm
     - 金属剥离、清洗
+    ![20230404_15_2.JPG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230404_15_2.JPG)
+
+	![20230404_15_5.JPG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230404_15_5.JPG)
+
     - 淀积N电极
     - 退火
 - 淀积钝化层
     - PECVD淀积钝化层（364nm）
+    ![SICAR1_2_3.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/SICAR1_2_3.jpg)
+
     - 光刻显影（M2）
     - 刻蚀氧化层
 -  制造Pad
