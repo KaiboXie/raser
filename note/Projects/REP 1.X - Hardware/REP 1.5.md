@@ -5,8 +5,13 @@ Author: 何野 解凯博
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-04-25
+Updated: 2023-05-04
 ---
+
+# 正在进行的工作
+-  [x] 使用alibava替代T1做NJU-SiC-PIN的β测试
+	-  [x] 制作可以供NJU-SiC-PIN使用的Detector Board（已完成制作，厂商已快递发出）
+	-  [ ] 制作固定Daughter Board和Detector Board的底板（已完成设计，待加工）
 
 # T1 fabrication
 
