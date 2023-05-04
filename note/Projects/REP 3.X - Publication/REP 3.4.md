@@ -52,6 +52,16 @@ Updated: 2023-04-01
 	-  [x] 全文达到投稿要求
 	-  [x] 投稿杂志期刊 
 
+- v1.1 (due 2023-05-05)
+	-  [ ] Reply to reviewers
+	-  [ ] What's the key point of the paper?  
+	-  [ ] Store the data to a central place on server 
+- v1.2 (due 2023-05-12)
+	-  [ ] Add systematic and statistical error  
+	-  [ ] (if able) refine data
+		-  [ ] take trapping time into account
+		-  [ ] simulate guard ring to change the field
+
 
 ##  Log 
 
