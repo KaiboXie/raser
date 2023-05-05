@@ -26,8 +26,16 @@ Created: 2023-04-11
 # 当前进度
 
 4.24-5.6
-- 完成同一电极在不同位置入射粒子下的电荷收集效率
-- strip加入红光tct扫描
+- 粒子入射位置距电极中心距离变化时电荷收集效率的变化（同样情况平板电极电荷收集效率视为100%）![|500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/canvas.png)
+- strip加入红光（660）tct单个示例（批量在跑中）![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/laser.png)
+![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/NO.1eletrode.png)
+![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/NO.2eletrode.png)
+![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/NO.3eletrode.png)
+![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/NO.4eletrode.png)
+![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/NO.5eletrode.png)
+![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/E.png)
+- 收缩加权场边界未能实现
+- 
 
 [[2023-04-10-TEAM]]
 -  [x] si strip模拟中计算电荷收集效率
