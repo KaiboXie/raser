@@ -1,7 +1,7 @@
 ---
 REP: 1.2
 Title: SICAR1 Fabrication
-Author: 张希媛、王聪聪,何野
+Author: 张希媛、王聪聪,何野，王科琪
 Status: Active
 Todo: 科琪上传第一次流片结果，何野测试IC和CV
 Type: Hardware 
@@ -27,9 +27,11 @@ Updated: 2023-04-28
     ![M1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/7014bb4b7ac4846c4677685ea976e33.png)
 - M2
     ![M2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/24d01f4c8216f032963ad5bf83012c0.png)
-
 - M3
     ![M3.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/74c68ea12c0d1f5b3ad4f171863d8e7.png)
+- M4钝化层
+    ![M4.png |400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3e5f112e22f4965936333807e059b48.png)
+   
 
 ### 第一次流片工艺
 [[王科琪]]， [[何野]]
