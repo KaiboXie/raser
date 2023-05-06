@@ -53,14 +53,15 @@ Updated: 2023-04-01
 	-  [x] 投稿杂志期刊 
 
 - v1.1 (due 2023-05-05)
-	-  [ ] Reply to reviewers
-	-  [ ] What's the key point of the paper?  
-	-  [ ] Store the data to a central place on server 
+	-  [ ] 做literature，确立文章创新点
+	-  [ ] 明确数据储存的位置
 - v1.2 (due 2023-05-12)
-	-  [ ] Add systematic and statistical error  
-	-  [ ] (if able) refine data
-		-  [ ] take trapping time into account
-		-  [ ] simulate guard ring to change the field
+	-  [ ] 对主要数据处理过程做误差分析
+	-  [ ] 重制文章主要数据部分
+		-  [ ] trapping time
+		-  [ ] guard ring侧面结构
+- v1.3 
+	-  [ ] 回复编辑部/预备重投稿
 
 
 ##  Log 
