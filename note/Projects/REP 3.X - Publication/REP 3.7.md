@@ -19,7 +19,7 @@ Updated: 2023-04-25
 -  [x] Hardware 
 	-  [x] NJU SiC LGAD [[REP 1.1]]
 -  [x] Software 
-	-  [x] Simulation: 
+	-  [x] Simulation: SiC in proton beam monitor REP signal after electronics[[REP 2.14]]
 -  [x] Presentation
 	-  [x] [[何野]] The 41st RD50 Workshop [slides](https://indico.cern.ch/event/1132520/contributions/5149453/attachments/2556919/4406364/SiC%20for%20beam%20monitor%20system.pdf)
 
