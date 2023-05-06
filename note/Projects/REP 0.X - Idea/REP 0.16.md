@@ -16,16 +16,16 @@ Updated: 2023-04-28
 
 Si LGAD edge + SiC PIN 辐照 top 
 
-- 实物装置：搭建edge-TCT测试系统  +REP 
+- 实物装置：搭建edge-TCT测试系统  [[REP 1.7]] 
 	1. NTK 375nm激光器
 	2. 聚焦筒镜
 	3. 移动平台 
 - 文章成果：实现RASER模拟软件中对于edge-TCT测试方法功能 ==7月底之前== 
-	1. P4：Si LGAD edge-TCT实验与模拟检验  [[REP 3.4]] 
-	2. SiC PIN 辐照前后，top-TCT 
+	1. P4：Si LGAD edge-TCT实验与模拟检验  [[REP 3.4]]  
+	2. SiC PIN 辐照前后，top-TCT [[REP 2.8]]  
 		1. 实验数据，算trapping time 
 		2. NGSpice电路读出 
-		3. RASER模拟，DEVSIM辐照后的电场 
+		3. ==RASER模拟，DEVSIM辐照后的电场== 
 	3. SiC PIN 辐照前后，beta 
 		1. 实验数据 
 		2. RASER模拟 
