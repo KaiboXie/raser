@@ -21,6 +21,13 @@ Created: 2023-04-11
 
 第一步 在devsim中获取辐照后碳化硅器件的CV与电场
 
+第1.5步 复现Schwandt 2018中HPK硅器件的CV与电场
+
+- 要点：
+	- impact ionisation model from van Overstraeten - de Man
+	- HPTM：$N=g\Phi, \sigma_e, \sigma_h$
+	- trap-assisted tunneling model from Hurkx
+
 目前进度
 
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/1D_HPK_PIN_irradiation_reverse_c%5E-2v.png)
