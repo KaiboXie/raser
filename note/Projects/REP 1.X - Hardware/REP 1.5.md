@@ -13,17 +13,6 @@ Updated: 2023-05-04
 	-  [x] 制作可以供NJU-SiC-PIN使用的Detector Board（已完成制作，厂商已快递发出）
 	-  [ ] 制作固定Daughter Board和Detector Board的底板（已完成设计，待加工）
 
-# T1 inventory
-|Number|Status|Location|Movement|
-|---|---|---|---|
-|1|未辐照的5mm SiC PIN|B107|-|
-|2|3.9E13质子辐照的5mm SiC PIN|B107|-|
-|3|2.4E14质子辐照的5mm SiC PIN|B107|-|
-|4|7.8E14质子辐照的5mm SiC PIN|B107|-|
-
-
-
-
 # T1 fabrication
 
 [[何野]]
