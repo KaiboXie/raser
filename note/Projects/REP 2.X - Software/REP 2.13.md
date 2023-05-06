@@ -9,7 +9,7 @@ Updated:
 ---
 
 
-# 3D-SiC SIMULATION
+# 2D-SiC SIMULATION
 [[赵森]]
 ## 有限元方法
 
