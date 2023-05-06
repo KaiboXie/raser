@@ -12,6 +12,24 @@ Updated: 2023-04-28
 # 碳化硅探测器快速仿真软件辐射效应电场模拟的研究
 
 
+## Overview
+
+Si LGAD edge + SiC PIN 辐照 top 
+
+- 实物装置：搭建edge-TCT测试系统  [[REP 1.7]] 
+	1. NTK 375nm激光器
+	2. 聚焦筒镜
+	3. 移动平台 
+- 文章成果：实现RASER模拟软件中对于edge-TCT测试方法功能 ==7月底之前== 
+	1. P4：Si LGAD edge-TCT实验与模拟检验  [[REP 3.4]]  
+	2. SiC PIN 辐照前后，top-TCT [[REP 2.8]]  
+		1. 实验数据，算trapping time 
+		2. NGSpice电路读出 
+		3. ==RASER模拟，DEVSIM辐照后的电场== 
+	3. SiC PIN 辐照前后，beta 
+		1. 实验数据 
+		2. RASER模拟 
+
 
 ## 研究背景
 
@@ -26,17 +44,4 @@ Updated: 2023-04-28
 ## 预期成果
 
 ![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230430172257.png)
-- 实物装置：搭建edge-TCT测试系统 
-	1. NTK 375nm激光器
-	2. 聚焦筒镜
-	3. 移动平台 [[王泓博]] 
-- 文章成果：实现RASER模拟软件中对于edge-TCT测试方法功能 ==7月底之前== 
-	1. P4：Si LGAD edge-TCT实验与模拟检验 [[符晨曦]] [[王浩博]] 
-	2. SiC PIN 辐照前后，top-TCT
-		1. 实验数据，算trapping time [[何野]] 
-		2. NGSpice电路读出 [[解凯博]] [[王浩博]] 
-		3. RASER模拟，DEVSIM辐照后的电场 [[石航瑞]] 
-	3. SiC PIN 辐照前后，beta
-		1. 实验数据 [[何野]] 
-		2. RASER模拟 [[石航瑞]] 
 
