@@ -17,7 +17,7 @@ Updated: 2023-04-25
 ## Overview 
 
 -  [x] Hardware 
-	-  [x] NJU SiC LGAD [[REP 1.1]]
+	-  [x] NJU SiC PIN [[REP 1.1]]
 -  [x] Software 
 	-  [x] Simulation: SiC in proton beam monitor REP signal after electronics[[REP 2.14]]
 -  [x] Presentation
