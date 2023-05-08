@@ -7,7 +7,6 @@ Type: Software
 Created: 2023-04-11
 ---
 
-
 # Edge-TCT on SiC 
 
 [[王浩博]]
@@ -32,7 +31,13 @@ Edge-TCT是一种常用的半导体探测器电学特性的测试方法。使用
 |波长$\lambda$(nm)|脉冲宽度$\tau$(ps)|光斑尺寸S(um)|重复频率(Hz)|穿透深度(um)|单个能量| 
 |---|---|---|---|---|---|
 |370-375nm|<100ps|<10um|100-1000|>1000|100-1000MIPS|
-
+SiC1000um穿透波长
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/bbab9db5c296a59cbfdc2dade5859ca.png)
 现在与北京凌云光电沟通激光器及聚焦系统的升级
-RASER现有程序得到的仿真结果出现奇怪的双峰结构
+RASER现有程序得到的仿真结果
+典型波形
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/20230403012026.png)
+波形：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/20230403013326.png)
+相对电场出现奇怪的双峰结构
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/20230403013158.png)
