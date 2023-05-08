@@ -12,6 +12,10 @@ from raser.model import Mobility
 from raser.model import Avalanche
 from raser.model import Vector
 
+t_bin = 50e-12
+t_end = 60e-9
+t_start = 0
+
 class Carrier:
     """
     Description:
@@ -192,6 +196,11 @@ class CalCurrent:
         
         self.drifting_loop(my_d, my_f)
 
+        self.t_bin = t_bin
+        self.t_end = t_end
+        self.t_start = t_start
+        self.n_bin = int((self.t_end-self.t_start)/self.t_bin)
+
         self.current_define(my_f.tol_elenumber)
         for i in range(my_f.tol_elenumber):
             self.sum_cu[i].Reset()
@@ -200,9 +209,10 @@ class CalCurrent:
         self.get_current(my_d,my_f.tol_elenumber)
         if my_d.det_model == "lgad3D":
             self.gain_current = CalCurrentGain(my_d, my_f, self)
-            self.gain_positive_cu.Reset()
-            self.gain_negative_cu.Reset()
-            self.get_current_gain()
+            for i in range(my_f.tol_elenumber):
+                self.gain_positive_cu[i].Reset()
+                self.gain_negative_cu[i].Reset()
+            self.get_current_gain(my_f.tol_elenumber)
 
     def drifting_loop(self, my_d, my_f):
         for electron in self.electrons:
@@ -229,11 +239,6 @@ class CalCurrent:
         @Modify:
             2021/08/31
         """
-        self.t_bin = 50e-12
-        self.t_end = 60e-9
-        self.t_start = 0
-        self.n_bin = int((self.t_end-self.t_start)/self.t_bin)
-
         self.positive_cu=[]
         self.negative_cu=[]
         self.gain_positive_cu=[]
@@ -241,15 +246,15 @@ class CalCurrent:
         self.sum_cu=[]
 
         for i in range(tol_elenumber):
-            self.positive_cu.append(ROOT.TH1F("charge+"+str(i), "Positive Current",
+            self.positive_cu.append(ROOT.TH1F("charge+"+str(i+1), " No."+str(i+1)+"Positive Current",
                                         self.n_bin, self.t_start, self.t_end))
-            self.negative_cu.append(ROOT.TH1F("charge-"+str(i), "Negative Current",
+            self.negative_cu.append(ROOT.TH1F("charge-"+str(i+1), " No."+str(i+1)+"Negative Current",
                                         self.n_bin, self.t_start, self.t_end))
-            self.gain_positive_cu.append(ROOT.TH1F("gain_charge+"+str(i),"Gain Positive Current",
+            self.gain_positive_cu.append(ROOT.TH1F("gain_charge+"+str(i+1)," No."+str(i+1)+"Gain Positive Current",
                                         self.n_bin, self.t_start, self.t_end))
-            self.gain_negative_cu.append(ROOT.TH1F("gain_charge-"+str(i),"Gain Negative Current",
+            self.gain_negative_cu.append(ROOT.TH1F("gain_charge-"+str(i+1)," No."+str(i+1)+"Gain Negative Current",
                                         self.n_bin, self.t_start, self.t_end))
-            self.sum_cu.append(ROOT.TH1F("charge"+str(i),"Total Current"+" No."+str(i+1)+"electron",
+            self.sum_cu.append(ROOT.TH1F("charge"+str(i+1),"Total Current"+" No."+str(i+1)+"electrode",
                                     self.n_bin, self.t_start, self.t_end))
             
         
@@ -295,11 +300,13 @@ class CalCurrent:
             self.sum_cu[i].Add(self.positive_cu[i])
             self.sum_cu[i].Add(self.negative_cu[i])
 
-    def get_current_gain(self):
-        self.gain_negative_cu = self.gain_current.negative_cu
-        self.gain_positive_cu = self.gain_current.positive_cu
-        self.sum_cu.Add(self.gain_positive_cu)
-        self.sum_cu.Add(self.gain_negative_cu)
+    def get_current_gain(self,tol_elenumber):
+        for i in range(tol_elenumber):
+            self.gain_negative_cu[i] = self.gain_current.negative_cu[i]
+            self.gain_positive_cu[i] = self.gain_current.positive_cu[i]
+        for i in range(tol_elenumber):
+            self.sum_cu[i].Add(self.gain_negative_cu[i])
+            self.sum_cu[i].Add(self.gain_positive_cu[i])
     
 class CalCurrentGain(CalCurrent):
     '''Calculation of gain carriers and gain current, simplified version'''
@@ -316,13 +323,15 @@ class CalCurrentGain(CalCurrent):
                                               hole.path[-1][1],\
                                               my_d.avalanche_bond,\
                                               hole.path[-1][3],\
-                                              -1*hole.charge*gain_rate))
+                                              -1*hole.charge*gain_rate,\
+                                                my_f.tol_elenumber))
                 if gain_rate>5:
                     self.holes.append(Carrier(hole.path[-1][0],\
                                               hole.path[-1][1],\
                                               my_d.avalanche_bond,\
                                               hole.path[-1][3],\
-                                              hole.charge*gain_rate/np.log(gain_rate)))
+                                              hole.charge*gain_rate/np.log(gain_rate),\
+                                                my_f.tol_elenumber))
 
         else : # n layer at d=0, electrons multiplicated into holes
             for electron in my_current.electrons:
@@ -330,20 +339,28 @@ class CalCurrentGain(CalCurrent):
                                           electron.path[-1][1],\
                                           my_d.avalanche_bond,\
                                           electron.path[-1][3],\
-                                          -1*electron.charge*gain_rate))
+                                          -1*electron.charge*gain_rate,\
+                                            my_f.tol_elenumber))
                 if gain_rate>5:
                     self.electrons.append(Carrier(electron.path[-1][0],\
                                                   electron.path[-1][1],\
                                                   my_d.avalanche_bond,\
                                                   electron.path[-1][3],\
-                                                  electron.charge*gain_rate/np.log(gain_rate)))
+                                                  electron.charge*gain_rate/np.log(gain_rate),\
+                                                    my_f.tol_elenumber))
 
         self.drifting_loop(my_d, my_f)
 
-        self.current_define()
-        self.positive_cu.Reset()
-        self.negative_cu.Reset()
-        self.get_current()
+        self.t_bin = t_bin
+        self.t_end = t_end
+        self.t_start = t_start
+        self.n_bin = int((self.t_end-self.t_start)/self.t_bin)
+
+        self.current_define(my_f.tol_elenumber)
+        for i in range(my_f.tol_elenumber):
+            self.positive_cu[i].Reset()
+            self.negative_cu[i].Reset()
+        self.get_current(my_d,my_f.tol_elenumber)
 
     def gain_rate(self, my_d, my_f, my_ava):
 
@@ -391,7 +408,7 @@ class CalCurrentGain(CalCurrent):
         gain_rate = exp_list[n-2]/(1-det) -1
         return gain_rate
 
-    def current_define(self):
+    def current_define(self,tol_elenumber):
         """
         @description: 
             Parameter current setting     
@@ -404,32 +421,51 @@ class CalCurrentGain(CalCurrent):
         @Modify:
             2021/08/31
         """
-        self.t_bin = 50e-12
-        self.t_end = 5.0e-9
-        self.t_start = 0
-        self.n_bin = int((self.t_end-self.t_start)/self.t_bin)
+        self.positive_cu=[]
+        self.negative_cu=[]
 
-        self.positive_cu = ROOT.TH1F("gain_charge+","Gain Positive Current",
-                                     self.n_bin, self.t_start, self.t_end)
-        self.negative_cu = ROOT.TH1F("gain_charge-","Gain Negative Current",
-                                     self.n_bin, self.t_start, self.t_end)
+        for i in range(tol_elenumber):
+            self.positive_cu.append(ROOT.TH1F("gain_charge+"+str(i+1)," No."+str(i+1)+"Gain Positive Current",
+                                        self.n_bin, self.t_start, self.t_end))
+            self.negative_cu.append(ROOT.TH1F("gain_charge-"+str(i+1)," No."+str(i+1)+"Gain Positive Current",
+                                        self.n_bin, self.t_start, self.t_end))
         
-    def get_current(self):
+    def get_current(self,my_d,tol_elenumber):
         test_p = ROOT.TH1F("test+","test+",self.n_bin,self.t_start,self.t_end)
         test_p.Reset()
-        for hole in self.holes:
-            for i in range(len(hole.path)-1):
-                test_p.Fill(hole.path[i][3],hole.signal[i]/self.t_bin)# time,current=int(i*dt)/Δt
-            self.positive_cu.Add(test_p)
-            test_p.Reset()
+        for j in range(tol_elenumber):
+            sum_max_hole=0
+            sum_min_hole=0
+            for hole in self.holes:
+                if (len(hole.signal[j])!=0):
+                    sum_max_hole=sum_max_hole+max(hole.signal[j])/self.t_bin
+                    sum_min_hole=sum_min_hole+min(hole.signal[j])/self.t_bin
+            if(sum_max_hole<1e-11 or abs(sum_min_hole)<1e-11) and (my_d.det_model == "Si_Strip"):
+                pass
+            else:
+                for hole in self.holes:
+                    for i in range(len(hole.path)-1):
+                        test_p.Fill(hole.path[i][3],hole.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
+                    self.positive_cu[j].Add(test_p)
+                    test_p.Reset()
 
         test_n = ROOT.TH1F("test-","test-",self.n_bin,self.t_start,self.t_end)
         test_n.Reset()
-        for electron in self.electrons:             
-            for i in range(len(electron.path)-1):
-                test_n.Fill(electron.path[i][3],electron.signal[i]/self.t_bin)# time,current=int(i*dt)/Δt
-            self.negative_cu.Add(test_n)
-            test_n.Reset()
+        for j in range(tol_elenumber):
+            sum_max_electron=0
+            sum_min_electron=0
+            for electron in self.electrons:
+                if (len(electron.signal[j])!=0):
+                    sum_max_electron=sum_max_electron+max(electron.signal[j])/self.t_bin
+                    sum_min_electron=sum_min_electron+min(electron.signal[j])/self.t_bin
+            if(sum_max_hole<1e-11 or abs(sum_min_hole)<1e-11) and (my_d.det_model == "Si_Strip"):
+                pass
+            else:
+                for electron in self.electrons:             
+                    for i in range(len(electron.path)-1):
+                        test_n.Fill(electron.path[i][3],electron.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
+                    self.negative_cu[j].Add(test_n)
+                    test_n.Reset()
 
 class CalCurrentG4P(CalCurrent):
     def __init__(self, my_d, my_f, my_g4p, batch):
@@ -509,7 +545,6 @@ class CarrierListFromG4P:
                 if len(p_step)>1:
                     particle_number=1+particle_number
                     total_step=len(p_step)+total_step
-            
             for j in range(len(my_g4p.p_steps_current)):
                 if(len(my_g4p.p_steps_current[j])>((total_step/particle_number)*0.5)):
                     self.batch_def(my_g4p,j)

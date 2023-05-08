@@ -61,7 +61,7 @@ def save(dset,my_d,my_l,ele_current,my_f,key):
     elif "lgad3D" in my_d.det_model:
         path = os.path.join("output", "lgadtct", dset.det_name, )
     create_path(path) 
-    L=eval("round(my_l.{})".format(key))
+    L=eval("my_l.{}".format(key))
     #L is defined by different keys
     for j in range(my_f.tol_elenumber):
         volt = array('d', [999.])
@@ -296,7 +296,7 @@ def get_f_v(i_x,i_y,i_z,model,my_f,plane,e_v,d_r,k):
         e_v.SetTitle("potential "+d_r[4])
         f_v=my_f.get_potential(input_x,input_y,input_z)
     elif model =="WP":
-        e_v.SetTitle("weighting potential "+d_r[4]+" No."+str(k-2)+"electron") 
+        e_v.SetTitle("weighting potential "+d_r[4]+" No."+str(k-2)+"electrode") 
         f_v=my_f.get_w_p(input_x,input_y,input_z,k-3)
     return f_v,e_v
 
@@ -464,8 +464,8 @@ def draw_plot(my_d, my_current, ele_current, tol_elenumber, model, path, tag="")
     #legend.SetTextSize(42)
     legend.Draw("same")
     c.Update()
-    c.SaveAs(path+model+my_d.det_model+tag+"No_"+str(tol_elenumber+1)+"electron"+"_basic_infor.pdf")
-    c.SaveAs(path+model+my_d.det_model+tag+"No_"+str(tol_elenumber+1)+"electron"+"_basic_infor.root")
+    c.SaveAs(path+model+my_d.det_model+tag+"No_"+str(tol_elenumber+1)+"electrode"+"_basic_infor.pdf")
+    c.SaveAs(path+model+my_d.det_model+tag+"No_"+str(tol_elenumber+1)+"electrode"+"_basic_infor.root")
     del c
 
 def draw_drift_path(my_d,my_f,my_current,path):
@@ -749,9 +749,80 @@ def save_current(dset,my_d,my_l,my_current,my_f,key):
     t_out.Branch("time", time, "time/D")
     for i in range(my_f.tol_elenumber):
         t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
-    for j in range(my_current.n_bin):
-        current[0]=my_current.sum_cu[i].GetBinContent(j)
-        time[0]=j*my_current.t_bin
+        for j in range(my_current.n_bin):
+            current[0]=my_current.sum_cu[i].GetBinContent(j)
+            time[0]=j*my_current.t_bin
+            t_out.Fill()
+        t_out.Write()
+        fout.Close()
+
+def set_input(dset,my_current,my_l,my_d,key):
+    if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
+        path = os.path.join('output', 'pintct', dset.det_name, )
+    elif "lgad3D" in my_d.det_model:
+        path = os.path.join('output', 'lgadtct', dset.det_name, )
+    L = eval("round(my_l.{})".format(key))
+    current=[]
+    time=[]
+    myFile = ROOT.TFile(os.path.join(path,"sim-TCT-current")+str(L)+".root")
+    myt = myFile.tree
+    for entry in myt:
+       current.append(entry.current0)
+       time.append(entry.time)
+    input_c=[]
+    if abs(min(current))>max(current): #set input signal
+        c_max=min(current)
+        for i in range(0, len(current)):
+            if current[i] < c_max * 0.01:
+                input_c.append(str(0))
+                input_c.append(str(0))
+                input_c.append(str(time[i]))
+                input_c.append(str(0))
+                break
+            else:
+                current[i]=0
+        for j in range(i, len(current)):
+            input_c.append(str(time[j]))
+            input_c.append(str(current[j]))
+            if current[j] > c_max * 0.01:
+                break
+        input_c.append(str(time[j]))
+        input_c.append(str(0))
+        input_c.append(str(time[len(time)-1]))
+        input_c.append(str(0))
+        for k in range(j, len(current)):
+            current[i]=0
+    else:
+        c_max=max(current)
+        for i in range(0, len(current)):
+            current[i]=0
+            if current[i] > c_max * 0.01:
+                input_c.append(str(0))
+                input_c.append(str(0))
+                input_c.append(str(time[i]))
+                input_c.append(str(0))
+                break
+        for j in range(i, len(current)):
+            input_c.append(str(time[j]))
+            input_c.append(str(current[j]))
+            if current[j] < c_max * 0.01:
+                break
+        input_c.append(str(time[j]))
+        input_c.append(str(0))
+        input_c.append(str(time[len(time)-1]))
+        input_c.append(str(0))
+        for k in range(j, len(current)):
+            current[i]=0
+    in_put=array("d",[0.])
+    t=array("d",[0.])
+    fout = ROOT.TFile(os.path.join(path, "input") + str(L) + ".root", "RECREATE")
+    t_out = ROOT.TTree("tree", "signal")
+    t_out.Branch("time", t, "time/D")
+    t_out.Branch("current", in_put, "current/D")
+    for m in range(my_current.n_bin):
+        in_put[0]=current[m]
+        t[0]=time[m]
         t_out.Fill()
     t_out.Write()
     fout.Close()
+    return input_c
