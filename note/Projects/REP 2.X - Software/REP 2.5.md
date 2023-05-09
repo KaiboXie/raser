@@ -5,6 +5,7 @@ Author: 李再一
 Status: 
 Type: Software 
 Created: 2023-04-05
+Updated: 2023-05-08
 ---
 
 # Improvement of Physics models in DEVSIM simulation
@@ -40,3 +41,8 @@ $R_{SRH}=\frac{np-n_i^2}{\tau_p(F)[n+n_i exp(\frac{E_t-E_i}{kT})]+\tau_n(F)[p+n_
 通常$\tau_n=\frac{1}{N_tr_n}$
 在电场的作用下，$\tau_n=\frac{\tau_n}{1+g(F)}$
 电场极强的情况下，载流子运动速度过快不能复合，可以直接忽略代表复合的np项
+
+在Hurkx发表在1992年的论文中，表述方式是：载流子的复合过程除了通常的SRH复合，还可以通过缺陷产生隧穿效应，因此，考虑缺陷存在时总的复合率：$R_{trap}(x)=(1+\Gamma(x))R_{SRH}(x)$ 
+其中 $\Gamma=2\sqrt{3\pi}\frac{|F|}{F_{\Gamma}}exp(F/F_{\Gamma})^2$  ,  $F_{\Gamma}=\frac{\sqrt{24m^*(kT)^3}}{q\hbar}$  
+$m^*$是有效质量，在文献中取$m^*=0.25m_0$  
+而且这个表达式只适用于场强不太高的情况。
