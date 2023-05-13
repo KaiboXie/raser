@@ -5,8 +5,17 @@ Author: 何野 解凯博
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-04-25
+Updated: 2023-05-09
 ---
+
+# 正在进行的工作
+-  [x] 使用alibava替代T1做NJU-SiC-PIN的β测试
+	-  [x] 制作可以供NJU-SiC-PIN使用的Detector Board
+	-  [x] 制作固定Daughter Board和Detector Board的底板
+	-  [ ] 使用1.5 * 1.5 NJU-SiC-PIN进行β测试采集数据
+
+
+
 
 # T1 fabrication
 
@@ -25,6 +34,13 @@ Updated: 2023-04-25
 目前T1第一版已经生产完成
 	实物图
 ![T1_v1.0.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_v1.0.jpg)
+
+LTspice仿真结果：
+	输入信号：10μA的脉冲电流
+	![input.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230206143912.png)
+	输出信号：
+	![output.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230206143644.png)
+	
 
 - [ ] T1第一版的测试
 	- [ ] 355nm激光
