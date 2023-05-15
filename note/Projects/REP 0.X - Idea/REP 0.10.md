@@ -18,3 +18,7 @@ Updated: 2023-04-25
 
 ### 2021-03-19 
 
+### 2023-05-13
+第三届半导体辐射探测器研讨会 http://cicpi.ustc.edu.cn/indico/conferenceOtherViews.py?confId=5064&view=standard
+1. 金刚石束流监控HEPS 贺静奎 
+2. 硅微条径迹探测器读出芯片的辐照效应研究 陆卫国 http://cicpi.ustc.edu.cn/indico/getFile.py/access?contribId=61&sessionId=0&resId=0&materialId=slides&confId=5064 预辐照，SEE单事例效率，Gray+Neq
