@@ -25,7 +25,7 @@ Created: 2023-04-05
 - 模拟了1.1.1的图并了解其结构
 - 学习了python和geant4，了解了raser的架构
 - 画出120Gev的π+介子经过两篇telescope的geant4的图
-![telescope|300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/120Gev%CF%80+.png)
+![telescope|360](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/120Gev%E7%9A%84%CF%80+.png)
 ---
 
 
