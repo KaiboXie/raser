@@ -17,7 +17,7 @@ Created: 2023-04-11
 
 ## Particle and Signal
 
-[2023-03-13-TEAM]]
+[[2023-03-13-TEAM]]
 -  [x] 增大模拟事件量获得gamma粒子在sic中的能量沉积
 -  [ ] si strip初步
 	-  [x] 了解熟悉当前raser中构建电场部分代码
