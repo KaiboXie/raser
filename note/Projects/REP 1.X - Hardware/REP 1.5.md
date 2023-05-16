@@ -12,7 +12,7 @@ Updated: 2023-05-09
 -  [x] 使用alibava替代T1做NJU-SiC-PIN的β测试
 	-  [x] 制作可以供NJU-SiC-PIN使用的Detector Board
 	-  [x] 制作固定Daughter Board和Detector Board的底板
-	-  [ ] 使用1.5 * 1.5 NJU-SiC-PIN进行β测试采集数据
+	-  [x] 使用1.5 * 1.5 NJU-SiC-PIN进行β测试采集数据
 
 
 
