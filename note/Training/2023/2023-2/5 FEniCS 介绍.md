@@ -32,6 +32,64 @@ $$
 $$
 电极上具有边界条件$U_{electrode\ i}=0\ or\ 1$，读出电极置1，其余置0.
 
+定理证明：
+对于探测器体系内的电势$U$,由叠加原理，总可以把它拆分成$U_0,U_s,U_q$三部分，其中$U_0$为各极板上带电形成的场，$U_s$为体系内固定位置电荷形成的场，$U_q$为漂移电荷自身的场。
+各极板上的感应电荷总量就可以写成
+$$
+Q_i=\varepsilon\oint \vec E \cdot d\vec S=\varepsilon\oint \vec E_0 \cdot d\vec S+\varepsilon\oint \vec E_s \cdot d\vec S+\varepsilon\oint \vec E_q \cdot d\vec S
+$$
+接下来，将体系拆解成无电荷有边值的$U_0$部分和有电荷无边值的$U_1=U_s+U_q$部分。
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%88%AA%E5%B1%8F2023-05-17%2011.11.56.png)
+现在在$U_1$场中考虑走过一段路径的载流子（带电q），体系对它做功，亦即体系电磁能变化为
+$$
+W_q=\int_{x_i}^{x_f}q\vec E_s\cdot d \vec x =\frac{1}{2}\varepsilon\int_\Omega (E_{1i}^2-E_{1f}^2)\ dV
+$$
+（由于所有电极在$U_1$场中全部接地，故不对电荷做功）
+回到现实中，由于存在电极上的场，电磁能变化修改为
+$$
+\begin{split}
+W_q&=\int_{x_i}^{x_f}q(\vec E_0 +\vec E_s)\cdot d \vec x-\sum_LU_L\Delta Q_L \\&=\frac{1}{2}\varepsilon\int_\Omega ((\vec E_0+\vec E_{1i})^2-(\vec E_0+\vec E_{1f})^2)\ dV
+\end{split}
+$$
+其中第一行第二项为电场对各个电极上的自由电荷做功，导致各个电极上电荷量变化了。
+又由于右式可以推出
+$$
+\begin{split}
+LHS&=\frac{1}{2}\varepsilon\int_\Omega ((\vec E_0+\vec E_{1i})^2-(\vec E_0+\vec E_{1f})^2)\ dV
+\\&=\frac{1}{2}\varepsilon\int_\Omega(E_{1i}^2-E_{1f}^2)+2\vec E_0\cdot(\vec E_{1i}-\vec E_{1f})dV
+\\&=\frac{1}{2}\varepsilon\int_\Omega(E_{1i}^2-E_{1f}^2)dV
+\end{split}
+$$
+因为由格林第一公式，考虑到$U_0$无电荷，$U_1$无边值：
+$$
+\begin{split}
+\int_\Omega \vec E_0\cdot\vec E_1 dV 
+&= \int_\Omega \nabla U_0\cdot\nabla U_1 dV
+\\&= \int_{\partial\Omega} U_1\nabla U_0\cdot d\vec S-\int_\Omega U_1\nabla^2 U_0dV =0
+\end{split}
+$$
+故有偏压式与无偏压式相减，得到
+$$
+\sum_LU_L\Delta Q_L = \int_{x_i}^{x_f}q\vec E_0 \cdot d \vec x=-q(U_0(x_f)-U_0(x_i))
+$$
+又由于$U_0$必然是各个电极产生的净电势的的线性叠加，即
+$U_0(x)=\sum_L U_{0,L}(x)$，且显然$U_{0,L}$满足
+$$
+\nabla^2 U_{0,L}=0,U_{0,L}(x\ on\ \partial \Omega)=0\ or\ U_L
+$$
+故对每个电极必有
+$$
+\Delta Q_L=-q(U_{w,L}(x_f)-U_{w,L}(x_i))
+$$
+此处$U_{w,L}=U_{0,L}/U_L$ ，亦即
+$$
+\nabla^2 U_{w,L}=0,U_{w,L}(x\ on\ \partial \Omega)=0\ or\ 1
+$$
+对时间求导即可得
+$$
+I_L=-q\frac{dU_w(x(t))}{dt}=-q\cdot-\nabla U_w\cdot\frac{d\vec x}{dt}=q\vec E_w\cdot\vec v
+$$
+
 得到的物理结果：
 
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/planar3Dxz2500.0.jpg)
