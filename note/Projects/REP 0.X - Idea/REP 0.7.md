@@ -14,6 +14,32 @@ Updated: 2023-04-25
 [[史欣]]
 
 
+## Release 
+
+
+### 4.X 
+
+- Goal:  reduce the library, one task with one software 
+
+#### v4.0  (2024-01-01)
+
+- Debian: 12.0 
+- Geant4: 
+- ROOT: 
+- DEVSIM 
+- Remove FEniCS (focus on DEVSIM)
+- Remove matplotlib (focus on ROOT)
+
+### 3.X 
+
+- Debian: 11.5
+- FEniCS 
+- ROOT: 6.26.06
+- Geant4: 10.7.p02 
+- DEVSIM 
+
+
+
 ## Log
 
 
