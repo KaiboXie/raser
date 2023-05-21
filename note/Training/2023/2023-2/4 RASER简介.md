@@ -62,13 +62,14 @@ $$I=I_0\cdot exp(-\alpha x)$$
 1. 采用模块化，有一定公用部分，也有各模块独立部分
 2. 使用python语言编写，使用git进行管理
 ---
-#### 程序架构![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230516_shhr_raser_training_jiagou.png)
+#### 程序架构
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230516_shhr_raser_training_jiagou.png)
 
 ---
 ### 目前RASER程序可以实现的功能
 - 对不同的器件
 	- [Si](#HPK-Si-LGAD) & [SiC](#SiC-LGAD) LGAD
-	- [Si](#HPK-Si-PIN) & [SiC ](#NJU-PIN)
+	- [Si](#HPK-Si-PIN) & [SiC ](#NJU-PIN) PIN
 	- [Si Strip](#Si_Strip)
 	- [3D-SiC](#plugin3D)
 ---
@@ -82,8 +83,11 @@ $$I=I_0\cdot exp(-\alpha x)$$
 ---
 ## 附录
 ### 模拟器件参数
-- NJU-PIN <a name="NJU-PIN"></a> 
+
+NJU-PIN
+<h2 name="NJU-PIN"></h2> 
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230516_shhr_raser_training_NJU_PIN.png)
+
 ---
 
 - SiC-LGAD <a name="SiC-LGAD"></a> 
@@ -104,3 +108,45 @@ $$I=I_0\cdot exp(-\alpha x)$$
 
 - Si_Strip  <a name="Si_Strip"></a>
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230516_shhr_raser_training_Si_Strip.png)
+
+### 程序结构
+```mermaid
+flowchart TD
+Setting==参数字典==>Detector & FEniCS & Geant4 & CalCurrent & EleCurrent
+subgraph Setting
+end
+subgraph Detector
+长宽/温度 & 电流数据
+end
+subgraph FEniCS
+电场 & 加权场
+end
+subgraph Geant4
+模拟设备 & 粒子路径
+end
+subgraph CalCurrent
+载流子路径 & 载流子信号 & 增益载流子
+style 增益载流子  
+end
+subgraph Model
+迁移率模型 & 雪崩模型
+style 雪崩模型  
+end
+subgraph EleCurrent
+CSA & BB
+end
+长宽/温度--边界条件-->加权场 & 电场 & 模拟设备
+长宽/温度--游走规则-->粒子路径
+电场--"有效边界条件（3D）"-->模拟设备
+模拟设备--能量/游走规则-->粒子路径
+粒子路径--载流子表-->载流子路径
+电场--欧姆定律-->载流子路径
+迁移率模型-->载流子路径
+载流子路径-->载流子信号
+载流子路径-->增益载流子
+雪崩模型-->增益载流子
+增益载流子-->载流子信号
+加权场--肖克莱-拉莫定理-->载流子信号
+载流子信号--储存-->电流数据
+电流数据--处理-->CSA & BB
+```

@@ -28,6 +28,16 @@ Updated: 2023-05-13
 经过 TCT_T1.py 得到 SiC 在激光照射后输出的电流信号 current:e+h ，根据 current:e+h 在描述 T1 电路的文件 paras/T1.cir 的基础上改写输入电流源得到新的可供 ngspice 执行的文件 output/T1_tmp.cir ，执行 output/T1_tmp.cir 即可得到 T1 输出的电压关于时间的数据并保存至 output/t1.raw 供后续使用ROOT画图
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/500V.jpg)
 
+## Irradiation
+对于不同的辐照损伤，目前使用trapping time在程序中进行模拟。通过模拟结果与实验比对(辐照剂量分别为0, 3.9e13, 7.8e14 ; 模拟上采用的trapping time 分别为：8.9ns, 0.79ns, 0.06ns)
+3.9e13:
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime_compare_3.9e13.png)
+
+7.8e14
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime_compare_7.8e14.png)
+
+各点辐照和trapping time 值：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime01.png)
+
 ## Waveform 
 ### 最新NGspice模拟结果和实验对比
 以500V为基准调整激光单脉冲能量为1.215e-11J，使得实验和模拟结果符合良好![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230505_top_tct_exp_and_sim_compare4_500V.png)
