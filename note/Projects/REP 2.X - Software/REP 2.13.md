@@ -49,9 +49,29 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 ## 当前进度
 
 
+[[2023-05-15-TEAM]]
+简单PN结结构：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/PN%E7%BB%93%E7%BB%93%E6%9E%84.png)
+
+
+不同电压下PN结电场变化
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/PN%E7%BB%93%E7%94%B5%E5%9C%BA%E5%8F%98%E5%8C%96.png)
+	实现对简单PN结的正向偏压电流及电场模拟
+
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BB%BF%E7%9C%9FPN%E7%BB%93I-V%E6%9B%B2%E7%BA%BF.png)
+
+
+
+
+
+
 [[2023-05-06-TEAM]]
 （先按ppt思路重复）
  ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/ppt%E5%99%A8%E4%BB%B6%E7%BB%93%E6%9E%84%E5%92%8C%E7%BD%91%E6%A0%BC.png)
+
+
+
+
  二极管结构并实现局部网格细化
  ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6.png)
  代码运行到这一步就截止了
