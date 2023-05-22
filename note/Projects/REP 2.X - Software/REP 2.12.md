@@ -23,22 +23,13 @@ Created: 2023-04-05
 ## Current progress
 ---
 - 模拟了1.1.1的图并了解其结构
- 
- ![moni.png|300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%A8%A1%E6%8B%9F%E5%9B%BE.png)
-  ![jiegou.png|300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%BB%93%E6%9E%84%E5%9B%BE.png)
-  
 - 学习了python和geant4，了解了raser的架构
+- 画出120Gev的π+介子经过七片si材料的板的geant4的图
+![fig.png|600](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/fig.png)
+- 输出粒子和次级粒子每一个step的位置信息和能量沉积
+![位置.png|800](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BD%8D%E7%BD%AE.png) 问题：一片telescope的各种信息（比如几何，电场，材料等）具体应该是什么？
 ---
-- 在run中建立了关于telescope的6.1.1并上传了相关的代码
- 
- ![daima.png|500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/telescope.png)
 
----
-## Difficulties encountered
-无法在raser上实现可视化
- ![cuowu.png|700](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/2%7DD0H1495Y%25LMU%7B(J_S%60TJN.png)
- 
----
 
 
 
