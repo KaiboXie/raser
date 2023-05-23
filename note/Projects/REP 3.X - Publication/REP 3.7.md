@@ -34,6 +34,6 @@ Updated: 2023-04-25
 
 - 硬件部分[[REP 1.2]]
 	- 辐照后PIN的IV、CV、CCE![charge.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/charge2.1.png)
-	- 工作一年约1e15等效1MeV中子辐照，此时电荷收集效率大约为10%
+	- 工作一年约6e14等效1MeV中子辐照，此时电荷收集效率大约为15%
 - 软件部分：质子通过束流后沉积的能量、通过电子学产生的信号、实际读出的质子数
 - 
