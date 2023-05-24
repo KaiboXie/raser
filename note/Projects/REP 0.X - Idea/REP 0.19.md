@@ -25,6 +25,8 @@ https://root.cern.ch/doc/v622/classROOT_1_1RDataFrame.html
 - REP:  string, e.g. '0.19' 
 - RUN: int, e.g.  25
 - EVENT: int, e.g. 128  
-- Location: /publicfs/atlas/atlasnew/pxl/itk/raser 
+- Location: /publicfs/atlas/atlasnew/silicondet/itk/raser
+
+The folder 'raser' is maintained by 'shixin', and readonly to everyone. 
 
 
