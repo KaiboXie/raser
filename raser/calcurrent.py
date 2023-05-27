@@ -86,7 +86,7 @@ class Carrier:
         
         average_intensity = (intensity+intensity_prime)/2.0*1e4 # V/cm
         mobility = Material(my_d.material)
-        mu = mobility.cal_mobility(my_d.temperature, my_d.Neff(self.d_z+delta_z), self.charge, average_intensity)
+        mu = mobility.cal_mobility(my_d.temperature, my_d.doping_function(self.d_z+delta_z), self.charge, average_intensity)
         velocity = mu*average_intensity
 
         # get diffution from mobility and temperature
@@ -208,7 +208,7 @@ class CalCurrent:
             self.positive_cu[i].Reset()
             self.negative_cu[i].Reset()
         self.get_current(my_d,my_f.tol_elenumber)
-        if my_d.det_model == "lgad3D":
+        if "lgad3D" in my_d.det_model:
             self.gain_current = CalCurrentGain(my_d, my_f, self)
             for i in range(my_f.tol_elenumber):
                 self.gain_positive_cu[i].Reset()
