@@ -1,7 +1,7 @@
 
 ---
 REP: 3.7
-Title: Design and Simulation of 4H-SiC Low Gain Avalanche Diode
+Title: Design of SiC beam monitor online system
 Author: 何野、李星辰、肖素玉
 Status: Draft
 Type: Publication 
