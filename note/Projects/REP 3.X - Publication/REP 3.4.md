@@ -5,7 +5,7 @@ Author: 符晨曦、王浩博、肖素玉
 Status: Revision 
 Type: Publication 
 Created: 2022-10-01
-Team Report: 2023-05-22
+Updated: 2023-04-01
 ---
 
 
@@ -65,29 +65,6 @@ Team Report: 2023-05-22
 
 
 ##  Log 
-
-### 2023-05-22
-当前结果
-	迁移率模型：Reggiani
-	激光腰宽：14um
-	激光脉宽：600ps
-	RC时间常数：500ps
-
-LGAD幅值 电荷 电场 上升时间
-
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Amplitude_comparison.jpg)
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Charge_comparison.jpg)
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Elefield_comparison.jpg)
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/RiseTime_comparison.jpg)
-
-pin幅值 电荷 电场 上升时间
-
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Amplitude_comparison_pin.jpg)
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Charge_comparison_pin.jpg)
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Elefield_comparison_pin.jpg)
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/RiseTime_comparison_pin.jpg)
-
-其他数据对的很好，但是电场数据与波形的具体形状关系很大，不好调
 
 ### 2023-02-21 
 
