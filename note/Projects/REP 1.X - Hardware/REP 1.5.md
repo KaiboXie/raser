@@ -15,8 +15,17 @@ Updated: 2023-05-29
 	-  [x] 使用1.5 * 1.5 NJU-SiC-PIN进行β测试采集数据
 	-  [x] 使用5 * 5 NJU-SiC-PIN进行β测试采集数据
 	-  [ ] 使用金属底板替代塑料底板（降低无效数据在总数据中的比重，加工中）
+	-  [ ] 验证实验测得的噪声是否与之前理论上预估的噪声大小相符
+		-  [ ] 将β测试数据中的ADC转成电荷量，与理论上预计的噪声的电荷量大小对比
+	-  [ ] 了解所用β源的特点
+		-  [ ] β射线从源中出来的位置与源上的标识是否一致
+		-  [ ] β射线从源中出来后发散的程度有多大
+	-  [ ] 使用[[李辉]]已完成的alibava系统测试了解alibava系统
+		-  [ ] 对比自己实验得到的数据确认数据是否正常
+		-  [ ] 如何处理获得的数据
 
-## 安排
+
+## 进度
 - [ ] 使用alibava替代T1测试β信号
 	-  [x] 使用公版的Detector Board实验（高压滤波做法简单）
 		-  [x] 使用1.5mm * 1.5mm NJU-SiC-PIN 阵列
@@ -26,12 +35,14 @@ Updated: 2023-05-29
 			![capture_20230529100058457.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/capture_20230529100058457.bmp)
 			- 可能包含信号
 			![capture_20230529100036139.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/capture_20230529100036139.bmp)
+			- 未看到信号
 		-  [x] 使用5mm * 5mm NJU-SiC-PIN 
 			- 实验数据位置：服务器afs/ihep.ac.cn/users/x/xiekaibo/ALIBAVA/data/20230512pm
 			- 纯噪声
 			![capture_20230529100256146.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/capture_20230529100256146.bmp)
 			- 可能包含信号
 			![capture_20230529100313584.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/capture_20230529100313584.bmp)
+			- 未看到信号
 	-  [ ] 使用新设计的Detector Board实验（使用UCSC的高压滤波电路）
 		-  [ ] 使用1.5mm * 1.5mm NJU-SiC-PIN 
 		-  [ ] 使用5mm * 5mm NJU-SiC-PIN 
