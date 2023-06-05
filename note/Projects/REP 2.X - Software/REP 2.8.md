@@ -6,7 +6,7 @@ Status: Active
 Type: Software
 Created: 2023-04-11
 Updated: 2023-05-30
-Team Report: -
+Team Report: 2023-06-05
 ---
 
 
@@ -38,8 +38,7 @@ Team Report: -
 7.8e14
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime_compare_7.8e14.png)
 
-各点辐照和trapping time 值（横轴辐照采用对数坐标）：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230530_shhr_trappingtime_irradiation_logimage.png)
-trapping time 和irradiation的对数成线性关系![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime01.png)
+各点辐照和trapping time 值：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime01.png)
 
 ## Waveform 
 ### 最新NGspice模拟结果和实验对比
