@@ -7,6 +7,17 @@ Type:  Hardware
 Created: 2023-04-28
 Updated: 2023-05-15
 ---
+## Overview 
+idea
+    - [ ]  [[REP 0.11]]
+Hardware 
+	-  [x]  SiC PIN [[REP 1.4]]
+-  [x] Software 
+	-  [x] Simulation: [[REP 2.5]]	
+	
+- Publication  
+   - [ ] 
+	
 
 
 ## SICAR1，SICAR2 外延片的边角料进行切片 
@@ -70,17 +81,4 @@ Properties of 3C-SiC Grown by Sublimation Epitaxy on Different Type of Substrate
 Microstructural study of ferromagnetic Fe-implanted 6H-SiC
 
 
-DLTS 4H-SiC PIN 辐照前测试结果
 
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605100015.png)
-
-- [ ] 重复测试1.5x1.5mm 样品的IV，CV
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605100213.png)
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605100512.png)
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605100655.png)
-- [ ] 调研文献，给出辐照前更详尽的分析
-- [ ] 在仿真工作中，根据测试结果更新其缺陷信息如缺陷浓度和俘获截面
-- [ ] 辐照前样品的时间分辨测试 beta源测试
-- [ ] 辐照前样品的电荷收集
-- [ ] 准备辐照计划
-- [ ] 辐照后DLTS测试
