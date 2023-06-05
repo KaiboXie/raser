@@ -21,6 +21,15 @@ Updated: 2023-05-31
 
 
 ## 芯片外延
+SICAR1设计参数
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110358.png)
+
+SICAR1 出厂测试结果
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110443.png)
+
+SICAR1 SIMS测试结果
+
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110633.png)
 
 
 
