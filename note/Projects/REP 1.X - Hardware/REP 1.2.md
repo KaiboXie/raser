@@ -1,7 +1,7 @@
 ---
 REP: 1.2
 Title: SICAR1 Fabrication
-Author: 张希媛、王聪聪,何野，王科琪
+Author: 张希媛,王聪聪,何野,王科琪
 Status: Active
 Todo: 科琪上传第一次流片结果，何野测试IC和CV
 Type: Hardware 
@@ -12,6 +12,12 @@ Updated: 2023-05-31
 # SICAR1 Fabrication（第一次）
 
 [[张希媛]], [[王聪聪]]
+
+## Overview 
+
+- SICAR1 Run1 
+- SICAR1 Run2 
+- Open Tasks 
 
 
 ## 芯片外延
