@@ -7,16 +7,7 @@ Type:  Hardware
 Created: 2023-04-28
 Updated: 2023-05-15
 ---
-## Overview 
-idea
-    - [ ]  [[REP 0.11]]
-Hardware 
-	-  [x]  SiC PIN [[REP 1.4]]
--  [x] Software 
-	-  [x] Simulation: [[REP 2.5]]	
-	
-- Publication  
-   - [ ] 
+
 	
 
 

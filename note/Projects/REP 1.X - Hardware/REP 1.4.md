@@ -7,8 +7,17 @@ Type: Hardware
 Created: 2022-10-01
 Updated: 2023-04-25
 ---
-## Overview
 
+## Overview 
+idea
+    - [ ]  [[REP 0.11]]
+Hardware 
+	-  [x]  SiC PIN [[REP 1.4]]
+-  [x] Software 
+	-  [x] Simulation: [[REP 2.5]]	
+	
+- Publication  
+   - [ ] 
 
 # 4H-SiC PIN  Fabrication
 
