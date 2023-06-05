@@ -1,20 +1,36 @@
+
 ---
 REP: 1.2
 Title: SICAR1 Fabrication
-Author: 张希媛、王聪聪,何野，王科琪
+Author: 张希媛,王聪聪,何野,王科琪
 Status: Active
 Todo: 科琪上传第一次流片结果，何野测试IC和CV
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-04-28
+Updated: 2023-06-6
 ---
 
-# SICAR1 Fabrication
+# SICAR1 Fabrication（第一次）
 
 [[张希媛]], [[王聪聪]]
 
+## Overview 
+
+- SICAR1 Run1 
+- SICAR1 Run2 
+- Open Tasks 
+
 
 ## 芯片外延
+SICAR1设计参数
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110358.png)
+
+SICAR1 出厂测试结果
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110443.png)
+
+SICAR1 SIMS测试结果
+
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110633.png)
 
 
 
@@ -119,21 +135,103 @@ Updated: 2023-04-28
 - 刻蚀之后去除硅油 没有除干净光刻胶就涂不上去
 	- 用蘸有异丙醇的棉球擦洗背面，再用蘸有丙酮的棉球擦
 	- 使用打胶机清洗背面，再对背面和正面反复去油知道看不见硅油
-
-#### 第一次流片IV和CV测试
+--- 
+### 第一次流片IV和CV测试
+[[何野]]， [[解凯博]]
+#### 不同尺寸器件的IV测试、取数、作图
+- 测试环境
+	- B106探针台
+	- 电源：Keithley 2470 source meter
+	- sensor正面接地，背面加高压
+	- 扫描设置：电流限制105$\mu A$，间隔5s
+	- 反向偏压范围(0,250V)，步长1V
+	- 正向偏压范围(0,50V)，步长20mV
+---
+- IV性能的仿真
+![SICAR1-IV](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605101520.png)
+---
+- SICAR1-1-1 
+	- 尺寸: 5000$\mu m$ × 5000$\mu m$
+	- 版图：![bantu1-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103752.png)
+	- 图片：![SICAR1-1-1|400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605095855.png)
+	- 反向偏压：![SICAR1-1-1R](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605101712.png)
+	- 正向偏压：![SICAR1-1-1F](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605101834.png)
+	- 器件导通，反向偏压下漏电流大致符合预期
+- SICAR1-2-2
+	- 尺寸: 1000$\mu m$ × 1000$\mu m$
+	- 版图：![bantu1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103838.png)
+	- 图片：![SICAR1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605102733.png)
+	- 反向偏压：![SICAR1-2-2R](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605102855.png)
+	- 正向偏压：![SICAR1-2-2F](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605102928.png)
+	- 器件导通，反向偏压下漏电流低于预期
+- SICAR1-3-8
+	- 尺寸：1000$\mu m$ × 1000$\mu m$
+	- 版图：![bantu1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103950.png)
+	- 图片：![SICAR1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103536.png)
+	- 反向偏压：![SICAR1-3-8R](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103604.png)
+	- 正向偏压：![SICAR1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103631.png)
+	- 器件导通，反向偏压下漏电流低于预期
+- SICAR1-4-1-1
+	- 尺寸：1000$\mu m$ × 1000$\mu m$
+	- 版图：![bantu1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104755.png)
+	- 图片：![SICAR1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104748.png)
+	- 反向偏压：![SICAR1-4-1-1R](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104841.png)
+	- 正向偏压：![SICAR1-4-1-1F](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104921.png)
+	- 器件导通，反向偏压下漏电流低于预期
+- SICAR1-5-1-2
+	- 尺寸：1000$\mu m$ × 1000$\mu m$
+	- 版图：![bantu1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104948.png)
+	- 图片：![SICAR1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605105012.png)
+	- 反向偏压：![SICAR1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605105115.png)
+	- 正向偏压：![SICAR1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605105141.png)
+	- 器件导通，反向偏压下漏电流低于预期
+- 五个器件的反向漏电流密度：![density](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110734.png)
+	- 大尺寸器件（SICAR1-1-1）的漏电流较高
+	- 小尺寸器件的IV曲线比较相似，且漏电流水平较低
+---
+#### 不同尺寸器件的CV测试、取数、作图
+- 测试环境
+	- B002探针台
+	- 电源：Keithley 2410 source meter
+	- LCR：Keysight E4980A
+	- sensor正面接地，背面加高压
+	- 扫描设置：电流限制100$\mu A$，反向偏压范围(0,200V)，间隔5s
+---
+- CV性能的仿真
+ ![CV](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605111400.png)
+- $V_{GL}$：130V
+- $V_{FD}$：400V
+---
+- SICAR1-1-1
+	- CV曲线：![CV1-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112000.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112039.png)
+	- $V_{GL}$：75V
+	- $V_{FD}$：≈140V
+- SICAR1-2-2
+	- CV曲线：![CV1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112113.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112233.png)
+	- $V_{GL}$：65V
+	- $V_{FD}$：≈200V
+- SICAR1-3-8
+	- CV曲线：![CV1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112317.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112342.png)
+	- $V_{GL}$：81V
+	- $V_{FD}$：＞200V
+- SICAR1-4-1-1
+	- CV曲线：![CV1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112430.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112452.png)
+	- $V_{GL}$：83V
+	- $V_{FD}$：＞200V
+- SICAR1-5-1-2
+	- CV曲线：![CV1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112604.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112531.png)
+	- $V_{GL}$：77V
+	- $V_{FD}$：＞200V
+- 可以看出以上器件都有$V_{GL}$与$V_{FD}$（是LGAD），但是与设计的预期差别较大
+---
+### 第一次欧姆接触测试
 [[何野]]
-#### 第一次欧姆接触测试
-[[何野]]
-### 第二次流片工艺
-[[何野]] , [[解凯博]]
 
-# Schedule 
-| 时间 | 1号晶圆 | 2号晶圆 | 3号晶圆 | 4号晶圆 |
-| : - : | : - : | : - : | : - : | : - : | 
-| 2023-04-03 | | | 光刻显影P电极（M2）| 光刻显影P电极（M2）|
-| 2023-04-04 | | | 电子束蒸发 金属剥离 | 电子束蒸发 金属剥离 |
-| 2023-04-06 | 淀积N电极、退火 | 淀积N电极、退火 | 淀积N电极、退火 | 淀积N电极、退火 |
-| 2023-04-07 | PECVD淀积钝化层 | PECVD淀积钝化层 | PECVD淀积钝化层 | PECVD淀积钝化层 |
 # Log 
 1、欧姆接触电阻率测试（最优欧姆接触）**何野测试，科琪分析**
 
@@ -160,17 +258,35 @@ Updated: 2023-04-28
 4、电荷收集和时间分辨研究
 
 - [ ] 电荷收集和时间分辨测试（何野+谢凯博测试）
+# SICAR1 Fabrication(第二次)
 
-5、第二次流片
+[[张希媛]], [[王聪聪]]
 
-- [ ] 欧姆接触金属与退火温度确定
+## 芯片外延
 
-- [ ] 刻蚀后湿法腐蚀（查询碳化硅的湿法腐蚀液体，科琪和何野）
+## 芯片制作
+### 光刻版1.0设计（M1、M2、M3、M4）
+[[王科琪]]
+- 整体效果：
+    ![photolithography.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography.png)
+- M1
+    ![M1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/7014bb4b7ac4846c4677685ea976e33.png)
+- M2
+    ![M2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/24d01f4c8216f032963ad5bf83012c0.png)
+- M3
+    ![M3.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/74c68ea12c0d1f5b3ad4f171863d8e7.png)
+- M4钝化层
+    ![M4.png |400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3e5f112e22f4965936333807e059b48.png)
 
-- [ ] 增加钝化层光刻版（科琪）
+### sicar1第二次流片工艺
+[[何野]] , [[解凯博]]
 
-# 测试结果
-[[何野]] [[解凯博]] [[周嘉奇]]
-## IV
-- SICAR1-1
-/scratchfs/atlas/heye/SICAR/1/1/IMG
+# Schedule 
+| 时间 | 1号晶圆 | 2号晶圆 |
+| : - : | : - : | : - : | 
+| 2023-04-03 | | | 光刻显影P电极（M2）| 光刻显影P电极（M2）|
+| 2023-04-04 | | | 电子束蒸发 金属剥离 | 电子束蒸发 金属剥离 |
+| 2023-04-06 | 淀积N电极、退火 | 淀积N电极、退火 | 淀积N电极、退火 | 淀积N电极、退火 |
+| 2023-04-07 | PECVD淀积钝化层 | PECVD淀积钝化层 | PECVD淀积钝化层 | PECVD淀积钝化层 |
+# Log 
+
