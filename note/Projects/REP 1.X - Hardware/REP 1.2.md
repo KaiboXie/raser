@@ -1,3 +1,4 @@
+
 ---
 REP: 1.2
 Title: SICAR1 Fabrication
@@ -125,18 +126,101 @@ Updated: 2023-05-31
 - 刻蚀之后去除硅油 没有除干净光刻胶就涂不上去
 	- 用蘸有异丙醇的棉球擦洗背面，再用蘸有丙酮的棉球擦
 	- 使用打胶机清洗背面，再对背面和正面反复去油知道看不见硅油
-
-#### 第一次流片IV和CV测试
+--- 
+### 第一次流片IV和CV测试
 [[何野]]， [[解凯博]]
--  [ ] IV测试   
-	-  [ ] 不同尺寸器件和相同尺寸不同金属条件IV测试、取数、作图
-	-  [ ] 正反向IV趋势判断器件好坏
-	-  [ ] 反向IV暗电流测试避光测试IV，通过反向电流与电压公式关系判断暗电流，分析不同器件暗电流规律→IV测试结论
- -  [ ] CV测试与数据处理：
-	-  [ ] 不同尺寸器件和相同尺寸不同金属条件CV测试、取数、作图
-	-  [ ] 通过CV测试得到的数据，获取电阻率、面积、工作电压和结电容的关系
-	-  [ ] 计算势垒高度和有效掺杂浓度、时间分辨和开启电压
-#### 第一次欧姆接触测试
+#### 不同尺寸器件的IV测试、取数、作图
+- 测试环境
+	- B106探针台
+	- 电源：Keithley 2470 source meter
+	- sensor正面接地，背面加高压
+	- 扫描设置：电流限制105$\mu A$，间隔5s
+	- 反向偏压范围(0,250V)，步长1V
+	- 正向偏压范围(0,50V)，步长20mV
+---
+- IV性能的仿真
+![SICAR1-IV](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605101520.png)
+---
+- SICAR1-1-1 
+	- 尺寸: 5000$\mu m$ × 5000$\mu m$
+	- 版图：![bantu1-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103752.png)
+	- 图片：![SICAR1-1-1|400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605095855.png)
+	- 反向偏压：![SICAR1-1-1R](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605101712.png)
+	- 正向偏压：![SICAR1-1-1F](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605101834.png)
+	- 器件导通，反向偏压下漏电流大致符合预期
+- SICAR1-2-2
+	- 尺寸: 1000$\mu m$ × 1000$\mu m$
+	- 版图：![bantu1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103838.png)
+	- 图片：![SICAR1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605102733.png)
+	- 反向偏压：![SICAR1-2-2R](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605102855.png)
+	- 正向偏压：![SICAR1-2-2F](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605102928.png)
+	- 器件导通，反向偏压下漏电流低于预期
+- SICAR1-3-8
+	- 尺寸：1000$\mu m$ × 1000$\mu m$
+	- 版图：![bantu1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103950.png)
+	- 图片：![SICAR1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103536.png)
+	- 反向偏压：![SICAR1-3-8R](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103604.png)
+	- 正向偏压：![SICAR1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605103631.png)
+	- 器件导通，反向偏压下漏电流低于预期
+- SICAR1-4-1-1
+	- 尺寸：1000$\mu m$ × 1000$\mu m$
+	- 版图：![bantu1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104755.png)
+	- 图片：![SICAR1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104748.png)
+	- 反向偏压：![SICAR1-4-1-1R](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104841.png)
+	- 正向偏压：![SICAR1-4-1-1F](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104921.png)
+	- 器件导通，反向偏压下漏电流低于预期
+- SICAR1-5-1-2
+	- 尺寸：1000$\mu m$ × 1000$\mu m$
+	- 版图：![bantu1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605104948.png)
+	- 图片：![SICAR1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605105012.png)
+	- 反向偏压：![SICAR1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605105115.png)
+	- 正向偏压：![SICAR1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605105141.png)
+	- 器件导通，反向偏压下漏电流低于预期
+- 五个器件的反向漏电流密度：![density](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110734.png)
+	- 大尺寸器件（SICAR1-1-1）的漏电流较高
+	- 小尺寸器件的IV曲线比较相似，且漏电流水平较低
+---
+#### 不同尺寸器件的CV测试、取数、作图
+- 测试环境
+	- B002探针台
+	- 电源：Keithley 2470 source meter
+	- LCR：Keysight E4980A
+	- sensor正面接地，背面加高压
+	- 扫描设置：电流限制100$\mu A$，反向偏压范围(0,200V)，间隔5s
+---
+- CV性能的仿真
+ ![CV](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605111400.png)
+- $V_{GL}$：130V
+- $V_{FD}$：400V
+---
+- SICAR1-1-1
+	- CV曲线：![CV1-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112000.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112039.png)
+	- $V_{GL}$：75V
+	- $V_{FD}$：
+- SICAR1-2-2
+	- CV曲线：![CV1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112113.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112233.png)
+	- $V_{GL}$：65V
+	- $V_{FD}$：
+- SICAR1-3-8
+	- CV曲线：![CV1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112317.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112342.png)
+	- $V_{GL}$：81V
+	- $V_{FD}$：
+- SICAR1-4-1-1
+	- CV曲线：![CV1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112430.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112452.png)
+	- $V_{GL}$：83V
+	- $V_{FD}$：
+- SICAR1-5-1-2
+	- CV曲线：![CV1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112604.png)
+	- 1/$C^{2}$ -V曲线：![C2V1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112531.png)
+	- $V_{GL}$：77V
+	- $V_{FD}$：
+- 可以看出以上器件都有$V_{GL}$与$V_{FD}$（是LGAD），但是与设计的预期差别较大
+---
+### 第一次欧姆接触测试
 [[何野]]
 
 # Log 
