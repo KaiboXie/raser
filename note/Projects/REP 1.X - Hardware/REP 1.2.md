@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 
-=======
-![8Y@CK2HJ[0T4_`1)94L{OKO.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/8Y@CK2HJ%5B0T4_%601)94L%7BOKO.png)
->>>>>>> 1d6a3d0d5e0c9b81149d018bb61e9a6f0004677e
 ---
 REP: 1.2
 Title: SICAR1 Fabrication
