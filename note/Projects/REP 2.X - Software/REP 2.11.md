@@ -22,10 +22,21 @@ Created: 2023-04-11
 |电极宽度|间隙宽度|厚度|
 |---|---|---|
 |60um|50um|100um|
+- 加权场设置        
+![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/E.png)
+- 电荷收集效率随粒子入射位置变化关系图
+![|700](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/canvas.png)
+- 总电荷收集效率（8为同一情况下平板电极电荷收集效率）
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/360cce.png)
+
+![700](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/360.png)
+红光tct批量扫描未完成（掉作业）
+
+
+
+
 
 # 当前进度
-
-
 
 -  [ ] strip红光tct批量扫描
 -  [ ] fenics电场更改
