@@ -183,7 +183,7 @@ Updated: 2023-05-31
 #### 不同尺寸器件的CV测试、取数、作图
 - 测试环境
 	- B002探针台
-	- 电源：Keithley 2470 source meter
+	- 电源：Keithley 2410 source meter
 	- LCR：Keysight E4980A
 	- sensor正面接地，背面加高压
 	- 扫描设置：电流限制100$\mu A$，反向偏压范围(0,200V)，间隔5s
@@ -197,27 +197,27 @@ Updated: 2023-05-31
 	- CV曲线：![CV1-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112000.png)
 	- 1/$C^{2}$ -V曲线：![C2V1-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112039.png)
 	- $V_{GL}$：75V
-	- $V_{FD}$：
+	- $V_{FD}$：≈140V
 - SICAR1-2-2
 	- CV曲线：![CV1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112113.png)
 	- 1/$C^{2}$ -V曲线：![C2V1-2-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112233.png)
 	- $V_{GL}$：65V
-	- $V_{FD}$：
+	- $V_{FD}$：≈200V
 - SICAR1-3-8
 	- CV曲线：![CV1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112317.png)
 	- 1/$C^{2}$ -V曲线：![C2V1-3-8](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112342.png)
 	- $V_{GL}$：81V
-	- $V_{FD}$：
+	- $V_{FD}$：＞200V
 - SICAR1-4-1-1
 	- CV曲线：![CV1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112430.png)
 	- 1/$C^{2}$ -V曲线：![C2V1-4-1-1](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112452.png)
 	- $V_{GL}$：83V
-	- $V_{FD}$：
+	- $V_{FD}$：＞200V
 - SICAR1-5-1-2
 	- CV曲线：![CV1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112604.png)
 	- 1/$C^{2}$ -V曲线：![C2V1-5-1-2](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605112531.png)
 	- $V_{GL}$：77V
-	- $V_{FD}$：
+	- $V_{FD}$：＞200V
 - 可以看出以上器件都有$V_{GL}$与$V_{FD}$（是LGAD），但是与设计的预期差别较大
 ---
 ### 第一次欧姆接触测试
