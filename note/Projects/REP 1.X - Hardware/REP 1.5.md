@@ -5,52 +5,15 @@ Author: 何野 解凯博
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-05-29
+Updated: 2023-05-09
 ---
 
 # 正在进行的工作
 -  [x] 使用alibava替代T1做NJU-SiC-PIN的β测试
 	-  [x] 制作可以供NJU-SiC-PIN使用的Detector Board
-	-  [x] 制作固定Daughter Board和Detector Board的底板(3D打印)
+	-  [x] 制作固定Daughter Board和Detector Board的底板
 	-  [x] 使用1.5 * 1.5 NJU-SiC-PIN进行β测试采集数据
-	-  [x] 使用5 * 5 NJU-SiC-PIN进行β测试采集数据
-	-  [ ] 使用金属底板替代塑料底板（降低无效数据在总数据中的比重，加工中）
-	-  [ ] 验证实验测得的噪声是否与之前理论上预估的噪声大小相符
-		-  [ ] 将β测试数据中的ADC转成电荷量，与理论上预计的噪声的电荷量大小对比
-	-  [ ] 了解所用β源的特点
-		-  [ ] β射线从源中出来的位置与源上的标识是否一致
-		-  [ ] β射线从源中出来后发散的程度有多大
-	-  [ ] 使用[[李辉]]已完成的alibava系统测试了解alibava系统
-		-  [ ] 对比自己实验得到的数据确认数据是否正常
-		-  [ ] 如何处理获得的数据
 
-
-## 进度
-- [ ] 使用alibava替代T1测试β信号
-	-  [x] 使用公版的Detector Board实验（高压滤波做法简单）
-		-  [x] 使用1.5mm * 1.5mm NJU-SiC-PIN 阵列
-			- 实验数据位置：服务器
-			/afs/ihep.ac.cn/users/x/xiekaibo/ALIBAVA/data/20230510
-			- 纯噪声
-			![capture_20230529100058457.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/capture_20230529100058457.bmp)
-			- 可能包含信号
-			![capture_20230529100036139.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/capture_20230529100036139.bmp)
-			- 未看到信号
-		-  [x] 使用5mm * 5mm NJU-SiC-PIN 
-			- 实验数据位置：服务器afs/ihep.ac.cn/users/x/xiekaibo/ALIBAVA/data/20230512pm
-			- 纯噪声
-			![capture_20230529100256146.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/capture_20230529100256146.bmp)
-			- 可能包含信号
-			![capture_20230529100313584.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/capture_20230529100313584.bmp)
-			- 未看到信号
-	-  [ ] 使用新设计的Detector Board实验（使用UCSC的高压滤波电路）
-		-  [ ] 使用1.5mm * 1.5mm NJU-SiC-PIN 
-		-  [ ] 使用5mm * 5mm NJU-SiC-PIN 
-- [ ] 找出T1出现问题的原因
-	-  [ ] 取得厂家T1出厂测试的测试方法及数据
-	-  [ ] 让厂家重新设计并制作新的电路板测试重复β测试
-		-  [ ] 在UCSC的布线基础上只将板改为T形并将sensor的焊盘连同周围滤波电容移至T1的末端
-	-  [ ] 使用合适的快速的信号发生器在T型板上产生信号模拟μ子穿过SiC产生的信号观察T1的输出信号
 
 
 
@@ -157,7 +120,7 @@ T1在空载状态下就会引入新的噪声，UCSC则不会
 ### 后续计划
 -  [ ] 重复T1β测试
 	-  [ ] 对未辐照SiC-PIN的T1板进行β测试，取得信号波形数据
-	-  [ ] 与[[杨涛]]论文中使用UCSC得到的数据对比
+	-  [ ] 与杨涛论文中使用UCSC得到的数据对比
 -  [ ] 取得厂家T1出厂测试的测试方法及数据
 -  [ ] 让厂家设计并制作新的电路板测试是否可以看到β信号
        （尽可能不干涉厂家的设计）
