@@ -5,7 +5,8 @@ Author: 石航瑞, 解凯博
 Status: Active
 Type: Software
 Created: 2023-04-11
-Updated: 2023-05-13
+Updated: 2023-05-30
+Team Report: 2023-06-05
 ---
 
 
@@ -22,7 +23,8 @@ Updated: 2023-05-13
 | 价格 | 波长范围 | 误差 | 量程 | 355nm 响应 | 1065nm响应 |
 | ---    | --- | ---|  ---| --- | --- |
 | ￥4225.32 | 200-1100nm | 355-5%, 1064-7% | 50nW-50mW | 16.28mA/W | 17.44mA/W |
-> 我们的激光器10Hz，单脉冲在70uJ左右，功率在100uW-700uW之间
+
+我们的激光器10Hz，单脉冲在70uJ左右，功率在100uW-700uW之间
 
 ## NGspice
 经过 TCT_T1.py 得到 SiC 在激光照射后输出的电流信号 current:e+h ，根据 current:e+h 在描述 T1 电路的文件 paras/T1.cir 的基础上改写输入电流源得到新的可供 ngspice 执行的文件 output/T1_tmp.cir ，执行 output/T1_tmp.cir 即可得到 T1 输出的电压关于时间的数据并保存至 output/t1.raw 供后续使用ROOT画图
