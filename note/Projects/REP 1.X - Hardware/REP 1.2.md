@@ -17,10 +17,16 @@ Updated: 2023-06-6
 ## Overview 
 
 - SICAR1 Run1 
+   - 测试IV和CV，分析数据[[何野]]
+   - 分析欧姆接触电阻率[[王科琪]]
+   - 测试电荷收集[[解凯博]]
+   - 测试时间分辨[[何野]]
 - SICAR1 Run2 
+   - 流片（根据第一次流片确认钝化层厚度）
 - Open Tasks 
-
-
+  - 减小漏电流设计（保护环设计等查找论文）
+-  [x] Presentation
+	-  [ ]   The 42nd RD50 Workshop 
 ## 芯片外延
 SICAR1设计参数
 ![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110358.png)
