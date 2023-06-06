@@ -25,7 +25,7 @@ Updated: 2023-05-31
 - Open Tasks 
   - 减小漏电流设计（保护环设计等查找论文）
 -  [x] Presentation
-	-  [ ]   The 42th RD50 Workshop 
+	-  [ ]   The 42nd RD50 Workshop 
 ## 芯片外延
 
 
