@@ -2,10 +2,10 @@
 REP: 3.6
 Title: Design and Simulation of 4H-SiC Low Gain Avalanche Diode
 Author: 杨涛，符晨曦，张希媛
-Status: Revsion
+Status: Revsion due 2023-06-12
 Type: Publication 
 Created: 2021-10-01
-Updated: 2023-05-15
+Team Report: 2023-05-15
 ---
 
 
@@ -49,7 +49,9 @@ Last reviewed : 2022-12-27
 
 ### 2022-11-22
 
-Submitted v2.9 to NIMA : 2022-11-22
+Submitted v2.9 to NIMA : 2022-11-22 
+
+NIMA-D-22-00965
 
 https://track.authorhub.elsevier.com/?uuid=750e765f-2235-4d52-8e06-78ebce34ac93
 
@@ -58,6 +60,8 @@ https://track.authorhub.elsevier.com/?uuid=750e765f-2235-4d52-8e06-78ebce34ac93
 Submitted to arXiv:  https://arxiv.org/abs/2206.10191 
 
 ### 2023-05-15
+
+https://www.editorialmanager.com/nima/default2.aspx
 
 Dicussed the reply to the reviewers during team meeting. 
 
