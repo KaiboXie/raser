@@ -1,3 +1,4 @@
+![Uploading file...o56la]()
 ---
 REP: 1.1
 Title: SiC PIN NJU 
@@ -41,6 +42,10 @@ Obtain the SiC PIN from NJU
 - 7.8e14
 	- IV![IV_1e15_log.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/IV_1e15_log.png)
 	- CV![CV_1e15_0.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/CV_1e15_0.png)
+
+
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230607111747.png)
+
 
 ## Top-TCT扫描
 使用355nm激光
