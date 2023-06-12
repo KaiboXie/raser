@@ -7,7 +7,7 @@ Status: Active
 Todo: 科琪上传第一次流片结果，何野测试IC和CV
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-06-6
+Updated: 2023-06-12
 ---
 
 # SICAR1 Fabrication（第一次）
