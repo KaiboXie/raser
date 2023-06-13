@@ -5,8 +5,10 @@ Author: 李再一
 Status: in progress
 Type:  Hardware
 Created: 2023-04-28
-Updated: 2023-05-15
+Updated: 2023-06-13
 ---
+
+	
 
 
 ## SICAR1，SICAR2 外延片的边角料进行切片 
@@ -47,7 +49,25 @@ SICAR2切割情况：可能需要清洗
 
 -  [ ] 调研并确认辐照样品的数目
 -  [ ]  调研并确认辐照剂量和标度方法
-拟选用SICAR1-4块，SICAR2-4块，辐照剂量为7e12,5e13,3e14,1e15
+拟选用SICAR1-4块，SICAR2-4块，辐照剂量为1e12,1e13,1e14,1e15 $n_{eq}/cm^2$
+选用$1.5mm\times 1.5mm$ NJU-PIN 4块 辐照剂量 1e11,1e12,1e13,1e14 $n_{eq}/cm^2$
+80MeV质子 $3.04\times 10^9 p/cm^2/s$
+
+|样品编号|样品类型|辐照剂量($n_{eq}/cm^2$)|质子通量($p/cm^2$)|辐照时间(s)|
+|---|---|---|---|---|
+|1|SICAR1外延片|$1\times 10^{11}$|$7.037\times 10^{10}$|23.15|
+|2|SICAR1外延片|$1\times 10^{12}$|$7.037\times 10^{11}$|231.5|
+|3|SICAR1外延片|$1\times 10^{13}$|$7.037\times 10^{12}$|2314.9|
+|4|SICAR1外延片|$1\times 10^{14}$|$7.037\times 10^{13}$|23149|
+|5|SICAR2外延片|$1\times 10^{11}$|$7.037\times 10^{10}$|23.15|
+|6|SICAR2外延片|$1\times 10^{12}$|$7.037\times 10^{11}$|231.5|
+|7|SICAR2外延片|$1\times 10^{13}$|$7.037\times 10^{12}$|2314.9|
+|8|SICAR2外延片|$1\times 10^{14}$|$7.037\times 10^{13}$|23149|
+|9|$1.5mm\times 1.5mm$ NJU-PIN|$1\times 10^{11}$|$7.037\times 10^{10}$|23.15|
+|10|$1.5mm\times 1.5mm$ NJU-PIN|$1\times 10^{12}$|$7.037\times 10^{11}$|231.5|
+|11|$1.5mm\times 1.5mm$ NJU-PIN|$1\times 10^{13}$|$7.037\times 10^{12}$|2314.9|
+|12|$1.5mm\times 1.5mm$ NJU-PIN|$1\times 10^{14}$|$7.037\times 10^{13}$|23149|
+
 
 ## 辐照前后XRD对宏观缺陷的表征
 - [ ]  2theta-theta测试研究辐照对面外晶格大小的变化的影响
@@ -68,3 +88,6 @@ Properties of 3C-SiC Grown by Sublimation Epitaxy on Different Type of Substrate
 Microhardness of Electroless Composite Coating of Ni-P with SiC Nano-particles
 Properties of 3C-SiC Grown by Sublimation Epitaxy on Different Type of Substrates
 Microstructural study of ferromagnetic Fe-implanted 6H-SiC
+
+
+

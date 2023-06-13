@@ -13,7 +13,7 @@ from raser.model import Material
 from raser.model import Vector
 
 t_bin = 50e-12
-t_end = 60e-9
+t_end = 5e-9
 t_start = 0
 
 class Carrier:
@@ -60,7 +60,7 @@ class Carrier:
             self.end_condition = "out of bound"
         return self.end_condition
 
-    def drift_single_step(self,my_d,my_f,step=1):
+    def drift_single_step(self,my_d,my_f,step=0.1):
         e_field = my_f.get_e_field(self.d_x,self.d_y,self.d_z)
         intensity = Vector(e_field[0],e_field[1],e_field[2]).get_length()
         if(intensity!=0):
@@ -146,7 +146,7 @@ class Carrier:
     def drift_end(self,my_f):
         e_field = my_f.get_e_field(self.d_x,self.d_y,self.d_z)
         '''wpot = my_f.get_w_p(self.d_x,self.d_y,self.d_z) # after position check to avoid illegal input'''
-        if (e_field[0]==0 and e_field[1]==0 and e_field[2]==0):
+        if (e_field[0]==0 and e_field[1]==0 and e_field[2] == 0) or (e_field[2] < 1 and self.d_z < 2):
             self.end_condition = "zero drift force"
         '''elif wpot>(1-1e-5):
             self.end_condition = "reached cathode"
@@ -315,45 +315,48 @@ class CalCurrentGain(CalCurrent):
         self.electrons = [] # gain carriers
         self.holes = []
         cal_coefficient = Material(my_d.material).cal_coefficient
-        gain_rate = self.gain_rate(my_d,my_f,cal_coefficient)
+        gain_rate, alpha_ratio = self.gain_rate(my_d,my_f,cal_coefficient)
+        fluctuation = gain_rate * alpha_ratio + (1 - 1/gain_rate) * (1 - alpha_ratio)
 
         print("gain_rate="+str(gain_rate))
         # assuming gain layer at d>0
         if my_d.voltage<0 : # p layer at d=0, holes multiplicated into electrons
             for hole in my_current.holes:
+                gain_rate_tmp = gain_rate + random.gauss(0.0,fluctuation)
                 self.electrons.append(Carrier(hole.path[-1][0],\
                                               hole.path[-1][1],\
                                               my_d.avalanche_bond,\
                                               hole.path[-1][3],\
-                                              -1*hole.charge*gain_rate,\
+                                              -1*hole.charge*gain_rate_tmp,\
                                               my_d.material,\
                                               my_f.read_ele_num))
-                if gain_rate>5:
-                    self.holes.append(Carrier(hole.path[-1][0],\
-                                              hole.path[-1][1],\
-                                              my_d.avalanche_bond,\
-                                              hole.path[-1][3],\
-                                              hole.charge*gain_rate/np.log(gain_rate),\
-                                              my_d.material,\
-                                              my_f.read_ele_num))
+                
+                self.holes.append(Carrier(hole.path[-1][0],\
+                                          hole.path[-1][1],\
+                                          my_d.avalanche_bond,\
+                                          hole.path[-1][3],\
+                                          hole.charge*gain_rate_tmp,\
+                                          my_d.material,\
+                                          my_f.read_ele_num))
 
         else : # n layer at d=0, electrons multiplicated into holes
             for electron in my_current.electrons:
+                gain_rate_tmp = gain_rate + random.gauss(0.0,fluctuation)
                 self.holes.append(Carrier(electron.path[-1][0],\
                                           electron.path[-1][1],\
                                           my_d.avalanche_bond,\
                                           electron.path[-1][3],\
-                                          -1*electron.charge*gain_rate,\
+                                          -1*electron.charge*gain_rate_tmp,\
                                           my_d.material,\
                                           my_f.read_ele_num))
-                if gain_rate>5:
-                    self.electrons.append(Carrier(electron.path[-1][0],\
-                                                  electron.path[-1][1],\
-                                                  my_d.avalanche_bond,\
-                                                  electron.path[-1][3],\
-                                                  electron.charge*gain_rate/np.log(gain_rate),\
-                                                  my_d.material,\
-                                                  my_f.read_ele_num))
+
+                self.electrons.append(Carrier(electron.path[-1][0],\
+                                                electron.path[-1][1],\
+                                                my_d.avalanche_bond,\
+                                                electron.path[-1][3],\
+                                                electron.charge*gain_rate_tmp,\
+                                                my_d.material,\
+                                                my_f.read_ele_num))
 
         self.drifting_loop(my_d, my_f)
 
@@ -393,6 +396,7 @@ class CalCurrentGain(CalCurrent):
             alpha_minor_list = alpha_n_list
         diff_list = alpha_major_list - alpha_minor_list
         int_alpha_list = np.zeros(n-1)
+        alpha_ratio = max(alpha_minor_list)/max(alpha_major_list)
 
         for i in range(1,n):
             int_alpha = 0
@@ -412,7 +416,7 @@ class CalCurrentGain(CalCurrent):
             raise(ValueError)
         
         gain_rate = exp_list[n-2]/(1-det) -1
-        return gain_rate
+        return gain_rate, alpha_ratio
 
     def current_define(self,read_ele_num):
         """
