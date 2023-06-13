@@ -5,25 +5,53 @@ Author: 李再一
 Status: in progress
 Type:  Hardware
 Created: 2023-04-28
-Updated: 
+Updated: 2023-05-15
+---
+
+	
+
+
+## SICAR1，SICAR2 外延片的边角料进行切片 
+
+-  [x]  联系切片，将SICAR1 边角料切成5mm x 5mm 的大小
+-  [x]  SICAR1-4块，SICAR2-4块 切片，寄送
+-  [x] 检查切片结果，在显微镜下拍照标记 
+-  [x] 盘点样品数目，并挑选要做辐照实验的样品
+
+---
+SICAR1 4块 共有5mm×5mm 4+4+4+4=16块
+选4-b，4块做实验
+![sicar1-4.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1-4.jpg)
+---
+SICAR2 4块 共有5mm×5mm 4+2+4+4=14块
+选4下方的4块做实验
+![sicar2-4.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar2-4.jpg)
+---
+SICAR1切割情况：可能需要清洗
+![sicar1_2_br1_cut1.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1_2_br1_cut1.jpg)
+---
+![sicar1_3_mr3_cut1.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1_3_mr3_cut1.jpg)
+---
+![sicar1_4_bt.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1_4_bt.jpg)
+---
+SICAR2切割情况：可能需要清洗
+![sicar2_4.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar2_4.jpg)
+---
+![sicar2_1_left2_cut2.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar2_1_left2_cut2.jpg)
+---
+![sicar2_1_left3_cut1.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar2_1_left3_cut1.jpg)
 ---
 
 
-SICAR1，SICAR2 外延片的边角料进行切片 
-
--  [x]  联系切片，将SICAR1 边角料切成5mm x 5mm 的大小
--  [ ]  SICAR1-4块，SICAR2-4块 切片，寄送
--  [ ] 检查切片结果，在显微镜下拍照标记 
--  [ ] 盘点样品数目，并挑选要做辐照实验的样品
 
 
-
-辐照实验
+## 辐照实验
 
 -  [ ] 调研并确认辐照样品的数目
 -  [ ]  调研并确认辐照剂量和标度方法
+拟选用SICAR1-4块，SICAR2-4块，辐照剂量为7e12,5e13,3e14,1e15
 
-辐照前后XRD对宏观缺陷的表征
+## 辐照前后XRD对宏观缺陷的表征
 - [ ]  2theta-theta测试研究辐照对面外晶格大小的变化的影响
     - [ ]  调研4H-SiC的晶体学结构，如晶格常数
     - [ ] 了解XRD测试原理
@@ -42,3 +70,6 @@ Properties of 3C-SiC Grown by Sublimation Epitaxy on Different Type of Substrate
 Microhardness of Electroless Composite Coating of Ni-P with SiC Nano-particles
 Properties of 3C-SiC Grown by Sublimation Epitaxy on Different Type of Substrates
 Microstructural study of ferromagnetic Fe-implanted 6H-SiC
+
+
+

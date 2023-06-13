@@ -32,11 +32,13 @@ usage() {
 
     printf "\n\t%-9s  %-40s\n"  "6.1"       "Telescope"
 
+    printf "\n\t%-9s  %-40s"    "7.1"       "Si strip"
+
     printf "\n"
 }
 
 usage_1_1() { 
-    printf "\n\t%-5s  %-40s\n"  "1.1.1"    "NJU-SiC-PIN basic information for RASER simulation ..." 
+    printf "\n\t%-5s  %-40s\n"  "1.1.1"    "NJU-PIN basic information for RASER simulation ..." 
     printf "\n\t%-5s  %-40s\n"  "1.1.2"    "batch model with total number, split with step number" 
     printf "\n\t%-5s  %-40s\n"  "1.1.3"    "get time resolution for HPK-Si-PIN"
     printf "\n\t%-5s  %-40s\n"  "1.1.4"    "batch model with total number, split with step number, multi points voltage [-50,-500]" 
@@ -68,7 +70,7 @@ usage_1_3() {
 }
 
 usage_1_4() { 
-    printf "\n\t%-5s  %-40s\n"  "1.4.1"    "NJU-SiC-PIN beam monitor" 
+    printf "\n\t%-5s  %-40s\n"  "1.4.1"    "NJU-PIN beam monitor" 
     printf "\n"
 }
 
@@ -116,6 +118,7 @@ usage_3_1() {
     printf "\n\t%-5s  %-40s\n"  "3.1.2"    "SiC-LGAD top-TCT basic information ..."
     printf "\n\t%-5s  %-40s\n"  "3.1.4"    "SiC-PIN top-TCT using ngspice ..."
     printf "\n\t%-5s  %-40s\n"  "3.1.5"    "get T1 circuit simulation result figure"
+    printf "\n\t%-5s  %-40s\n"  "3.1.6"    "Si-Strip top-TCT basic information ..."
     printf "\n"
 }
 
@@ -143,6 +146,21 @@ usage_4_1() {
 	printf "\n\t%-5s  %-40s\n"  "4.1.4"    "get time resolution vs draw voltage ..." 
     printf "\n"
 }
+
+usage_7_1() { 
+	printf "\n\t%-5s  %-40s\n"  "7.1.1"    "Si sensor Energy deposition"  
+
+    printf "\n"
+}
+
+usage_7_2() { 
+    printf "\n\t%-5s  %-40s\n"  "7.2.1"    "Initial DataBase of DEVSIM" 
+    printf "\n\t%-5s  %-40s\n"  "7.2.2"    "Build 1D itk structure"
+    printf "\n\t%-5s  %-40s\n"  "7.2.3"    "Simulate 1D itk I-V"
+
+    printf "\n"
+}
+
 
 usage_5_1() {
     printf "\n\t%-5s  %-40s\n"  "5.1.1"    "T1 circuit simulation and get raw data..." 
@@ -182,8 +200,8 @@ case $option in
         ;;
 
 	1.1.2) echo "batch model with total number, split with step number"
-		step=100000
-		for ((i=0;i<20;i++))
+		step=1000
+		for ((i=0;i<10;i++))
         do
             ./python/run_batchjob.py pin3D/NJU-PIN \
                 "gsignal.py det_name=NJU-PIN parfile=paras/setting.json geant4_model=Time_resolution geant4_parfile=paras/geant4_setting.json scan=True total_e=$step instan=$i output=output/pin3D/NJU-PIN/"
@@ -191,7 +209,7 @@ case $option in
         ;;
 
     1.1.3) echo "get time resolution for SiC-PIN"
-        ./python/add_noise_raser.py output/pin3D/NJU-PIN/_d=10.0_v=-500.0_tmp=300.0_thick=100.0_radius=None 1
+        ./python/add_noise_raser.py output/pin3D/NJU-PIN/_d=52.0_v=-500.0_tmp=300.0_thick=100.0_radius=None 1
         ;;
 
     1.1.4) echo "run 3D-SiC batch model with total number, split with step number ..."
@@ -222,9 +240,14 @@ case $option in
         raser "./python/gsignal.py det_name=HPK-Si-PIN  parfile=paras/setting.json geant4_model=Time_resolution geant4_parfile=paras/geant4_setting.json"
         ;;
 
+    1.2.1C) echo "Si-PIN basic information for RASER simulation ..."
+        raser "./python/gsignal.py det_name=HPK-Si-PIN-Carrier  parfile=paras/setting.json geant4_model=Time_resolution geant4_parfile=paras/geant4_setting.json Carrier"
+        ;;
+
+
     1.2.2) echo "batch model with total number, split with step number"
-		step=10000
-		for ((i=0;i<20;i++))
+		step=1000
+		for ((i=0;i<10;i++))
         do
             ./python/run_batchjob.py pin3D/HPK-Si-PIN \
                 "gsignal.py det_name=HPK-Si-PIN parfile=paras/setting.json geant4_model=Time_resolution geant4_parfile=paras/geant4_setting.json scan=True total_e=$step instan=$i output=output/pin3D/HPK-Si-PIN/"
@@ -232,7 +255,7 @@ case $option in
         ;;
 
     1.2.3) echo "get time resolution for Si-PIN"
-        ./python/add_noise_raser.py output/pin3D/HPK-Si-PIN/_d=-1.0_v=200.0_tmp=300.0_thick=50.0_radius=None 1
+        ./python/add_noise_raser.py output/pin3D/HPK-Si-PIN/_d=-5.0_v=200.0_tmp=300.0_thick=50.0_radius=None 1
         ;;
 esac
 }
@@ -247,7 +270,7 @@ case $option in
         raser "./python/nju_pin_5mm_5mm_mesh.py"
         ;;
 
-    1.3.3) echo "Simulate 1D NJU-PIN I-V ..."
+    1.3.3) echo "Simulate 1D NJU-PIN I-V and electricfield ..."
         ./python/run_batchjob.py devsim "devsim_solve.py device=1D_NJU_PIN IV=True v_max=800"
         ;;
 
@@ -370,6 +393,24 @@ case $option in
     1.4.1) echo "SiC-PIN beam monitor" 
         raser "./python/gsignal.py det_name=NJU-PIN-Beam-monitor parfile=paras/setting.json beammonitor geant4_model=beam_monitor geant4_parfile=paras/geant4_setting.json"
         ;;
+    
+    1.4.2) echo "batch model with total number, split with step number"
+		step=1000
+		for ((i=0;i<100;i++))
+        do
+            ./python/run_batchjob.py pin3D/NJU-PIN \
+                "gsignal.py det_name=NJU-PIN-Beam-monitor parfile=paras/setting.json geant4_model=beam_monitor geant4_parfile=paras/geant4_setting.json scan=True total_e=$step instan=$i output=output/pin3D/NJU-PIN/"
+        done
+        ;;
+    1.4.3) echo "batch model with total number, split with step number"
+		step=1000
+        d=80
+		for ((i=$d;i<$d+1;i++))
+        do
+            ./python/run_batchjob.py pin3D/NJU-PIN \
+                "T1creat.py  current=$step number=$i"
+        done
+        ;;
 esac
 }
 
@@ -433,10 +474,10 @@ case $option in
         ;;
 
 	2.1.2) echo "batch model with total number, split with step number"
-        step=50000
-		for ((i=0;i<20;i++))
+        step=1000
+		for ((i=0;i<10;i++))
         do
-            for ((j=0;j<4;j++))
+            for ((j=0;j<1;j++))
             do
                 ./python/run_batchjob.py lgad3D/SICAR-1 \
                 "gsignal.py det_name=SICAR-1 parfile=paras/setting.json geant4_model=Time_resolution geant4_parfile=paras/geant4_setting.json scan=True total_e=$step instan=$i output=output/lgad3D/SICAR-1/ parameter_alter=True voltage=$[-500-j*100]"
@@ -462,11 +503,15 @@ case $option in
         raser "./python/gsignal.py det_name=HPK-Si-LGAD  parfile=paras/setting.json geant4_model=Time_resolution geant4_parfile=paras/geant4_setting.json"
         ;;
 
+    2.2.1C) echo "Si-LGAD basic information for RASER simulation ..."
+        raser "./python/gsignal.py det_name=HPK-Si-LGAD-Carrier parfile=paras/setting.json geant4_model=Time_resolution geant4_parfile=paras/geant4_setting.json Carrier"
+        ;;
+
     2.2.2) echo "batch model with total number, split with step number"
-        step=50000
-		for ((i=1;i<=4;i++))
+        step=1000
+		for ((i=0;i<10;i++))
         do
-            for ((j=1;j<=5;j++))
+            for ((j=0;j<1;j++))
             do
                 ./python/run_batchjob.py lgad3D/HPK-Si-LGAD \
                 "gsignal.py det_name=HPK-Si-LGAD parfile=paras/setting.json geant4_model=Time_resolution geant4_parfile=paras/geant4_setting.json scan=True total_e=$step instan=$i output=output/lgad3D/HPK-Si-LGAD/ parameter_alter=True voltage=$[200+j*10]"
@@ -492,8 +537,24 @@ case $option in
         raser "./python/TCTtest.py det_name=NJU-PIN parfile=paras/setting.json laser_model=top_TCT laser_parfile=paras/laser_setting.json"
         ;;
 
+    3.1.1Si) echo "Si-PIN top-TCT basic information ..."
+        raser "./python/TCTtest.py det_name=HPK-Si-PIN parfile=paras/setting.json laser_model=top_TCT_Si laser_parfile=paras/laser_setting.json"
+        ;;
+
+    3.1.1Sib) echo "Si-PIN bottom-TCT basic information ..."
+        raser "./python/TCTtest.py det_name=HPK-Si-PIN parfile=paras/setting.json laser_model=bottom_TCT_Si laser_parfile=paras/laser_setting.json"
+        ;;
+
     3.1.2) echo "SiC-LGAD top-TCT basic information ..."
         raser "./python/TCTtest.py det_name=SICAR-1 parfile=paras/setting.json laser_model=top_TCT laser_parfile=paras/laser_setting.json" 
+        ;;
+
+    3.1.2Si) echo "Si-LGAD top-TCT basic information ..."
+        raser "./python/TCTtest.py det_name=HPK-Si-LGAD parfile=paras/setting.json laser_model=top_TCT_Si laser_parfile=paras/laser_setting.json" 
+        ;;
+
+    3.1.2Sib) echo "Si-LGAD bottom-TCT basic information ..."
+        raser "./python/TCTtest.py det_name=HPK-Si-LGAD parfile=paras/setting.json laser_model=bottom_TCT_Si laser_parfile=paras/laser_setting.json" 
         ;;
 
     3.1.3) echo "get volt-time for SiC-PIN top-TCT, multi points x [0,500]"
@@ -515,6 +576,21 @@ case $option in
     3.1.5) echo "get T1 circuit simulation result figure ..."
         raser "./python/ngspice.py"
         ;;
+
+    3.1.6) echo "Si-Strip top-TCT basic information ..."
+        raser "./python/TCTtest.py det_name=Si_Strip parfile=paras/setting.json laser_model=top_TCT_Si laser_parfile=paras/laser_setting.json"
+        ;;
+
+    3.1.7) echo "get volt-time for Si-Strip top-TCT, multi points x [0,550]"
+        step=1
+        k=0.01
+            for ((j=0;j<101;j++))
+            do
+                x=$(echo $k $j|awk '{printf "%0.2f\n", $1*$2}')
+                ./python/run_batchjob.py pintct/Si_Strip \
+                "TCTtest.py det_name=Si_Strip parfile=paras/setting.json laser_model=top_TCT_Si laser_parfile=paras/laser_setting.json scan=True total_e=$step instan=1 output=output/pintct/Si_Strip/ parameter_alter=True fx_rel=$x"
+            done 
+        ;;
 esac
 }
 
@@ -533,7 +609,7 @@ case $option in
         step=1
         k=0.02
 
-            for ((j=0;j<51;j++))
+            for ((j=-10;j<61;j++))
             do
                 z=$(echo $k $j|awk '{printf "%0.2f\n", $1*$2}')
                 ./python/run_batchjob.py pintct/HPK-Si-PIN \
@@ -544,7 +620,7 @@ case $option in
     3.2.4) echo "get volt-time for Si-LGAD edge-TCT, multi points z [0,50]"
         step=1
         k=0.02
-            for ((j=0;j<51;j++))
+            for ((j=-10;j<61;j++))
             do
                 z=$(echo $k $j|awk '{printf "%0.2f\n", $1*$2}')
                 ./python/run_batchjob.py lgadtct/HPK-Si-LGAD \
@@ -572,7 +648,7 @@ esac
 sub_3_3(){
 case $option in
     3.3.1) echo "SiC-PIN edge-TCT basic information ..."
-           raser "./python/TCTtest.py det_name=NJU-SiC-PIN parfile=paras/setting.json laser_model=edge_TCT_SiC laser_parfile=paras/laser_setting.json"        
+           raser "./python/TCTtest.py det_name=NJU-PIN parfile=paras/setting.json laser_model=edge_TCT_SiC laser_parfile=paras/laser_setting.json"        
         ;;
     3.3.2) echo "get volt-time for SiC-PIN edge-TCT, multi points z [0,50]"
                 step=1
@@ -580,8 +656,8 @@ case $option in
             for ((j=0;j<101;j++))
             do
                 z=$(echo $k $j|awk '{printf "%0.2f\n", $1*$2}')
-                ./python/run_batchjob.py pintct/NJU-SiC-PIN \
-                "TCTtest.py det_name=NJU-SiC-PIN parfile=paras/setting.json laser_model=edge_TCT_SiC laser_parfile=paras/laser_setting.json scan=True total_e=$step instan=1 output=output/pintct/NJU-SiC-PIN/ parameter_alter=True fz_rel=$z"
+                ./python/run_batchjob.py pintct/NJU-PIN \
+                "TCTtest.py det_name=NJU-PIN parfile=paras/setting.json laser_model=edge_TCT_SiC laser_parfile=paras/laser_setting.json scan=True total_e=$step instan=1 output=output/pintct/NJU-PIN/ parameter_alter=True fz_rel=$z"
             done
         ;;
 esac
@@ -619,6 +695,8 @@ case $option in
 esac
 }
 
+
+
 sub_5_1(){
 case $option in 
     5.1.1) echo "T1 circuit simulation and get raw data ..."
@@ -649,15 +727,51 @@ case $option in
 esac
 }
 
+sub_7_1(){
+case $option in 
+
+    7.1.1) echo "Si sensor energy deposition" 
+        raser "./python/gsignal.py det_name=ITk-Si-strip parfile=paras/setting.json proton-irrad" 
+        ;;
+        esac
+    
+
+}
+
+sub_7_2(){
+case $option in 
+
+    7.2.1) echo "Initial DataBase of DEVSIM ..."
+        raser "./python/gen_devsim_db.py"
+        ;;
+
+    7.2.2) echo "Build 1D ITk MD8 structure ..."
+        raser "./python/itk_md8_mesh.py"
+        ;;
+
+    7.2.3) echo "Simulate 1D itk I-V ..."
+        ./python/run_batchjob.py devsim "solve_iv_itk.py"
+        ;;
+    
+    7.2.3Si) echo "Simulate 1D itk I-V ..."
+        ./python/run_batchjob.py devsim "devsim_solve.py device=1D_ITK_MD8 IV=True v_max=800"
+        ;;
+        
+    7.2.4) echo "Simulate irradiated minisensor I-V C-V ..."
+        ./python/run_batchjob.py devsim "devsim_solve.py device=1D_ITK_MD8 irradiation=True IV=True v_max=800"
+
+        ;;
+        esac
+}
 
 case $option in 
-    1.1) echo "RASER simulate NJU-SiC-PIN"
+    1.1) echo "RASER simulate NJU-PIN"
         usage_1_1
         echo "Please enter your option: " 
         read option 
         sub_1_1 option 
         ;;
-    1.1.*) echo "RASER simulate NJU-SiC-PIN"
+    1.1.*) echo "RASER simulate NJU-PIN"
         sub_1_1 option
         ;;
 
@@ -778,6 +892,44 @@ case $option in
         ;;
     3.3.*) echo  "RASER simulate edge-TCT"
         sub_3_3 option
+        ;;
+
+    7.1) echo "RASER simulate ITk-Si-strip"
+        usage_7_1
+        echo "Please enter your option: " 
+        read option 
+        sub_7_1 option 
+        ;;
+    7.1.*) echo "RASER simulate ITk-Si-strip"
+        sub_7_1 option
+        ;;
+    7.2) echo "DEVSIM"
+        usage_7_2
+        echo "Please enter your option: " 
+        read option 
+        sub_7_2 option 
+        ;;
+    7.2.*) echo "DEVSIM"
+        sub_7_2 option
+        ;;
+
+    7.1) echo "RASER simulate ITk-Si-strip"
+        usage_7_1
+        echo "Please enter your option: " 
+        read option 
+        sub_7_1 option 
+        ;;
+    7.1.*) echo "RASER simulate ITk-Si-strip"
+        sub_7_1 option
+        ;;
+    7.2) echo "DEVSIM"
+        usage_7_2
+        echo "Please enter your option: " 
+        read option 
+        sub_7_2 option 
+        ;;
+    7.2.*) echo "DEVSIM"
+        sub_7_2 option
         ;;
 
     4.1) echo "RASER simulate 3D-SiC"

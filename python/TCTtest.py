@@ -19,14 +19,17 @@ if "parameter_alter=True" in args:
 else:
     key = ""
 my_d = raser.R3dDetector(dset)
-my_f = raser.FenicsCal(my_d, dset.fenics)
-my_l = raser.TCTTracks(my_d, dset.laser)
+#my_f = raser.FenicsCal(my_d, dset.fenics)
 
+e_field_filepath = './output/devsim/1D_NJU_PIN/'\
+                    + str(-int(my_d.voltage)) + '.0V_x_E.csv'
+my_f = raser.DevsimCal(e_field_filepath, my_d, dset.fenics)
+my_l = raser.TCTTracks(my_d, dset.laser)
 my_current = raser.CalCurrentLaser(my_d, my_f, my_l)
 ele_current = raser.Amplifier(my_current, dset.amplifier)
 if "ngspice" in args:
-    drawsave.save_current(dset,my_d,my_l,my_current,my_f,"fz_abs")
-    input_p=drawsave.set_input(dset,my_current,my_l,my_d,"fz_abs")
+    drawsave.save_current(dset,my_d,my_current,my_f,"fz_abs")
+    input_p=drawsave.set_input(dset,my_current,my_d,"fz_abs")
     input_c=','.join(input_p)
     with open('paras/T1.cir', 'r') as f:
         lines = f.readlines()
@@ -38,17 +41,15 @@ if "ngspice" in args:
         f.writelines(lines)
         f.close()
 if "scan=True" in args: #assume parameter alter
-    drawsave.save(dset,my_d,my_l,ele_current,my_f,key)
+    drawsave.save_signal_TTree(dset,my_d,my_l,ele_current,my_f,key)
     if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
         path = "output/" + "pintct/" + dset.det_name + "/"
     elif "lgad3D" in my_d.det_model:
         path = "output/" + "lgadtct/" + dset.det_name + "/"
     else:
         raise NameError
-    drawsave.create_path(path) 
-    drawsave.draw_plot(my_d,my_current,ele_current.BB_ele, "BB", path, "_"+args[-1])
 else:
-    drawsave.drawplot(my_d,ele_current,my_f,None,my_current,my_l)
+    drawsave.draw_plots(my_d,ele_current,my_f,None,my_current,my_l)
 # now = time.strftime("%Y_%m%d_%H%M")
 # path = "fig/" + now + "/"
 # drawsave.create_path(path)

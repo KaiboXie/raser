@@ -24,7 +24,9 @@ Updated: 2023-04-01
 	-  [x] [[杨涛]] The 39th RD50 Workshop [slides](https://indico.cern.ch/event/1074989/contributions/4601968/attachments/2347396/4003106/yangtao_39th_rd50_workshop_20211117_v1.2.pdf) 
 	-  [x] [[张希媛]] The 41st RD50 Workshop [slides](https://indico.cern.ch/event/1132520/contributions/5149103/attachments/2556958/4406436/Xiyuan%20Zhang_41st_rd50_workshop.pdf)
 -  [ ] Publication
-
+- [ ] 需要对时间分辨部分进行polish
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605101506.png)
+对RASER中不同项影响时间分辨的因素的的仿真进行分析
 
 - Source code: 
     https://code.ihep.ac.cn/raser/paper/p5_sicar1_design
