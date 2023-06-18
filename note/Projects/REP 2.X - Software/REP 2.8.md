@@ -5,7 +5,7 @@ Author: 石航瑞, 解凯博
 Status: Active
 Type: Software
 Created: 2023-04-11
-Updated: 2023-05-30
+Updated: 2023-06-13
 Team Report: 2023-06-05
 ---
 
@@ -31,6 +31,18 @@ Team Report: 2023-06-05
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/500V.jpg)
 
 ## Irradiation
+### Latest
+$\Phi = 0$
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_trappingtime_0_result.png)
+
+$\Phi = 3.9e13$
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_trappingtime_3.9e13_result.png)
+
+$\Phi = 7.8e14$
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_trappingtime_7.8e14_result.png)
+
+
+### before
 对于不同的辐照损伤，目前使用trapping time在程序中进行模拟。通过模拟结果与实验比对(辐照剂量分别为0, 3.9e13, 7.8e14 ; 模拟上采用的trapping time 分别为：8.9ns, 0.79ns, 0.06ns)
 3.9e13:
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime_compare_3.9e13.png)
@@ -42,6 +54,9 @@ Team Report: 2023-06-05
 trapping time 和irradiation的对数成线性关系![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime01.png)
 
 ## Waveform 
+### Latest
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_trappingtime_0_result.png)
+
 ### 最新NGspice模拟结果和实验对比
 以500V为基准调整激光单脉冲能量为1.215e-11J，使得实验和模拟结果符合良好![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230505_top_tct_exp_and_sim_compare4_500V.png)
 - 将各电压点实验模拟比对结果展示如下
@@ -146,7 +161,16 @@ raser模拟结果：$I_{max}=150\mu A$
 - 由于BB电子学只能修改曲线的下降沿，所以图像上下降沿的比对较吻合，上升沿相差较大
 
 ## Charge
-
+### Latest
+电荷收集效率比对
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_cce_compare_result.png)
+不同辐照下电荷收集
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_cce_result.png)
+3.9e13
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_3.9e13_th1f_result.png)
+iv：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_iv_result.png)
+### before
 目前的电荷收集效率比对结果为![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230505_top_tct_exp_and_sim_compare4_cce.png)
 >采用NGspice处理后波形（波形输入）；更新时间：23.05.05
 
