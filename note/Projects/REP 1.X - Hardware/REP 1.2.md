@@ -7,7 +7,7 @@ Status: Active
 Todo: 科琪上传第一次流片结果，何野测试IC和CV
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-06-6
+Updated: 2023-06-12
 ---
 
 # SICAR1 Fabrication（第一次）
@@ -17,10 +17,16 @@ Updated: 2023-06-6
 ## Overview 
 
 - SICAR1 Run1 
+   - 测试IV和CV，分析数据[[何野]]
+   - 分析欧姆接触电阻率[[王科琪]]
+   - 测试电荷收集[[解凯博]]
+   - 测试时间分辨[[何野]]
 - SICAR1 Run2 
+   - 流片（根据第一次流片确认钝化层厚度）
 - Open Tasks 
-
-
+  - 减小漏电流设计（保护环设计等查找论文）
+-  [x] Presentation
+	-  [ ]   The 42nd RD50 Workshop 
 ## 芯片外延
 SICAR1设计参数
 ![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110358.png)
@@ -39,52 +45,29 @@ SICAR1 SIMS测试结果
 [[王科琪]]
 - 整体效果：
     ![photolithography.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography.png)
-- M1
-    ![M1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/7014bb4b7ac4846c4677685ea976e33.png)
-- M2
-    ![M2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/24d01f4c8216f032963ad5bf83012c0.png)
-- M3
-    ![M3.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/74c68ea12c0d1f5b3ad4f171863d8e7.png)
-- M4钝化层
-    ![M4.png |400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3e5f112e22f4965936333807e059b48.png)
-   
+
 
 ### 第一次流片工艺
 [[王科琪]]， [[何野]]
 - 清洗![clean.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/clean.png)
-- 刻蚀台面
-    - 涂光刻胶（负胶）
-    - 光刻显影台面（M1）
-    - 刻蚀台面（四块2cmX2cm的片子由纳米所代做）
-	![刻蚀1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%801.png)
+- 刻蚀台面	![刻蚀1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%801.png)
 	![刻蚀2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%802.png)
 
 
 - 制造电极  
-    - 涂光刻胶（负胶）
-    - 光刻显影P电极（M2）![M2-1-3-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-3-50.jpg)
+    - ![M2-1-3-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-3-50.jpg)
     ![M2-1-2-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-2-50.jpg)
-
-    - 电子束蒸发Ni/Ti/Al=60/30/80nm
-    - 金属剥离、清洗
     ![20230404_15_2.JPG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230404_15_2.JPG)
 
 	![20230404_15_5.JPG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230404_15_5.JPG)
 
-    - 淀积N电极
-    - 退火
 - 淀积钝化层
-    - PECVD淀积钝化层（364nm）
+    - PECVD淀积钝化层
     ![SICAR1_2_3.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/SICAR1_2_3.jpg)
 
-    - 光刻显影（M2）
-    - 刻蚀氧化层
 -  制造Pad
-    - 涂光刻胶（负胶）
-    - 光刻显影（M3）
-    - 磁控溅射Pad（Al=500um）
-    - Pad剥离
-    - 低温退火
+    - 磁控溅射Pad
+
 ### 第一次流片工艺流程图
 [[王科琪]]
 ![process.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/e314bbfe289d745761c1e47f80207de.jpg)
@@ -105,36 +88,15 @@ SICAR1 SIMS测试结果
 | 11 | 刻蚀钝化层 | 4 |
 | 12 | 光刻钝化层 | 4 | 1900 |
 | 13 | 刻蚀钝化层 | 4 |
-| 总计 | | 4 | 35495 |
+| 14 | 磁控溅射 | 4 | 2200 |
+| 总计 | | 4 | 37695 |
 
 ### 第一次流片问题与后期改进
 [[王科琪]]
-| 序号 | 问题 | 改进 |
-| : - : | : - : | : - : |
-| 1 | 电极出现白色圆点 | 调整退火与PECVD的顺序，先退火 |
-| 2 | 漂洗二氧化硅时，洗去过量的二氧化硅 | 
-| 3 | 晶圆表面有杂质 | 每一次工艺之前都要对晶圆进行清洗 |
-| 4 | 光刻版 | 增加钝化层；重新设计版标；修改欧姆接触电阻率测试版 |
 
 ### 第一次流片工艺总结
 [[何野]]
-- 清洗：去除表面的杂质
-	- 去除油污和有机物：依次使用丙酮、乙醇、去离子水煮洗
-	- 去除颗粒和有机物： 去离子水：氨水：双氧水=5：1：1，加热至80℃浸泡10min，之后用去离子水清洗
-	- 去除氧化物： 去离子水：氨水：氢氟酸=3：2：1，浸泡2min，之后用去离子水清洗
-	- 去除有机物和金属杂质：双氧水：浓硫酸=3：7，加热至125℃，浸泡19min，之后用去离子水清洗
-- 光刻
-	- 洗光刻板：用丙酮棉球擦洗光刻板，然后使用去离子水冲洗，洗完之后浸泡在去离子水中带到光刻间
-	- 片子放到预处理箱中
-	- 涂光刻胶、前烘、显影、后烘
-- 金属剥离：蒸完金属之后去除掉有光刻胶的部分
-	- 在丙酮中浸泡一段时间后，用针筒冲洗丙酮去除金属
-	- 乙醇、去离子水清洗掉丙酮，将片子吹干
-- 剥离二氧化硅
-	- 使用BOE腐蚀
-- 刻蚀之后去除硅油 没有除干净光刻胶就涂不上去
-	- 用蘸有异丙醇的棉球擦洗背面，再用蘸有丙酮的棉球擦
-	- 使用打胶机清洗背面，再对背面和正面反复去油知道看不见硅油
+
 --- 
 ### 第一次流片IV和CV测试
 [[何野]]， [[解凯博]]
@@ -228,6 +190,17 @@ SICAR1 SIMS测试结果
 	- $V_{GL}$：77V
 	- $V_{FD}$：＞200V
 - 可以看出以上器件都有$V_{GL}$与$V_{FD}$（是LGAD），但是与设计的预期差别较大
+---
+- 5mm器件的IV、CV
+	- IV
+		- 反向![5mmIVR](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091132.png)
+		- 正向![5mmIVF](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091243.png)
+	- CV
+		- ![5mmCV](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091344.png)
+		- 1/$C^{2}$-V![5mmC2V](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091418.png)
+		- 耗尽区深度![depth](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091506.png)
+		- 掺杂浓度![doping](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091617.png)
+		- 耗尽电压![Vfd](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612092429.png)
 ---
 ### 第一次欧姆接触测试
 [[何野]]
