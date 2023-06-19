@@ -7,7 +7,7 @@ Status: Active
 Todo: 科琪上传第一次流片结果，何野测试IC和CV
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-06-6
+Updated: 2023-06-12
 ---
 
 # SICAR1 Fabrication（第一次）
@@ -190,6 +190,17 @@ SICAR1 SIMS测试结果
 	- $V_{GL}$：77V
 	- $V_{FD}$：＞200V
 - 可以看出以上器件都有$V_{GL}$与$V_{FD}$（是LGAD），但是与设计的预期差别较大
+---
+- 5mm器件的IV、CV
+	- IV
+		- 反向![5mmIVR](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091132.png)
+		- 正向![5mmIVF](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091243.png)
+	- CV
+		- ![5mmCV](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091344.png)
+		- 1/$C^{2}$-V![5mmC2V](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091418.png)
+		- 耗尽区深度![depth](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091506.png)
+		- 掺杂浓度![doping](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091617.png)
+		- 耗尽电压![Vfd](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612092429.png)
 ---
 ### 第一次欧姆接触测试
 [[何野]]
