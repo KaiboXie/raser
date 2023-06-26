@@ -49,30 +49,13 @@ SICAR1 SIMS测试结果
 
 ### 第一次流片工艺
 [[王科琪]]， [[何野]]
-- 清洗![clean.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/clean.png)
-- 刻蚀台面	![刻蚀1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%801.png)
-	![刻蚀2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%802.png)
 
-
-- 制造电极  
-    - ![M2-1-3-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-3-50.jpg)
-    ![M2-1-2-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-2-50.jpg)
-    ![20230404_15_2.JPG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230404_15_2.JPG)
-
-	![20230404_15_5.JPG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230404_15_5.JPG)
-
-- 淀积钝化层
-    - PECVD淀积钝化层
-    ![SICAR1_2_3.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/SICAR1_2_3.jpg)
-
--  制造Pad
-    - 磁控溅射Pad
 
 ### 第一次流片工艺流程图
 [[王科琪]]
-![process.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/e314bbfe289d745761c1e47f80207de.jpg)
 
 ### 第一次流片工艺花销（大致）
+
 | 序号 | 工艺 | 数量 | 花销 |
 | : - : | : - : | : - : | : - : |
 | 1 | 光刻P电极 | 2 | 1500（估计） |
