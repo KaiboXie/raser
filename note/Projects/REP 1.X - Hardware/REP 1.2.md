@@ -29,14 +29,10 @@ Updated: 2023-06-19
 	-  [ ]   The 42nd RD50 Workshop 
 ## 芯片外延
 SICAR1设计参数
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110358.png)
+此处省去
 
-SICAR1 出厂测试结果
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110443.png)
 
-SICAR1 SIMS测试结果
 
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110633.png)
 
 
 
@@ -248,7 +244,14 @@ SICAR1 SIMS测试结果
 
 [[张希媛]], [[王聪聪]]
 
-## 芯片外延
+
+
+
+
+
+
+
+
 
 ## 芯片制作
 ### 光刻版1.0设计（M1、M2、M3、M4）
