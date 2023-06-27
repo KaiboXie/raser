@@ -5,7 +5,7 @@ Author: 何野 解凯博
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-06-12
+Updated: 2023-06-26
 ---
 
 # 正在进行的工作
@@ -26,9 +26,10 @@ Updated: 2023-06-12
 	-  [ ] 改进实验重复测试
 		-  [x] 将β源放置在sensor背面保证大部分电子可以都穿过sensor
 		-  [x] 更改闪烁体的摆放方式和位置，保证触发效率
+		-  [ ] 将闪烁体置于碳化硅前
 	-  [ ] 制作用于FPGA产生的高频大信号的分压板，使信号分压后可用于T1问题的检测
 
-## alibava实验
+## alibava实验结果
 - ### test1
 	- 1.5mm NJU-SiC-PIN * 6（未辐照）
 	- 实验数据位置：服务器
