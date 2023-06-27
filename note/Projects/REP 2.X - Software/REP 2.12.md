@@ -39,11 +39,11 @@ Created: 2023-04-05
     - 具体是建立三个Si片，都设定成灵敏探测器，这样可以只输出粒子在探测器内部的信息，优化了输出；优化了可视化图形的颜色![vis.png|500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/vis.png)
     - 设定粒子源并发射粒子，读出简易的探测器响应，即粒子在探测器内部的能量沉积和位置信息![output.png|1150](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/output.png)
 - 位置分辨
-    - 通过计算m1,m2中的击中信息的平均值，与si strip的击中信息比较得出位置分辨 (需要通过升级探测器来改进)![位置分辨(粗糙).png|1200](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BD%8D%E7%BD%AE%E5%88%86%E8%BE%A8.png)
+    通过计算m1,m2中的击中信息的平均值，与si strip的击中信息比较得出位置分辨 (需要通过升级探测器来改进)![位置分辨(粗糙).png|1200](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BD%8D%E7%BD%AE%E5%88%86%E8%BE%A8.png)
 - 升级Si片
     - 将三个Si片改进成5×5的小Si片，以此来改进位置分辨的算法![三视图.png|1100](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/QQ%E5%9B%BE%E7%89%8720230619104344.png)
-    
-    
+- 位置分辨的改进
+    击中信息不再采用Geant4理论计算的结果，而是通过判断粒子击中的si片，输出si片的中心位置，加上si片半宽的误差来输出击中信息![|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/5%C3%975.png)![|1000](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BA%8C%E7%BB%B4%E4%BD%8D%E7%BD%AE%E5%88%86%E8%BE%A8.png)
 ---
 
 
