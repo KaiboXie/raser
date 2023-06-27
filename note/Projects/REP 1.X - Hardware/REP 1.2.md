@@ -7,7 +7,7 @@ Status: Active
 Todo: 科琪上传第一次流片结果，何野测试IC和CV
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-06-12
+Updated: 2023-06-19
 ---
 
 # SICAR1 Fabrication（第一次）
@@ -191,7 +191,20 @@ SICAR1 SIMS测试结果
 	- $V_{FD}$：＞200V
 - 可以看出以上器件都有$V_{GL}$与$V_{FD}$（是LGAD），但是与设计的预期差别较大
 ---
-- 5mm器件的IV、CV
+- 5mm器件的IV、CV （new）
+	- IV
+		- 反向![RD50_IV_R.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/RD50_IV_R.png)
+		- 正向![RD50_IV_F.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/RD50_IV_F.png)
+	- CV
+		- ![RD50_CV.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/RD50_CV.png)
+		- 1/$C^{2}$-V![RD50_C2V.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/RD50_C2V.png)
+	- 耗尽区宽度：![depth_compare.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/depth_compare.png)
+
+
+
+
+---
+- 5mm器件的IV、CV （old）
 	- IV
 		- 反向![5mmIVR](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091132.png)
 		- 正向![5mmIVF](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230612091243.png)
