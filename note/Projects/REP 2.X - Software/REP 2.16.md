@@ -1,11 +1,11 @@
 ---
-REP: 1.9
+REP: 2.16
 Title: TAICHU3 Beam Test Simulation
 Author: 胡一鸣
 Status: Active
 Type: Hardware 
 Created: 2023-06-09
-Updated: 2023-06-09
+Updated: 2023-06-27
 ---
 
 # TAICHU3 Beam Test Simulation 
