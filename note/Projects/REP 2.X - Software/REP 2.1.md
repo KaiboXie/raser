@@ -30,7 +30,15 @@ Updated: 2023-05-18
 -  [x] 插值后电场导入至RASER     [[石航瑞]]
 
 ### 2023-06-05
--   [ ] 验证DEVSIM解一维电场的RASER结果     [[石航瑞]]
+-   [x] 验证DEVSIM解一维电场的RASER结果     [[石航瑞]]
+
+采用同一参数分别用FEniCS和DEVSIM得到模拟结果，如下图所示：
+- FEniCS结果：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230701_shhr_devsim_1d_compare_fenics.png)
+
+- DEVSIM结果
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230701_shhr_devsim_1d_compare_devsim.png)
+
+
 
 
 ## Use FEniCS 
