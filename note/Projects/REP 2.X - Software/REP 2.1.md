@@ -15,9 +15,6 @@ Updated: 2023-05-18
 [[朱霖]], [[李星臣]], [[石航瑞]] 
 
 
-
-
-
 ### 2023-05-17 
 
 - [[5 FEniCS 介绍]]
@@ -30,7 +27,23 @@ Updated: 2023-05-18
 -  [x] 插值后电场导入至RASER     [[石航瑞]]
 
 ### 2023-06-05
--   [ ] 验证DEVSIM解一维电场的RASER结果     [[石航瑞]]
+-   [x] 验证DEVSIM解一维电场的RASER结果     [[石航瑞]]
+
+采用同一参数分别用FEniCS和DEVSIM得到模拟结果，如下图所示：
+- FEniCS结果：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230701_shhr_devsim_1d_compare_fenics.png)
+
+- DEVSIM结果
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230701_shhr_devsim_1d_compare_devsim.png)
+
+
+
+### 2023-07 DEVSIM解二维电场计划
+参考nju_pin_5mm_2Dmesh.py及杨涛博士的Node.py、DriftDiffusion.py、Physics.py、Initial.py等，完善devsim_solve.py 或新写devsim_solve_2D.py
+1. 实现基本框架（Material、Doping、Meshing、Solver）
+2. 调整或增加物理边界条件、初始解等
+3. 与FEniCS结果对比（与 2. 循环迭代）
+
+
 
 
 ## Use FEniCS 
