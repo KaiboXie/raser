@@ -34,7 +34,13 @@ TAICHU3是多层硅像素顶点径迹探测器，目前已经完成了两次Test
 ![clustersize.PNG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/clustersize.PNG)
 下面我做了个简单的示意图，展示为什么会以1-4 clustersize为主![cluster_from.PNG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/cluster_from.PNG)
 
-
+---
+- [ ]  参考allpix2
+- [ ] 布局像素仿真代码架构
+	- [ ] 建立一套可以复用的，OOP的架构
+	- [ ] 目前想法：
+		- [ ] Pixel为父类，根据未来可能出现的具体设计子类Pixel，比如我要的是TAICHU3
+		- [ ] Pixel类最主要的构造部分应当是 Geometry和Dopping， 使用json和setting模块作为输入参数，同时要留有给Geant4以及DEVISM的接口作为几何/边界条件。（或许DEVISM是直接通过setting来联系的不需要和这个模块有交互？）
 
 
 
