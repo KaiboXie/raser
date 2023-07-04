@@ -5,7 +5,7 @@ Author: 肖素玉
 Status: in progress
 Type:  Hardware
 Created: 2023-05-05
-Updated: 
+Updated: 2023-06-08
 ---
 
 ![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230430172257.png)
@@ -29,3 +29,8 @@ E = h/k * c/$\lambda$ = 1240/$\lambda$ , E in eV, $\lambda$ in nm
 | Si| 1.12-1.17eV| 1078nm| 1200-1500nm| 1300nm|
 | SiC | 3.09eV| 401nm| 447-558nm| 484nm? |
 
+## edge TCT 测试结果
+
+![20230608run2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/20230608run2.png)
+
+![20230608run3.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/20230608run3.png)
