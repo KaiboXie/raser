@@ -34,6 +34,7 @@ Ref DOI: https://onlinelibrary.wiley.com/doi/abs/10.1002/pssa.200925213
 
 
 # 建立一维实体模型
+(./python/nju_pin_5mm_5mm_mesh.py--------./run 1.3.2)
 ## 必需的库文件（raser/Node）
 ## Step1.建立一维网格及模拟器件结构
 使用devsim自带的网格划分器
@@ -89,3 +90,45 @@ devsim.edge_from_node_model(device=device,region=region,node_model="Acceptors")
 ## edge_mode
 参考边界上的节点模型，边缘模型相对于边界上两节点上计算的。
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/edgemodel.png)
+
+
+
+# 仿真IV&CV曲线
+## 定义主函数
+定义参数的字典集合，括号内部sys.argv[ ]其实就是一个列表，里边的项为输入的参数，如果三叔中包含device项，则在字典中查看检索关键字和检索内容，关键字为device，检索内容是device对应的region。否则输出检索关键字错误。
+定义网格，初始化解，
+```js
+initial_solution(device,region,para_dict)
+```
+在参数字典字典内调出初始解的类型，初始解类型包括：缺陷，最大电压值，电流，电容。
+对于缺陷和最大电压，可以直接从字典中调用，对于电流和电容
+电流采用
+```js
+solve_iv(device,region,v_max,para_dict)
+```
+通过最大电压求解电流
+电容采用
+```js
+solve_cv(device,region,v_max,para_dict,frequency=1e3)
+```
+通过输入最大电压，频率为$10^3$ ,求解电容（猜测使用RC电路震荡，震荡频率设置为frequency）
+
+## 定义参数字典
+对参数列表做历遍，利用上面建立集合的计算方法建立字典，利用para.rpartition分割字符，并对检索关键字和检索内容建立字典。输出到参数字典。
+
+# 确定网格
+输入device对应字段，将device对应的网格导入，并将对应的网格，掺杂。
+## 外延层集合建立
+
+```js
+devsim.set_parameter(name = "extended_solver", value=True)
+```
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%A4%96%E5%BB%B6%E7%89%87.png)
+extended_solver：      外延的精度矩阵牛顿和线性求解
+extended_model：     外延的精度模型评价
+extended_equation： 外延的精度方程装配
+建立外延层参数。
+```js
+devsim.circuit_element(name="V1", n1=Physics.GetContactBiasName("top"), n2=0, value=0.0, acreal=1.0, acimag=0.0)
+```
+在电路中，交流电实数部分为1，虚部为0。电路中元素为电压，命名为V1，n1为电路节点，n2为默认0
