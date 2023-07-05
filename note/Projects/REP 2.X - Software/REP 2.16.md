@@ -35,13 +35,17 @@ TAICHU3是多层硅像素顶点径迹探测器，目前已经完成了两次Test
 下面我做了个简单的示意图，展示为什么会以1-4 clustersize为主![cluster_from.PNG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/cluster_from.PNG)
 
 ---
+## 像素探测器仿真
 - [ ]  参考allpix2
+	- [ ] 同样为探测器仿真软件，也使用已有的软件来完成部分功能，不过简化了接口使得用户更方便使用
 - [ ] 布局像素仿真代码架构
-	- [ ] 建立一套可以复用的，OOP的架构
-	- [ ] 目前想法：
-		- [ ] Pixel为父类，根据未来可能出现的具体设计子类Pixel，比如我要的是TAICHU3
-		- [ ] Pixel类最主要的构造部分应当是 Geometry和Dopping， 使用json和setting模块作为输入参数，同时要留有给Geant4以及DEVISM的接口作为几何/边界条件。（或许DEVISM是直接通过setting来联系的不需要和这个模块有交互？）
-
+	- [x] 目前想法：（废弃）
+		- [x] Pixel为父类，根据未来可能出现的具体设计子类Pixel，比如我要的是TAICHU3
+		- [x] Pixel类最主要的构造部分应当是 Geometry和Dopping， 使用json和setting模块作为输入参数，同时要留有给Geant4以及DEVISM的接口作为几何/边界条件。（或许DEVISM是直接通过setting来联系的不需要和这个模块有交互？）
+	- [ ] 优先考虑在已有代码中增加一部分：
+		- [ ] 在Particle类中增加输入参数判断项，来执行各自的探测器仿真，利于维护
+		- [ ] 从利于维护的角度来说，在已有文件函数或类中增加一部分（使用if判断输入参数隔离环境）>增加一个类>增加一个文件
+		- [ ] 在自己的部分中，如果存在不需要执行的判断句，弹出报错（raise）比直接pass更加利于维护
 
 
 
