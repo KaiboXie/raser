@@ -47,27 +47,14 @@ CV结果：
 ![ea31d8f2b8766526dcf1714325fcc1a.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/ea31d8f2b8766526dcf1714325fcc1a.jpg)
 
 IV结果：
+![irradiation_IV_0626.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/irradiation_IV_0626.png)
+第二次测漏电流增大的情况：
+![compare_IV_i5_230626.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/compare_IV_i5_230626.png)
+
+![compare_IV_e3_230626.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/compare_IV_e3_230626.png)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-总结：IV曲线基本一致的样品为四片，有两片在电压500V左右时发生了跳变，二次测量发现其漏电流有了明显的增加。与5mmx5mm的样品相比，1.5mmx1.5mm的样品在漏电流增加之前相对较小。[[REP 1.1]]
+总结：IV曲线基本一致的样品为四片，有两片漏电流较大。部分样品电流在600V以上突然增加，二次测量发现其漏电流有了明显的增加。与5mmx5mm的样品相比，1.5mmx1.5mm的样品在漏电流增加之前相对较小。[[REP 1.1]]
 
 - [x] 准备辐照计划
 ![dfa00cdf54d21eecae794c047261852.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/dfa00cdf54d21eecae794c047261852.jpg)
