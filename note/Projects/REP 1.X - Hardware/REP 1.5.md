@@ -202,3 +202,26 @@ T1在空载状态下就会引入新的噪声，UCSC则不会
 
 ### 疑问：
 - [ ] 厂家测试得到的T1的噪声较大的结论在没有UCSC作为对比的情况下时如何得到的，标准是什么
+---
+### β源
+发射的β粒子的能量：
+The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr and at 2.280 MeV from   <sup>90</sup>Y
+β源的活度：
+![屏幕截图 2023-07-07 175827.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-07-07%20175827.png)
+测试方法不完善，需要进一步测试
+β源底部：
+![bottom.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/bottom.jpg)
+底部中央小孔的边长约为1.5mm~2.5mm
+
+---
+### T1板屏蔽罩测试
+屏蔽罩：
+![屏蔽外壳1.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E8%94%BD%E5%A4%96%E5%A3%B31.jpg)
+测试结果：
+无β源时：
+![无β源div5.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%97%A0%CE%B2%E6%BA%90div5.jpg)
+加β源时：
+![有β源5ns.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%9C%89%CE%B2%E6%BA%905ns.jpg)
+噪声的峰值都在10mV左右(连接主放的情况下)
+测试屏蔽罩未与接地，需要进一步测试接地的情况
+
