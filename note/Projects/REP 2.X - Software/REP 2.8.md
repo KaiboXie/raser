@@ -26,6 +26,15 @@ Team Report: 2023-06-05
 
 我们的激光器10Hz，单脉冲在70uJ左右，功率在100uW-700uW之间
 
+PM101: 
+https://www.thorlabschina.cn/thorproduct.cfm?partnumber=PM101
+Operation manual: 
+https://www.thorlabschina.cn/drawings/4d1ac5f6ea8b7605-9CAA2977-9D35-C9D1-3D7B9ECD730FAF1D/PM101-Manual(English).pdf
+Software: 
+https://www.thorlabs.com/software_pages/ViewSoftwarePage.cfm?Code=OPM
+Operation manual: 
+https://www.thorlabs.com/software/MUC/OPM/v5.0/TL_OPM_V5.0_web-secured.pdf
+
 ## NGspice
 经过 TCT_T1.py 得到 SiC 在激光照射后输出的电流信号 current:e+h ，根据 current:e+h 在描述 T1 电路的文件 paras/T1.cir 的基础上改写输入电流源得到新的可供 ngspice 执行的文件 output/T1_tmp.cir ，执行 output/T1_tmp.cir 即可得到 T1 输出的电压关于时间的数据并保存至 output/t1.raw 供后续使用ROOT画图
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/500V.jpg)
