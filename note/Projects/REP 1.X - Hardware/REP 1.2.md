@@ -19,24 +19,22 @@ Updated: 2023-06-19
 - SICAR1 Run1 
    - 测试IV和CV，分析数据[[何野]]
    - 分析欧姆接触电阻率[[王科琪]]
-   - 测试电荷收集[[解凯博]]
-   - 测试时间分辨[[何野]]
+   - 分析完IV和CV后7月初完成划片准备测试电荷收集和时间分辨[[何野]]
+   - 测试电荷收集[[解凯博]]（7月29日之前完成）
+   - 测试时间分辨[[何野]]（7月29日之前完成）
 - SICAR1 Run2 
    - 流片（根据第一次流片确认钝化层厚度）
+   - 高温假之前完成第二次流片（7月29日之前完成）[[王科琪]]、[[何野]]、[[解凯博]]
 - Open Tasks 
   - 减小漏电流设计（保护环设计等查找论文）
 -  [x] Presentation
 	-  [ ]   The 42nd RD50 Workshop 
 ## 芯片外延
 SICAR1设计参数
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110358.png)
+此处省去
 
-SICAR1 出厂测试结果
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110443.png)
 
-SICAR1 SIMS测试结果
 
-![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230605110633.png)
 
 
 
@@ -49,30 +47,13 @@ SICAR1 SIMS测试结果
 
 ### 第一次流片工艺
 [[王科琪]]， [[何野]]
-- 清洗![clean.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/clean.png)
-- 刻蚀台面	![刻蚀1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%801.png)
-	![刻蚀2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%88%BB%E8%9A%802.png)
 
-
-- 制造电极  
-    - ![M2-1-3-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-3-50.jpg)
-    ![M2-1-2-50.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/M2-1-2-50.jpg)
-    ![20230404_15_2.JPG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230404_15_2.JPG)
-
-	![20230404_15_5.JPG](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230404_15_5.JPG)
-
-- 淀积钝化层
-    - PECVD淀积钝化层
-    ![SICAR1_2_3.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/SICAR1_2_3.jpg)
-
--  制造Pad
-    - 磁控溅射Pad
 
 ### 第一次流片工艺流程图
 [[王科琪]]
-![process.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/e314bbfe289d745761c1e47f80207de.jpg)
 
 ### 第一次流片工艺花销（大致）
+
 | 序号 | 工艺 | 数量 | 花销 |
 | : - : | : - : | : - : | : - : |
 | 1 | 光刻P电极 | 2 | 1500（估计） |
@@ -222,7 +203,7 @@ SICAR1 SIMS测试结果
 1、欧姆接触电阻率测试（最优欧姆接触）**何野测试，科琪分析**
 
 - [ ] P电极金属Ni/Ti/Al=60/30/80nm，不同退火温度800℃、950℃、1050℃（最高温度）欧姆接触电阻率。
-
+     ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/compare.png)
 - [ ] 相同退火温度（1050℃）不同金属的欧姆接触电阻率（Ni/Ti/Al=60/30/80nm，Ni/Ti/Al=60/20/100nm，Ni/Ti/Al=50/15/80nm）
 
 2、温度对Sicar1电学性能影响研究（工作电压、暗电流、电阻率结电容等）
@@ -248,7 +229,14 @@ SICAR1 SIMS测试结果
 
 [[张希媛]], [[王聪聪]]
 
-## 芯片外延
+
+
+
+
+
+
+
+
 
 ## 芯片制作
 ### 光刻版1.0设计（M1、M2、M3、M4）
