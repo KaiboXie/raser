@@ -30,7 +30,7 @@ PM101:
 https://www.thorlabschina.cn/thorproduct.cfm?partnumber=PM101
 Operation manual: 
 https://www.thorlabschina.cn/drawings/4d1ac5f6ea8b7605-9CAA2977-9D35-C9D1-3D7B9ECD730FAF1D/PM101-Manual(English).pdf
-Software:
+Software: 
 https://www.thorlabs.com/software_pages/ViewSoftwarePage.cfm?Code=OPM
 Operation manual: 
 https://www.thorlabs.com/software/MUC/OPM/v5.0/TL_OPM_V5.0_web-secured.pdf
