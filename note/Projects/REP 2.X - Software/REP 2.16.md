@@ -46,6 +46,20 @@ TAICHU3是多层硅像素顶点径迹探测器，目前已经完成了两次Test
 		- [ ] 在Particle类中增加输入参数判断项，来执行各自的探测器仿真，利于维护
 		- [ ] 从利于维护的角度来说，在已有文件函数或类中增加一部分（使用if判断输入参数隔离环境）>增加一个类>增加一个文件
 		- [ ] 在自己的部分中，如果存在不需要执行的判断句，弹出报错（raise）比直接pass更加利于维护
+- [ ] RASER模块理解
+	- [x] 示例：
+		my_f = raser.FenicsCal(my_d,dset.fenics)            -> 载流子漂移模块，目前正在改用Devsim，该部分初始化了边界条件
+		my_g4p = raser.Particles(my_d, my_f, dset)        -> 初始化Geant4, 并且生成了原初电离的粒子信息的文件
+	        my_current = raser.CalCurrentG4P(my_d, my_f, my_g4p, 0)   ->尚未了解，应当是使用g4数据和载流子漂移方程生成文件
+	        ele_current = raser.Amplifier(my_current, dset.amplifier)       ->尚未了解，应当是根据外部电路和上一步文件给出最终想要的数据
+	- [x] Setting: 使用json文件作为输入，在该模块下整理为可以被后续模块使用的部分
+	- [x] Geant4：提过简单的接口给用户，来运行G4
+	- [ ] Devsim：比较关键的部分，处理载流子漂移，现在还未实现三维,[[DEVSIM操作手册]]
+		- [ ] 理论部分：载流子漂移[[6 DEVSIM 介绍]]，以及
+		- [ ] 代码部分：初始化中读取参数构造边界条件，并且提供电场电势函数供CalCurrent部分使用
+	- [ ]  CalCurrent:
+	- [ ] Amp:
+
 
 
 
