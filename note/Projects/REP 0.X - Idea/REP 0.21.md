@@ -25,7 +25,7 @@ Updated: 2023-07-03
 
 ## Select
 
-The true selection happens naturally with several milestones in the first 3 months (180 days): 
+The true selection happens naturally with several milestones in the first 6 months (180 days): 
 
 - M1:  Create proper member's name with two key elements - REPs, Weekly Plan （ability to plan, execute, communicate and integrate into team) 
 - M2:  Journal Club (ability to select and develop research topic)
