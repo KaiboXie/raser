@@ -1,4 +1,3 @@
-![Uploading file...o56la]()
 ---
 REP: 1.1
 Title: SiC PIN NJU 
