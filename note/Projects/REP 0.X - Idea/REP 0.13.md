@@ -53,11 +53,5 @@ Updated: 2024-04-25
 
 #### 光刻版设计（M1、M5、M6、M7）
 
-- 整体效果    ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography1.1.png)
-- M1    ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography1.1_M1.png)
-- M5    ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography1.1_M5.png)
-- M6   ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography1.1_M6.png)
-- M7    ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography1.1_M7.png)
 
 #### 工艺流程设计
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/technology%20process%201.2.jpg)
