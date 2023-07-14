@@ -44,6 +44,9 @@ Created: 2023-04-05
     - 将三个Si片改进成5×5的小Si片，以此来改进位置分辨的算法![三视图.png|1100](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/QQ%E5%9B%BE%E7%89%8720230619104344.png)
 - 位置分辨的改进
     击中信息不再采用Geant4理论计算的结果，而是通过判断粒子击中的si片，输出si片的中心位置，加上si片半宽的误差来输出击中信息![|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/5%C3%975.png)![|1000](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BA%8C%E7%BB%B4%E4%BD%8D%E7%BD%AE%E5%88%86%E8%BE%A8.png)
+- 径迹重建
+    根据除DUT外所有探测器的击中位置信息，用最小二乘法拟合这些三维空间数据点来得出拟合直线，计算出直线在DUT的位置信息，与DUT的击中信息比较进一步得出位置分辨
+    直线方程采用的形式：x = k1 * z + b1；y = k2 * z + b2，具体可见一篇最小二乘法的参考文献：https://www.doc88.com/p-8189740853644.html（文献公式有误，2应该替换为n，n为三维空间数据点的个数）![|800](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E9%87%8D%E5%BB%BA.png)
 ---
 
 
