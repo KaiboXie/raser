@@ -9,7 +9,7 @@ Created: 2023-05-01
 Updated: 2023-05-12
 ---
 
-# ITk Strip Silicon Sentor Irradiatino with 80 MeV proton beam
+# ITk Strip Silicon Sensor Irradiation with 80 MeV proton beam
 
 李晖、李瞻、[[史欣]]* 
 
