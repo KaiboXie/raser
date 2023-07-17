@@ -63,10 +63,10 @@ def main():
     if "proton-irrad" in args:
         my_f = raser.FenicsCal2D(my_d,dset.fenics)
         my_g4p = raser.SiITk(my_d, my_f, dset)
-        my_current = raser.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-        ele_current = raser.Amplifier(my_current, dset.amplifier)
-        drawsave.get1_beam_number(my_g4p,ele_current)
-        drawsave.cce(my_d,my_f,my_current)
+        #my_current = raser.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+        #ele_current = raser.Amplifier(my_current, dset.amplifier)
+        drawsave.get1_beam_number(my_g4p)
+        #drawsave.cce(my_d,my_f,my_current)
         return
 
     if "Carrier" in args:
@@ -94,10 +94,15 @@ def main():
         drawsave.cce(my_d,my_f,my_current)
         return
     print(det_dic['voltage'])
+
     e_field_filepath = './output/devsim/1D_NJU_PIN/'\
                         + str(-int(det_dic['voltage'])) + '.0V_x_E.csv'
-    #my_f = raser.FenicsCal(my_d,dset.fenics)
-    my_f = raser.DevsimCal(e_field_filepath, my_d, dset.fenics)
+    try:
+        my_f = raser.DevsimCal(e_field_filepath, my_d, dset.fenics)
+    except FileNotFoundError:
+        print("devsim field not found, using fenics to build the field")
+        my_f = raser.FenicsCal(my_d,dset.fenics)
+        
     my_g4p = raser.Particles(my_d, my_f, dset)
     if "scan=True" not in args:
         my_current = raser.CalCurrentG4P(my_d, my_f, my_g4p, 0)

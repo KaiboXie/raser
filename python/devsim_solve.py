@@ -88,6 +88,7 @@ def extend_set():
 
 def initial_solution(device,region,para_dict):
     # Initial DC solution
+    
     Initial.InitialSolution(device, region, circuit_contacts="top")
     devsim.solve(type="dc", absolute_error=1.0, relative_error=1e-10, maximum_iterations=50)
 
@@ -98,6 +99,7 @@ def initial_solution(device,region,para_dict):
     if "irradiation" in para_dict:
         if device == "1D_ITK_MD8":
             Initial.DriftDiffusionInitialSolutionSiIrradiated(device, region, circuit_contacts="top")
+            devsim.set_parameter(device=device, name=Physics.GetContactBiasName("top"), value=0.05)
         else:
             Initial.DriftDiffusionInitialSolutionIrradiated(device, region, circuit_contacts="top")
         """names        = ["E30K"   , "V3"      , "Ip"      , "H220"    , "CiOi"    ]
@@ -108,8 +110,9 @@ def initial_solution(device,region,para_dict):
                 devsim.add_db_entry(material="global",   parameter="N_t_irr_"+name,     value=N_t_irr,   unit="cm^(-3)",     description="N_t_"+name)
             devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-5, maximum_iterations=400)
             print("Neutron_eq="+str(Neutron_eq))"""
-        devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-5, maximum_iterations=400)
-
+        devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-5, maximum_iterations=400,maximum_divergence=300)
+        
+        
 def set_defect(paras):
     #Z_1/2
     devsim.add_db_entry(material="global",   parameter="sigma_n",     value=float(paras["sigma_n"]),   unit="s/cm^2",     description="sigma_n")
@@ -149,18 +152,22 @@ def solve_iv(device,region,v_max,para_dict):
         args111 = ["det_name=ITk-Si-strip","parfile=paras/setting.json"]
         dset111 = Setting(args111)
         det_dic111 = dset111.detector    
-        doping1=str(det_dic111['doping'])+"e12"
+        doping1=det_dic111['doping']
         ITK_MD8_doping=doping1
         area_factor = 1.0/(0.8*0.8)
-        f_md8iv = open("./output/devsim/"+device+"_"+ITK_MD8_doping+"/"+device+condition+"_reverse_iv.csv", "w")
+        f_md8iv = open("./output/devsim/"+device+"_"+"4.7e14"+"/"+device+condition+"_reverse_iv_tau5e-6.csv", "w")
         header_md8iv = ["Voltage","Current"]
         writer_md8iv = csv.writer(f_md8iv)
         writer_md8iv.writerow(header_md8iv)
 
 
-    positions = []
+    positions_mid = []
     intensities = []
     bias_voltages = []
+
+    positions = []
+    electrons = []
+    holes = []
 
     while reverse_v < v_max:
         reverse_top_total_current = solve_iv_single_point(device,region,reverse_v)
@@ -171,14 +178,24 @@ def solve_iv(device,region,v_max,para_dict):
             writer_md8iv.writerow([reverse_v,abs(reverse_top_total_current/area_factor)])        
 
         voltage_step = 100
-        if(reverse_v%voltage_step==0 and reverse_v<v_max_field):
+        if(reverse_v%voltage_step==0.0 and reverse_v<=v_max_field):
             devsim.edge_average_model(device=device, region=region, node_model="x", edge_model="xmid")
-            x = devsim.get_edge_model_values(device=device, region=region, name="xmid") # get x-node values 
+            x_mid = devsim.get_edge_model_values(device=device, region=region, name="xmid") # get x-node values 
             E = devsim.get_edge_model_values(device=device, region=region, name="ElectricField") # get y-node values
             V = reverse_v
-            positions.append(x)
+
+            x = devsim.get_node_model_values(device=device, region=region, name="x") # get x-node values 
+            n = devsim.get_node_model_values(device=device, region=region, name="Electrons")
+            p = devsim.get_node_model_values(device=device, region=region, name="Holes")
+
+            positions_mid.append(x_mid)
             intensities.append(E)
             bias_voltages.append(V)
+
+            positions.append(x)
+            electrons.append(n)
+            holes.append(p)
+
 
         if device == "1D_ITK_MD8":
             reverse_voltage.append(reverse_v)
@@ -186,8 +203,6 @@ def solve_iv(device,region,v_max,para_dict):
             reverse_voltage.append(0-reverse_v)
         reverse_v += 1
 
-        # breakdown
-        if(abs(reverse_top_total_current/area_factor) > 1e3): break
 
     f_iv.close()
     if device == "1D_ITK_MD8":
@@ -195,7 +210,11 @@ def solve_iv(device,region,v_max,para_dict):
     devsim.close_db()
 
     draw_iv(reverse_voltage, reverse_top_current, device, condition)
-    drawsave_ele_field(device, positions,intensities, bias_voltages,condition)
+    draw_ele_field(device, positions_mid, intensities, bias_voltages, condition)
+    draw_electrons(device, positions, electrons, bias_voltages, condition)
+    draw_holes(device, positions, holes, bias_voltages, condition)
+    save_ele_field(device, positions, intensities, bias_voltages, condition)
+
 
 def solve_cv(device,region,v_max,para_dict,frequency):
     condition = ""
@@ -231,7 +250,12 @@ def solve_iv_single_point(device,region,reverse_v):
         devsim.set_parameter(device=device, name=Physics.GetContactBiasName("top"), value=reverse_v)
     else:
         devsim.set_parameter(device=device, name=Physics.GetContactBiasName("top"), value=0-reverse_v)
-    devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-5, maximum_iterations=200)
+    devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-5, maximum_iterations=100,maximum_divergence=50)
+    # try:
+    #     devsim.solve(type="dc", absolute_error=1e10, relative_error=1e-5, maximum_iterations=200,maximum_divergence=50)
+    # except devsim.error as msg:
+    #     if msg=="Convergence failure!":
+    #         raise
     Physics.PrintCurrents(device, "top")
     Physics.PrintCurrents(device, "bot")
     reverse_top_electron_current= devsim.get_contact_current(device=device, contact="top", equation="ElectronContinuityEquation")
@@ -258,6 +282,7 @@ def draw_iv(V,I,device,condition):
     #if device == "1D_ITK_MD8":
     #    fig2.savefig("./output/devsim/{device}_{ITK_MD8_doping}/{device}_{condition}_reverse_iv.png".format(device=device,ITK_MD8_doping=ITK_MD8_doping,condition=condition))
     fig2.savefig("./output/devsim/{}_reverse_iv.png".format(device+condition))
+    fig2.clear()
 
 def draw_cv(V,C,device,condition):
     fig3=matplotlib.pyplot.figure(num=4,figsize=(4,4))
@@ -279,7 +304,7 @@ def draw_cv(V,C,device,condition):
     fig4.savefig("./output/devsim/{}_reverse_c^-2v.png".format(device+condition))
     fig4.clear()
 
-def drawsave_ele_field(device, positions,intensities, bias_voltages,condition):
+def draw_ele_field(device, positions,intensities, bias_voltages,condition):
     fig1=matplotlib.pyplot.figure()
     ax1 = fig1.add_subplot(111)
     for (x,E,V) in zip(positions,intensities, bias_voltages):
@@ -292,7 +317,39 @@ def drawsave_ele_field(device, positions,intensities, bias_voltages,condition):
         ax1.set_xlim(0,5e-4)
     fig1.show()
     fig1.savefig("./output/devsim/{}_reverse_electricfield.png".format(device+condition))
+    fig1.clear()
 
+def draw_electrons(device, positions, electrons, bias_voltages, condition):
+    fig1=matplotlib.pyplot.figure()
+    ax1 = fig1.add_subplot(111)
+    for (x,n,V) in zip(positions, electrons, bias_voltages):
+        matplotlib.pyplot.plot(x,n,label="%s"%(str(V)))
+    matplotlib.pyplot.xlabel('Depth [cm]')
+    matplotlib.pyplot.ylabel('Electron Density [cm^{-3}]')
+    matplotlib.pyplot.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+    ax1.legend(loc='upper right')
+    if device == "1D_SICAR1_LGAD":
+        ax1.set_xlim(0,5e-4)
+    fig1.show()
+    fig1.savefig("./output/devsim/{}_reverse_electrons.png".format(device+condition))
+    fig1.clear()
+
+def draw_holes(device, positions, holes, bias_voltages, condition):
+    fig1=matplotlib.pyplot.figure()
+    ax1 = fig1.add_subplot(111)
+    for (x,p,V) in zip(positions, holes, bias_voltages):
+        matplotlib.pyplot.plot(x,p,label="%s"%(str(V)))
+    matplotlib.pyplot.xlabel('Depth [cm]')
+    matplotlib.pyplot.ylabel('Hole Density [cm^{-3}]')
+    matplotlib.pyplot.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+    ax1.legend(loc='upper right')
+    if device == "1D_SICAR1_LGAD":
+        ax1.set_xlim(0,5e-4)
+    fig1.show()
+    fig1.savefig("./output/devsim/{}_reverse_holes.png".format(device+condition))
+    fig1.clear()
+
+def save_ele_field(device, positions,intensities, bias_voltages,condition):
     if not (os.path.exists("./output/devsim/{}/".format(device+condition))):
         os.makedirs("./output/devsim/{}/".format(device+condition))
     for (x,E,V) in zip(positions,intensities, bias_voltages):
