@@ -5,7 +5,7 @@ Author: 何野 解凯博
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-07-09
+Updated: 2023-07-17
 ---
 
 # 正在进行的工作
@@ -125,11 +125,11 @@ Updated: 2023-07-09
 ![UCSC_simulation_circuit.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSC_simulation_circuit.png)
 
 	布线
-![layout.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/layout.png)
+![layout.png|775](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/layout.png)
 
 目前T1第一版已经生产完成
 	实物图
-![T1_v1.0.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_v1.0.jpg)
+![T1_v1.0.jpg|575](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_v1.0.jpg)
 
 LTspice仿真结果：
 	输入信号：10μA的脉冲电流
@@ -232,6 +232,8 @@ The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr 
 β源的活度：
 ![屏幕截图 2023-07-07 175827.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-07-07%20175827.png)
 测试方法不完善，需要进一步测试
+第二次测试结果（三号厅，5cm×5cm 闪烁体，总测量时间为10分钟，表中结果为每分钟触发数）：
+![β源活度2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%CE%B2%E6%BA%90%E6%B4%BB%E5%BA%A62.png)
 β源底部：
 ![bottom.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/bottom.jpg)
 底部中央小孔的边长约为1.5mm~2.5mm
@@ -247,4 +249,22 @@ The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr 
 ![有β源5ns.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%9C%89%CE%B2%E6%BA%905ns.jpg)
 噪声的峰值都在10mV左右(连接主放的情况下)
 测试屏蔽罩未与接地，需要进一步测试接地的情况
+
+---
+### T1各部分噪声采集：
+拟测试的节点：
+![高压部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E9%AB%98%E5%8E%8B%E9%83%A8%E5%88%86.png)
+
+![低压部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BD%8E%E5%8E%8B%E9%83%A8%E5%88%86.png)
+
+![主体部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%BB%E4%BD%93%E9%83%A8%E5%88%86.png)
+
+node1: 高压滤波部分
+node2:低压滤波1部分
+node2 + node3：低压滤波2部分
+node3 + node4：更换电阻的影响
+node6：整体电路板
+
+
+
 
