@@ -616,6 +616,18 @@ case $option in
                 "TCTtest.py det_name=HPK-Si-PIN parfile=paras/setting.json laser_model=edge_TCT_Si laser_parfile=paras/laser_setting.json scan=True total_e=$step instan=1 output=output/pintct/HPK-Si-PIN/ parameter_alter=True fz_rel=$z"
             done 
             ;;  
+
+    3.2.3V) echo "get volt-time for Si-PIN edge-TCT, multi points V [-200,-60]"
+        step=1
+        k=20
+
+            for ((j=3;j<11;j++))
+            do
+                V=$(echo $k $j|awk '{printf "%0.2f\n", $1*$2}')
+                ./python/run_batchjob.py pintct/HPK-Si-PIN \
+                "TCTtest.py det_name=HPK-Si-PIN parfile=paras/setting.json laser_model=edge_TCT_Si laser_parfile=paras/laser_setting.json scan=True total_e=$step instan=1 output=output/pintct/HPK-Si-PIN/ parameter_alter=True voltage=$V"
+            done 
+            ;;  
  
     3.2.4) echo "get volt-time for Si-LGAD edge-TCT, multi points z [0,50]"
         step=1
@@ -628,9 +640,21 @@ case $option in
             done            
             ;;
 
+    3.2.4V) echo "get volt-time for Si-LGAD edge-TCT, multi points V [-200,-60]"
+        step=1
+        k=20
+
+            for ((j=3;j<11;j++))
+            do
+                V=$(echo $k $j|awk '{printf "%0.2f\n", $1*$2}')
+                ./python/run_batchjob.py lgadtct/HPK-Si-LGAD \
+                "TCTtest.py det_name=HPK-Si-LGAD parfile=paras/setting.json laser_model=edge_TCT_Si laser_parfile=paras/laser_setting.json scan=True total_e=$step instan=1 output=output/pintct/HPK-Si-LGAD/ parameter_alter=True voltage=$V"
+            done 
+            ;; 
+
     3.2.5) echo "analyse eTCT rootfiles"
-        ./python/tct_analysis.py output/pintct/HPK-Si-PIN/
-        ./python/tct_analysis.py output/lgadtct/HPK-Si-LGAD/
+        ./python/tct_analysis.py output/pintct/HPK-Si-PIN/data/ output/pintct/HPK-Si-PIN/result/
+        ./python/tct_analysis.py output/lgadtct/HPK-Si-LGAD/data/ output/lgadtct/HPK-Si-LGAD/result/
         ;;
 
     3.2.6) echo "get volt-time from experiment"
@@ -638,8 +662,8 @@ case $option in
         ;;
 
     3.2.7) echo "analyse eTCT rootfiles with experiment data"
-        ./python/tct_analysis.py output/pintct/HPK-Si-PIN/ "experiment"
-        ./python/tct_analysis.py output/lgadtct/HPK-Si-LGAD/ "experiment"
+        ./python/tct_analysis.py output/pintct/HPK-Si-PIN/data/ output/pintct/HPK-Si-PIN/result/ "experiment"
+        ./python/tct_analysis.py output/lgadtct/HPK-Si-LGAD/data/ output/lgadtct/HPK-Si-LGAD/result/ "experiment"
         ;;
 
 esac
@@ -731,7 +755,7 @@ sub_7_1(){
 case $option in 
 
     7.1.1) echo "Si sensor energy deposition" 
-        raser "./python/gsignal.py det_name=ITk-Si-strip parfile=paras/setting.json proton-irrad" 
+        raser "./python/gsignal.py det_name=ITk-Si-strip parfile=paras/setting.json proton-irrad geant4_model=ITk-Si-strip geant4_parfile=paras/geant4_setting.json" 
         ;;
         esac
     
@@ -748,12 +772,8 @@ case $option in
     7.2.2) echo "Build 1D ITk MD8 structure ..."
         raser "./python/itk_md8_mesh.py"
         ;;
-
-    7.2.3) echo "Simulate 1D itk I-V ..."
-        ./python/run_batchjob.py devsim "solve_iv_itk.py"
-        ;;
     
-    7.2.3Si) echo "Simulate 1D itk I-V ..."
+    7.2.3) echo "Simulate 1D itk I-V ..."
         ./python/run_batchjob.py devsim "devsim_solve.py device=1D_ITK_MD8 IV=True v_max=800"
         ;;
         
