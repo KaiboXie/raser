@@ -45,7 +45,7 @@ devsim.create_1d_mesh(mesh="dio")
 ````js
 devsim.add_1d_mesh_line(mesh="dio", pos=0, ps=1e-4, tag="top")
 ````
-在网格内描点画线，上述代码指令是在dio网格中建立坐标为0的点，并从该点向坐标正方向延申$10^{-4}$,(反向延申则使用ns=)并将这条线段命名为top。
+在网格内描点画线，上述代码指令是在dio网格中建立坐标为0的点，并从该点向坐标正方向延申$10^{-4}$（网格大小）,(反向延申则使用ns=)并将这条线段命名为top。
 ```js
 devsim.add_1d_contact  (mesh="dio", name="top", tag="top", material="metal")
 ```
