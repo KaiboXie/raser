@@ -49,6 +49,7 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 ## 当前进度
 
 
+
 [[2023-05-15-TEAM]]
 简单PN结结构：
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/PN%E7%BB%93%E7%BB%93%E6%9E%84.png)
