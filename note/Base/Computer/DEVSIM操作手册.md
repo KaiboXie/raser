@@ -90,9 +90,10 @@ devsim.edge_from_node_model(device=device,region=region,node_model="Acceptors")
 ## edge_mode
 参考边界上的节点模型，边缘模型相对于边界上两节点上计算的。
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/edgemodel.png)
-
-
-
+## 为什么要建立这两个模型
+$\frac{\partial {X}}{\partial{t}}+\nabla \vec Y +Z =0$ 
+devsim只会解这样的微分方程，而求解过程则是将微分方程转化为积分形式，
+$ $
 # 仿真IV&CV曲线
 ## 定义主函数
 定义参数的字典集合，括号内部sys.argv[ ]其实就是一个列表，里边的项为输入的参数，如果三叔中包含device项，则在字典中查看检索关键字和检索内容，关键字为device，检索内容是device对应的region。否则输出检索关键字错误。
