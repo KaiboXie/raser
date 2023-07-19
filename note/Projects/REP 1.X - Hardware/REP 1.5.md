@@ -5,7 +5,7 @@ Author: 何野 解凯博
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-07-09
+Updated: 2023-07-17
 ---
 
 # 正在进行的工作
@@ -17,7 +17,7 @@ Updated: 2023-07-09
 	-  [ ] 使用金属底板替代塑料底板
 	-  [ ] 验证实验测得的噪声是否与之前理论上预估的噪声大小相符
 		-  [ ] 将β测试数据中的ADC转成电荷量，与理论上预计的噪声的电荷量大小对比
-	-  [ ] 了解所用β源的特点
+	-  [x] 了解所用β源的特点
 		-  [x] β射线从源中出来的位置与源上的标识是否一致
 		-  [ ] β射线从源中出来后发散的程度有多大
 	-  [x] 使用[[李辉]]已完成的alibava系统测试了解alibava系统
@@ -26,30 +26,8 @@ Updated: 2023-07-09
 	-  [ ] 改进实验重复测试
 		-  [x] 将β源放置在sensor背面保证大部分电子可以都穿过sensor
 		-  [x] 更改闪烁体的摆放方式和位置，保证触发效率
-		-  [ ] 将闪烁体置于碳化硅前
+		-  [x] 将闪烁体置于碳化硅前
 	-  [ ] 制作用于FPGA产生的高频大信号的分压板，使信号分压后可用于T1问题的检测
-
-## 实验步骤
-### 1、闪烁体支架打印
-- 将切片文件放入打印机里的sd卡
-- 将固体胶涂在打印机的底板上，等待固体胶风干
-- 打印机开机，调平（打印机里有自动调平程序）
-- 选择打印文件，开始打印
-
-### 2、装置放置
-- 确保底板上的子板和探测器板、sensor之间的连线没有问题
-- 连接实验电路，将底板的盒盖盖上
-- 底板朝上，盒盖朝下放置
-- 在底板上卡上闪烁体支架，放置闪烁体，移动位置使闪烁体中心与sensor阵列中心在一条竖直线上
-- 将β源出射口对准闪烁体中心
-
-### 3、结果分支
-- 可以看到信号（理想情况）
-	- 更换探测器板重复实验（107干燥柜里有）
-	- 制作T形的探测器板重复实验
-- 看不到实验信号
-	- [ ] 分析测得的噪声水平是否小于理论的碳化硅信号大小
-	- [ ] 测试β是否可以穿过闪烁体
 
 
 ## alibava实验结果
@@ -58,6 +36,7 @@ Updated: 2023-07-09
 	- 实验数据位置：服务器
 		/afs/ihep.ac.cn/users/x/xiekaibo/ALIBAVA/data/20230510
 	- 未看到信号，触发速度慢
+	- 闪烁体放置方式存在问题，应将电路板一面朝下放置
 
 - ### test2
 	- 5mm NJU-SiC-PIN * 1（未辐照）
@@ -68,8 +47,7 @@ Updated: 2023-07-09
 - ### test3
 	- 较test1、2进行了改进
 	- 1.5mm NJU-SiC-PIN * 9（未辐照）
-	- 实验数据位置：三号厅102电脑
-		
+	- 实验数据位置：
 	- 仍未看见信号，且触发速度仍非常慢
 
 - ### test3补充实验
@@ -81,6 +59,14 @@ Updated: 2023-07-09
 	- 在保证β源与闪烁体相对位置不变，将探测器板上粘有SiC的区域置于中间
 		- 触发非常慢
 	- test3看不到信号原因猜测：击中SiC的电子无法到达闪烁体触发，产生触发的都是没有经过SiC的电子
+
+- ### test4
+	- 改变了碳化硅与闪烁体的位置关系，β先经过闪烁体后经过碳化硅
+	 ![实验装置_20230717.bmp|500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/%E5%AE%9E%E9%AA%8C%E8%A3%85%E7%BD%AE_20230717.bmp)
+	- 1.5mm NJU-SiC-PIN * 6（未辐照）
+	- 实验数据位置：服务器
+		afs/ihep.ac.cn/users/x/xiekaibo/ALIBAVA/data/20230706pm
+	- 实验过程中存在问题，实验结果不可靠，需要重复实验
 
 ## 进度
 - [ ] 使用alibava替代T1测试β信号
@@ -125,11 +111,11 @@ Updated: 2023-07-09
 ![UCSC_simulation_circuit.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSC_simulation_circuit.png)
 
 	布线
-![layout.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/layout.png)
+![layout.png|775](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/layout.png)
 
 目前T1第一版已经生产完成
 	实物图
-![T1_v1.0.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_v1.0.jpg)
+![T1_v1.0.jpg|575](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_v1.0.jpg)
 
 LTspice仿真结果：
 	输入信号：10μA的脉冲电流
@@ -232,6 +218,8 @@ The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr 
 β源的活度：
 ![屏幕截图 2023-07-07 175827.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-07-07%20175827.png)
 测试方法不完善，需要进一步测试
+第二次测试结果（三号厅，5cm×5cm 闪烁体，总测量时间为10分钟，表中结果为每分钟触发数）：
+![β源活度2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%CE%B2%E6%BA%90%E6%B4%BB%E5%BA%A62.png)
 β源底部：
 ![bottom.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/bottom.jpg)
 底部中央小孔的边长约为1.5mm~2.5mm
@@ -247,4 +235,22 @@ The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr 
 ![有β源5ns.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%9C%89%CE%B2%E6%BA%905ns.jpg)
 噪声的峰值都在10mV左右(连接主放的情况下)
 测试屏蔽罩未与接地，需要进一步测试接地的情况
+
+---
+### T1各部分噪声采集：
+拟测试的节点：
+![高压部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E9%AB%98%E5%8E%8B%E9%83%A8%E5%88%86.png)
+
+![低压部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BD%8E%E5%8E%8B%E9%83%A8%E5%88%86.png)
+
+![主体部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%BB%E4%BD%93%E9%83%A8%E5%88%86.png)
+
+node1: 高压滤波部分
+node2:低压滤波1部分
+node2 + node3：低压滤波2部分
+node3 + node4：更换电阻的影响
+node6：整体电路板
+
+
+
 
