@@ -15,7 +15,6 @@ import sys
 import ROOT
 import math
 import numpy as np
-import drawsave
     
 def collect_data(path, model, volt_scale, time_scale, keys, key_name):
     amplitude = array("d")
@@ -86,10 +85,10 @@ def get_amplitude(volt,J):
     return(Vmax-Vmin)
 
 def get_charge(volt,J):
-    sum_charge=0
+    sum_volt=0
     for j in range(J):
-        sum_charge+=volt[j]
-    return sum_charge/100*3.7*1000 # Capacitance of detector = 3.7 pF, result in fC
+        sum_volt+=volt[j]
+    return sum_volt*50e-12/100/500e-12*3.7*1000 # time bin 50ps, A=100, tau=500ps, Capacitance of detector = 3.7 pF, result in fC
 
 def get_velprof(volt,time,J):
     x=array("d")
@@ -230,9 +229,9 @@ def draw_double_graphs(array1,array2,keys,key_name,name,path):
     if name == 'Charge':
         Y_title = 'Charge [fC]'
         if 'LGAD' in path:
-            mg.GetYaxis().SetRangeUser(0,1000)
+            mg.GetYaxis().SetRangeUser(0,100)
         else:
-            mg.GetYaxis().SetRangeUser(0,40)
+            mg.GetYaxis().SetRangeUser(0,4)
 
     if name == 'VelProf':
         Y_title = 'Ve+Vh [a.u.]'
@@ -375,13 +374,14 @@ def analysis_voltage(path,output_path,pulse_energy_scale):
 def main():
     path=sys.argv[1]
     output_path=sys.argv[2]
-    drawsave.create_path(output_path)
+    if not os.access(output_path, os.F_OK):
+        os.makedirs(output_path, exist_ok=True) 
     if 'LGAD' in path:
         pulse_energy_scale = 1.58
     else:
         pulse_energy_scale = 1
     # the pulse energy difference in experiment
-    #analysis_depth(path,output_path,pulse_energy_scale)
+    analysis_depth(path,output_path,pulse_energy_scale)
     analysis_voltage(path,output_path,pulse_energy_scale)             
 
 if __name__ == "__main__":

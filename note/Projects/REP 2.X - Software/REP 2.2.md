@@ -15,7 +15,16 @@ Updated: 2023-04-25
 Implemented as: ./run 1.1.5 
 
 
+### 2023-07 DEVSIM解二维电场计划
+参考nju_pin_5mm_2Dmesh.py及杨涛博士的Node.py、DriftDiffusion.py、Physics.py、Initial.py等，完善devsim_solve.py 或新写devsim_solve_2D.py
+1. 实现基本框架（Material、Doping、Meshing、Solver）
+2. 调整或增加物理边界条件、初始解等
+3. 与FEniCS结果对比（与 2. 循环迭代）
 
+### 2023-07-24
+-  [ ] 实现DEVSIM解2D电场的流程，并求解C-V     [[赵森]]
+-  [ ] 实现DEVSIM解2D PN结的事例，熟悉二位DEVSIM的实现流程     [[石航瑞]]
+-  [ ] 完善调用DEVSIM电场结果的接口     [[李星臣]]
 
 
 
