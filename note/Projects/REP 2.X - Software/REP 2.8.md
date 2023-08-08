@@ -85,17 +85,35 @@ trapping time 和irradiation的对数成线性关系![](https://raser-1314796952
 	- 1000V![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230505_top_tct_exp_and_sim_compare4_1000V.png)
 	- 可以看到在全耗尽（电压大于500V）的情况下，实验模拟结果符合非常好。
 
+## 理论计算
+
 ### 理论估算激光产生信号强度
 激光公式$$I_0=I(0, 0, 0)\frac{\omega_0}{\omega (z)}exp{\frac{-2r^2}{\omega^2(z)}}\cdot exp{\frac{-4t^2ln2}{\tau^2}}$$$$I'=I_0\cdot e^{-\alpha z}$$两边对$z$求导可推得：$$dI=-\alpha z\cdot I$$
 载流子产生：
 $$dN_{e-h pair}dVdt=\alpha dz \frac{I\cdot dS\cdot dt}{h\nu}$$
-由Shockley-Ramos：$$I_q(t)=q\vec{v_q}(t)\cdot \nabla U_\omega(\vec{x_q}(t))$$可得：
-$$I_q(t)dt=q\vec{v_q}\nabla U_\omega \cdot dt=q\frac{d\vec{x_q}}{dt}\frac{U_\omega}{dx} dt = q dU_\omega (\vec{x_q}(t))$$ 所以：$$\vec{I}_(t_1, t_2) (t_1-t_2)=\Sigma_q\Sigma_t I_q(t)\cdot dt$$
-在估计的计算中，计算top-TCT时，可以忽略激光的直径，只考虑时间展宽，将激光简化为z方向和时间两个维度来简化计算，可以得到$$I=I(0, 0, 0)\cdot exp(\frac{-4t^2}{\tau ^2}) \cdot exp(-\alpha z)$$其中$\alpha = 2.1m^{-1},  \tau = 1\times 10^{-8}s$
+由Shockley-Ramos：$$I_q(t)=q\vec{v_q}(t)\cdot exp(-\frac{t}{\tau _{eff,e,h}})\cdot \nabla U_\omega(\vec{x_q}(t))$$可得：
+$$I_q(t)dt=q\vec{v_q}\nabla U_\omega \cdot exp(-\frac{t}{\tau _{eff,e,h}})\cdot dt= q dU_\omega exp(-\frac{t}{\tau _{eff,e,h}})\cdot(\vec{x_q}(t))$$ 所以：$$\vec{I}_(t_1, t_2) (t_1-t_2)=\Sigma_q\Sigma_t I_q(t)\cdot dt$$
+在估计的计算中，计算top-TCT时，可以忽略激光的直径，只考虑时间展宽，将激光简化为z方向和时间两个维度来简化计算，可以得到$$I=I(0, 0, 0)\cdot exp(\frac{-4t^2}{\tau ^2}) \cdot exp(-\alpha z)$$其中$\alpha = 2.1m^{-1},  \tau = 8.1\times 10^{-9}s$
 对于载流子产生过程，由于忽略了直径，其化为：$$dN_{e-h}dzdt=\alpha dz\frac{I\cdot dz dt}{h\nu}$$对于S-R定理而言，$q=N_{e-h}\cdot e$，加权场为一维z方向场
 根据程序解电场结果，$E(z)\approx 1e7-1e11\cdot z$    (SI)
 假定电子漂移受电场作用：$F=Eq$
 在z处的载流子密度为：$$N(z)=\int \frac{I}{E}\cdot e\cdot dz=\int E_I\cdot exp(\frac{-4(t-\sqrt{\frac{z\cdot m_e}{E\cdot e}})^2}{\tau ^2}) \cdot exp(-\alpha z)\cdot dz$$产生的感应电流为：$$I(t)=\int N(z)e\cdot v\cdot U\cdot dz$$
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230807_top_tct_laser_enengy.png)
+实验测得激光平均功率为$7.2\times 10^{-8}W$, 脉冲频率为10Hz, 即单脉冲能量为$7.2\times 10^{-9}J$
+代入积分可得$I_{max}=0.016A$, 将该电流进行电子学处理可估计出信号理论峰值约为20V
+
+>模拟中使用激光能量为$1.2\times 10^{-11}J$, 信号峰值强度约为$0.5V$
+
+### 理论估计CCE
+在工作电压下，电荷近似被全部收集。实验用355nm激光单光子能量为：$E=h\nu=3.49eV$, 碳化硅禁带宽度为3.2eV, 可认为一个光子激发一对载流子。那么激发载流子总数为：
+$$N=\frac{E_{pulse}}{E}=1.29\times 10^{10}$$
+其电荷收集为$Q=2.063nC$
+实验上电荷收集由经过了放大器放大的电压信号积分而来, 对该理论值进行类似的电子学处理
+$$Q'=Q*Gain/R=825.2nC$$式中Gain为放大器放大倍率，R为示波器电阻值。
+实验上的电荷收集为20.57nC，二者相差约40倍
+
+### 之前的计算
+
 在实验上：$I=60A$, $80A-69.86\mu J$
 代入数据计算可得：$I(t)_{max}\approx50\mu A$,  $E=1e-11J$
 								$I(t)_{max}\approx90A$， $E=60e-6J$
