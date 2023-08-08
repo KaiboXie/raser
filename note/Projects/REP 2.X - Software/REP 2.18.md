@@ -1,8 +1,8 @@
 ---
 REP: 2.18
 Title: Si strip simulation 
-Author: 
-Status: 
+Author: 杨佳东
+Status: in progress
 Type: Software
 Created: 2023-07-10
 ---

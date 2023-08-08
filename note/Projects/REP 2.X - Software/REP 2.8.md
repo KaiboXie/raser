@@ -64,6 +64,10 @@ trapping time 和irradiation的对数成线性关系![](https://raser-1314796952
 
 ## Waveform 
 ### Latest
+#### 下降沿
+下降沿模拟和实验相差较大，推测是由于线缆分布电容产生的。下图为添加了1mF后的模拟、实验对照，可以看出在添加了电容后确实有改善，但和原先结果基本没有明显变化。
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230804_top_tct_add_capacitance_compare.png)
+
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_trappingtime_0_result.png)
 
 ### 最新NGspice模拟结果和实验对比
