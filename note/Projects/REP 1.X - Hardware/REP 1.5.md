@@ -5,7 +5,7 @@ Author: 何野 解凯博
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-07-17
+Updated: 2023-08-10
 ---
 
 # 正在进行的工作
@@ -216,9 +216,7 @@ T1在空载状态下就会引入新的噪声，UCSC则不会
 发射的β粒子的能量：
 The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr and at 2.280 MeV from   <sup>90</sup>Y
 β源的活度：
-![屏幕截图 2023-07-07 175827.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-07-07%20175827.png)
-测试方法不完善，需要进一步测试
-第二次测试结果（三号厅，5cm×5cm 闪烁体，总测量时间为10分钟，表中结果为每分钟触发数）：
+三号厅，5cm×5cm 闪烁体，总测量时间为10分钟，表中结果为每分钟触发数）：
 ![β源活度2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%CE%B2%E6%BA%90%E6%B4%BB%E5%BA%A62.png)
 β源底部：
 ![bottom.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/bottom.jpg)
@@ -226,31 +224,38 @@ The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr 
 
 ---
 ### T1板屏蔽罩测试
-屏蔽罩：
-![屏蔽外壳1.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E8%94%BD%E5%A4%96%E5%A3%B31.jpg)
-测试结果：
-无β源时：
-![无β源div5.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%97%A0%CE%B2%E6%BA%90div5.jpg)
-加β源时：
-![有β源5ns.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%9C%89%CE%B2%E6%BA%905ns.jpg)
-噪声的峰值都在10mV左右(连接主放的情况下)
-测试屏蔽罩未与接地，需要进一步测试接地的情况
+测试所用的屏蔽罩（导线从T1板test外壳引出，并与包裹着铜箔的屏蔽外壳相连后被接地导线的鳄鱼夹夹住）：
+![屏蔽罩+接地2.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E8%94%BD%E7%BD%A9+%E6%8E%A5%E5%9C%B02.jpg)
+测试结果（此时低压源已接地）：
+未加屏蔽前（以标准差衡量噪声大小）：
+![T1_noise_diyayuanjieditiao.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_diyayuanjieditiao.jpg)
+加上屏蔽后：![T1_noise_zhaojieditiao.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_zhaojieditiao.jpg)
+加上屏蔽罩后对噪声的减小没有影响
 
 ---
-### T1各部分噪声采集：
-拟测试的节点：
-![高压部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E9%AB%98%E5%8E%8B%E9%83%A8%E5%88%86.png)
+### 低压源对噪声的影响
+低压源的output开启后会引入很大的噪声：
+开启低压源前：
+![开启低压源前.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%BC%80%E5%90%AF%E4%BD%8E%E5%8E%8B%E6%BA%90%E5%89%8D.jpg)
+开启低压源后：
+![开启低压源后.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%BC%80%E5%90%AF%E4%BD%8E%E5%8E%8B%E6%BA%90%E5%90%8E.jpg)
 
-![低压部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BD%8E%E5%8E%8B%E9%83%A8%E5%88%86.png)
+低压源接地测试（三号厅，T1板的输出噪声经过了主放的放大）：
+低压源未接地：
+![T1_noise_diyayuanweijiedi.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_diyayuanweijiedi.jpg)
+低压源接地：
+![T1_noise_diyayuanjieditiao.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_diyayuanjieditiao.jpg)
+低压源接地后噪声标准差减小，虽然减小的极少
 
-![主体部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%BB%E4%BD%93%E9%83%A8%E5%88%86.png)
-
-node1: 高压滤波部分
-node2:低压滤波1部分
-node2 + node3：低压滤波2部分
-node3 + node4：更换电阻的影响
-node6：整体电路板
-
-
+---
+### T1整体噪声分析
+三号厅，噪声由T1的输出口经主放放大后呈现在示波器上，以标准差衡量噪声大小
+高压源+低压源同时接入到T1板上
+![T1_noise_gaoyayuan.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_gaoyayuan.jpg)
+若以最大值来衡量噪声
+![噪声最大值.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%99%AA%E5%A3%B0%E6%9C%80%E5%A4%A7%E5%80%BC.jpg)
+T1整体噪声FFT分析结果：
+同时将高压源与低压源接入到T1板上，利用NumPy库进行噪声的FFT变换，选用的窗口为汉明窗![T1_noise_FFT.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_FFT.jpg)
+在信号波形允许的情况下，或许可以通过增加滤波电路来滤去部分噪声
 
 
