@@ -12,6 +12,7 @@ Created: 2023-04-11
 
 [[李星臣]]
 
+
 任务列表：
 	1. strip表面红外激光扫描，研究位置分辨；
 	2. RASER添加strip功能，研究strip电极与间隙宽度对位置分辨的影响；
@@ -21,6 +22,29 @@ Created: 2023-04-11
 ## Introduction 
 硅微条探测器具有极好的位置分辨率，近年来，世界各大高能物理实验室几乎都采用它作为顶点探测器
 目前进行的实验目标是根据ams上硅微条的参数来进行粒子入射模拟和top-tct模拟
+
+
+## ITK Strip 红外扫描进展
+- 接线电极：129-237
+- 噪声
+	![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/noise.png)
+- 对焦：图为纵坐标各channel10000次峰值采样概率最大的值，横坐标为channel，可以看出，激光中心在256channel侧外部，焦点Z<33000
+	![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/30000.png)![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/31000.png)
+	![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/32000.png)![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/33000.png)
+	![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/34000.png)![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/34000.png)
+	![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/35000.png)![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/36000.png)
+	![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/37000.png)![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/38000.png)![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/39000.png)![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/40000.png)
+- 线断了，需重新打线
+- 又臭又长的alibava说明书中发现的聚焦功能![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/focus.png)
+
+## 激光强度测量
+- 波长设为355与375nm几乎无区别，==高带宽读出与低带宽读出差别明显==，70A和80A差距较小，60A功率显著下降，整体激光强度均小于说明书中参数
+- 60A                                                                                                                                                                ![600](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/60A%20low%20bandwidth.png)![600](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/60A%20high%20bandwidth.png)
+- 70A                                                                                                                                 ![600](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/70A%20low%20bandwidth.png)  ![600](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/70A%20high%20bandwidth.png)
+- 官方注释![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/bandwidth2.png)
+
+
+
 
 ## AMS parameter and Signal
 
