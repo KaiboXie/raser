@@ -258,4 +258,15 @@ T1整体噪声FFT分析结果：
 同时将高压源与低压源接入到T1板上，利用NumPy库进行噪声的FFT变换，选用的窗口为汉明窗![T1_noise_FFT.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_FFT.jpg)
 在信号波形允许的情况下，或许可以通过增加滤波电路来滤去部分噪声
 
+---
+### T1噪声来源分析
+T1仅接入低压源时的噪声：
+![T1_noise_diyayuanjieditiao.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_diyayuanjieditiao.jpg)
+UCSC仅接入低压源时的噪声:
+![UCSC_noise_diya.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSC_noise_diya.jpg)
+若以三倍标准差作为噪声的最大值，则T1与UCSC噪声最大值之差=（6.68-3.37）×3=9.93mV，与以前将噪声最大值作为衡量噪声的标准所得的结果大致一致
+以最大值衡量噪声时，UCSC与T1噪声对比：
+![噪声最大值对比.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%99%AA%E5%A3%B0%E6%9C%80%E5%A4%A7%E5%80%BC%E5%AF%B9%E6%AF%94.jpg)
+因此可以认为T1的噪声水平比UCSC大的原因是T1的低压部分产生了较多的噪声，具体原因尚不明确，或许是反馈电阻的更改使得噪声增加，具体原因需要后续通过实验验证。
+
 
