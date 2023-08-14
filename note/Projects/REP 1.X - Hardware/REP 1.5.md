@@ -279,7 +279,7 @@ UCSC仅接入低压源时的噪声:
 ![UCSC_100V_230814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSC_100V_230814.png)
 - 考虑到T1和UCSC结构不同，α粒子在空气中能损较大，T1实验中有额外的8mm空气，能损接近1MeV，所以电荷收集的差异在合理范围内
 - 结论：不能证明T1电荷放大倍数不足
-
+---
 - 假设T1和UCSC电荷放大倍数相同，比较波形幅度差异
 - T1收集到169.4fC电荷时，波形幅值为317.4mV
 ![T1_450V_230814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_450V_230814.png)
@@ -287,6 +287,13 @@ UCSC仅接入低压源时的噪声:
 ![PIN3_100V_230814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/PIN3_100V_230814.png)
 - UCSC收集到电荷量远小于T1时，波形幅值却大于T1
 - 结论：相同电荷收集量，UCSC输出信号电压幅值大于T1
+---
 - T1读出板的电压放大倍数小于UCSC
 - 可能是T1看不到β源信号的原因之一
-- 反应在波形上：UCSC信号更“尖”，T1信号更“平”
+- 反应在波形上：UCSC信号更“尖”，T1信号更“胖”
+- UCSC 240.6fC波形
+![UCSCwfm_230814.png|525](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSCwfm_230814.png)
+- T1 155.8fC波形
+![T1wfm_230814.png|525](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1wfm_230814.png)
+- UCSC 108.4fC波形
+![UCSC_PIN3_100V_230814.png|525](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSC_PIN3_100V_230814.png)
