@@ -12,6 +12,7 @@ Created: 2023-04-11
 
 [[李星臣]]
 
+
 任务列表：
 	1. strip表面红外激光扫描，研究位置分辨；
 	2. RASER添加strip功能，研究strip电极与间隙宽度对位置分辨的影响；
@@ -24,6 +25,17 @@ Created: 2023-04-11
 
 
 ## ITK Strip 红外扫描进展
+
+- 300V charge collection with distence ![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/charge%20collection%20with%20distence_1.png)
+- 300V charge asymmetry with distance![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/charge%20asymmetry%20with%20distance_1.png)
+- charge collection with voltage![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/charge%20collection%20with%20voltage.png)
+- 目前取的最大值而不是分bin后event最大值对应的值
+- 明天出一版分bin后的图
+
+
+
+
+
 - 接线电极：129-237
 - 噪声
 	![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/noise.png)
