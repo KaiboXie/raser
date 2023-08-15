@@ -68,6 +68,11 @@ Updated: 2023-08-10
 		afs/ihep.ac.cn/users/x/xiekaibo/ALIBAVA/data/20230706pm
 	- 实验过程中存在问题，实验结果不可靠，需要重复实验
 
+## ALIBAVA空载噪声测试
+- 各通道噪声（alibava子板1）
+![alibava_noise_2020814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/alibava_noise_2020814.png)
+
+
 ## 进度
 - [ ] 使用alibava替代T1测试β信号
 	-  [x] 使用公版的Detector Board实验（高压滤波做法简单）
