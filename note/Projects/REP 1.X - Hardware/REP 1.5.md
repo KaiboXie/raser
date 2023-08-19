@@ -5,7 +5,7 @@ Author: 何野 解凯博
 Status: Active
 Type: Hardware 
 Created: 2022-10-01
-Updated: 2023-07-17
+Updated: 2023-08-10
 ---
 
 # 正在进行的工作
@@ -67,6 +67,11 @@ Updated: 2023-07-17
 	- 实验数据位置：服务器
 		afs/ihep.ac.cn/users/x/xiekaibo/ALIBAVA/data/20230706pm
 	- 实验过程中存在问题，实验结果不可靠，需要重复实验
+
+## ALIBAVA空载噪声测试
+- 各通道噪声（alibava子板1）
+![alibava_noise_2020814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/alibava_noise_2020814.png)
+
 
 ## 进度
 - [ ] 使用alibava替代T1测试β信号
@@ -216,9 +221,7 @@ T1在空载状态下就会引入新的噪声，UCSC则不会
 发射的β粒子的能量：
 The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr and at 2.280 MeV from   <sup>90</sup>Y
 β源的活度：
-![屏幕截图 2023-07-07 175827.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-07-07%20175827.png)
-测试方法不完善，需要进一步测试
-第二次测试结果（三号厅，5cm×5cm 闪烁体，总测量时间为10分钟，表中结果为每分钟触发数）：
+三号厅，5cm×5cm 闪烁体，总测量时间为10分钟，表中结果为每分钟触发数）：
 ![β源活度2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%CE%B2%E6%BA%90%E6%B4%BB%E5%BA%A62.png)
 β源底部：
 ![bottom.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/bottom.jpg)
@@ -226,31 +229,76 @@ The <sup>90</sup>Sr source emits β particles at 0.546 MeV from <sup>90</sup>Sr 
 
 ---
 ### T1板屏蔽罩测试
-屏蔽罩：
-![屏蔽外壳1.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E8%94%BD%E5%A4%96%E5%A3%B31.jpg)
-测试结果：
-无β源时：
-![无β源div5.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%97%A0%CE%B2%E6%BA%90div5.jpg)
-加β源时：
-![有β源5ns.jpg|450](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E6%9C%89%CE%B2%E6%BA%905ns.jpg)
-噪声的峰值都在10mV左右(连接主放的情况下)
-测试屏蔽罩未与接地，需要进一步测试接地的情况
+测试所用的屏蔽罩（导线从T1板test外壳引出，并与包裹着铜箔的屏蔽外壳相连后被接地导线的鳄鱼夹夹住）：
+![屏蔽罩+接地2.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E8%94%BD%E7%BD%A9+%E6%8E%A5%E5%9C%B02.jpg)
+测试结果（此时低压源已接地）：
+未加屏蔽前（以标准差衡量噪声大小）：
+![T1_noise_diyayuanjieditiao.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_diyayuanjieditiao.jpg)
+加上屏蔽后：![T1_noise_zhaojieditiao.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_zhaojieditiao.jpg)
+加上屏蔽罩后对噪声的减小没有影响
 
 ---
-### T1各部分噪声采集：
-拟测试的节点：
-![高压部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E9%AB%98%E5%8E%8B%E9%83%A8%E5%88%86.png)
+### 低压源对噪声的影响
+低压源的output开启后会引入很大的噪声：
+开启低压源前：
+![开启低压源前.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%BC%80%E5%90%AF%E4%BD%8E%E5%8E%8B%E6%BA%90%E5%89%8D.jpg)
+开启低压源后：
+![开启低压源后.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%BC%80%E5%90%AF%E4%BD%8E%E5%8E%8B%E6%BA%90%E5%90%8E.jpg)
 
-![低压部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BD%8E%E5%8E%8B%E9%83%A8%E5%88%86.png)
+低压源接地测试（三号厅，T1板的输出噪声经过了主放的放大）：
+低压源未接地：
+![T1_noise_diyayuanweijiedi.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_diyayuanweijiedi.jpg)
+低压源接地：
+![T1_noise_diyayuanjieditiao.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_diyayuanjieditiao.jpg)
+低压源接地后噪声标准差减小，虽然减小的极少
 
-![主体部分.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%B8%BB%E4%BD%93%E9%83%A8%E5%88%86.png)
+---
+### T1整体噪声分析
+三号厅，噪声由T1的输出口经主放放大后呈现在示波器上，以标准差衡量噪声大小
+高压源+低压源同时接入到T1板上
+![T1_noise_gaoyayuan.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_gaoyayuan.jpg)
+若以最大值来衡量噪声
+![噪声最大值.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%99%AA%E5%A3%B0%E6%9C%80%E5%A4%A7%E5%80%BC.jpg)
+T1整体噪声FFT分析结果：
+同时将高压源与低压源接入到T1板上，利用NumPy库进行噪声的FFT变换，选用的窗口为汉明窗![T1_noise_FFT.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_FFT.jpg)
+在信号波形允许的情况下，或许可以通过增加滤波电路来滤去部分噪声
 
-node1: 高压滤波部分
-node2:低压滤波1部分
-node2 + node3：低压滤波2部分
-node3 + node4：更换电阻的影响
-node6：整体电路板
+---
+### T1噪声来源分析
+T1仅接入低压源时的噪声：
+![T1_noise_diyayuanjieditiao.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_noise_diyayuanjieditiao.jpg)
+UCSC仅接入低压源时的噪声:
+![UCSC_noise_diya.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSC_noise_diya.jpg)
+若以三倍标准差作为噪声的最大值，则T1与UCSC噪声最大值之差=（6.68-3.37）×3=9.93mV，与以前将噪声最大值作为衡量噪声的标准所得的结果大致一致
+以最大值衡量噪声时，UCSC与T1噪声对比：
+![噪声最大值对比.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%99%AA%E5%A3%B0%E6%9C%80%E5%A4%A7%E5%80%BC%E5%AF%B9%E6%AF%94.jpg)
+因此可以认为T1的噪声水平比UCSC大的原因是T1的低压部分产生了较多的噪声，具体原因尚不明确，或许是反馈电阻的更改使得噪声增加，具体原因需要后续通过实验验证。
 
-
-
-
+## T1放大倍数研究
+[[李再一]]
+- 在α源测试中，分别使用T1和UCSC读出板收集同一个sensor的电荷收集
+- 理论上两种读出板会收集到相同的电荷量
+- 100V反向偏压，T1收集到155.8fC电荷，信号幅值276.7mV
+![T1_100V_230814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_100V_230814.png)
+- UCSC收集到240.6fC电荷，信号幅值730.8mV
+![UCSC_100V_230814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSC_100V_230814.png)
+- 考虑到T1和UCSC结构不同，α粒子在空气中能损较大，T1实验中有额外的8mm空气，能损接近1MeV，所以电荷收集的差异在合理范围内
+- 结论：不能证明T1电荷放大倍数不足
+---
+- 假设T1和UCSC电荷放大倍数相同，比较波形幅度差异
+- T1收集到169.4fC电荷时，波形幅值为317.4mV
+![T1_450V_230814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1_450V_230814.png)
+- UCSC收集到108.4fC电荷时，波形幅值为353.4mV
+![PIN3_100V_230814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/PIN3_100V_230814.png)
+- UCSC收集到电荷量远小于T1时，波形幅值却大于T1
+- 结论：相同电荷收集量，UCSC输出信号电压幅值大于T1
+---
+- T1读出板的电压放大倍数小于UCSC
+- 可能是T1看不到β源信号的原因之一
+- 反应在波形上：UCSC信号更“尖”，T1信号更“胖”
+- UCSC 240.6fC波形
+![UCSCwfm_230814.png|525](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSCwfm_230814.png)
+- T1 155.8fC波形
+![T1wfm_230814.png|525](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/T1wfm_230814.png)
+- UCSC 108.4fC波形
+![UCSC_PIN3_100V_230814.png|525](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/UCSC_PIN3_100V_230814.png)
