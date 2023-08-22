@@ -1,13 +1,27 @@
 ---
 REP: 0.17
-Title: 在以SiC为基础的sensor上刻蚀晶体管以提高sensor的电流输出
-Author: 解凯博
-Status: Waitting
+Title: 碳化硅探测器与（BJT）集成提高sensor的电流输出
+Author: 解凯博 王聪聪 史欣 
+Status: in progress
 Type: Idea
 Created: 2023-05-04
 Updated: 2023-05-04
 ---
+# SICAR1集成 
 
+ [[王聪聪]] [[史欣]] [[解凯博]] [[黄英杰]] [[吴思语]]
+
+## Overview 
+
+- 查阅文献
+   - [ ] 碳化硅的集成 [[解凯博]] [[黄英杰]]
+   
+   - [ ] 硅探测器的集成 [[吴思语]]
+## Patents 
+专利：碳化硅探测器与双极晶体管（BJT）集成芯片设计与应用
 # 想法来源
 [[2023-02-27-JC157]]
 有团队在研究SiC的晶体管刻蚀
+
+ 
+
