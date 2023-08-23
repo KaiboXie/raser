@@ -45,7 +45,7 @@ devsim.create_1d_mesh(mesh="dio")
 ````js
 devsim.add_1d_mesh_line(mesh="dio", pos=0, ps=1e-4, tag="top")
 ````
-在网格内描点画线，上述代码指令是在dio网格中建立坐标为0的点，并从该点向坐标正方向延申$10^{-4}$,(反向延申则使用ns=)并将这条线段命名为top。
+在网格内描点画线，上述代码指令是在dio网格中建立坐标为0的点，并从该点向坐标正方向延申$10^{-4}$（网格大小）,(反向延申则使用ns=)并将这条线段命名为top。
 ```js
 devsim.add_1d_contact  (mesh="dio", name="top", tag="top", material="metal")
 ```
@@ -90,9 +90,10 @@ devsim.edge_from_node_model(device=device,region=region,node_model="Acceptors")
 ## edge_mode
 参考边界上的节点模型，边缘模型相对于边界上两节点上计算的。
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/edgemodel.png)
-
-
-
+## 为什么要建立这两个模型
+$\frac{\partial {X}}{\partial{t}}+\nabla \vec Y +Z =0$ 
+devsim只会解这样的微分方程，而求解过程则是将微分方程转化为积分形式，
+$ $
 # 仿真IV&CV曲线
 ## 定义主函数
 定义参数的字典集合，括号内部sys.argv[ ]其实就是一个列表，里边的项为输入的参数，如果三叔中包含device项，则在字典中查看检索关键字和检索内容，关键字为device，检索内容是device对应的region。否则输出检索关键字错误。
@@ -242,7 +243,29 @@ def DriftDiffusionInitialSolutionIrradiated(device, region, circuit_contacts=Non
 建立空穴解和电子解，设置求解变量，包括电子和空穴，变量来源于对电子和空穴做初始化。随后组装方程，对器件中电极列表中的电极，在电极处建立迁移漂移模型。
 同理对于Si器件，则采用DriftDiffusionInitialSolutionSiIrradiated函数。
 
+# 电容模拟的原理
+在电容测量中，常用的一种方法是使用2π倍频法（也称为角频率法或频率变化法）来测量电容值。
 
+2π倍频法是基于RC电路的频率响应特性进行测量的。当一个RC电路受到一个正弦波输入信号时，电容器的电压响应会随着频率的变化而改变。通过测量电容器的电压响应和输入信号的频率，可以计算出电容值。
+
+以下是使用2π倍频法测量电容的步骤：
+
+- [ ] 构建RC电路：将一个已知电阻R和待测电容C连接成一个串联的RC电路。确保电路连接正确，并注意电容的极性。
+    
+- [ ] 施加输入信号：使用信号发生器产生一个正弦波信号，并将其输入到RC电路中。信号的频率范围应该覆盖您要测量的电容值。
+    
+- [ ] 连接示波器：将示波器的探头连接到电容上，以测量电容器上的电压响应。确保示波器的设置适当，包括选择正确的电压范围和触发方式。
+    
+- [ ] 观察电压响应：逐渐增加输入信号的频率，并观察示波器上的电压响应。当输入信号的频率达到RC电路的截止频率时，电容器上的电压响应将开始衰减。根据截止频率和电阻值可以计算出电容值。
+
+
+在2π倍频法中，截止频率（fc）是一个重要的参数。它可以通过以下公式计算：
+$$fc =\frac {1}{2πRC}$$
+
+其中，R是电路中的电阻值，C是待测电容。
+通过测量截止频率和已知的电阻值，可以反推出电容值：
+
+$$C = \frac{1}{2\pi Rfc}$$
 ## 建立缺陷参数（还需完善）
 在数据库文件中加入包含缺陷的参数，
 ## 解IV曲线
@@ -252,3 +275,12 @@ def DriftDiffusionInitialSolutionIrradiated(device, region, circuit_contacts=Non
 新建表格文件，打开表格文件，文件名命名为（device和condition），表格表头为“voltage”“current”，将结果以行的形式的写入表格文件中。
 对于1维ITKMD8器件，参数文件从“paras/setting.json"配置文件中导入。对其中的area_factor赋值。建立中值，强度和偏转电压，位置，电子和空穴的空白列表。
 当偏置电压小于最大偏置电压时，
+
+
+
+
+
+
+
+
+

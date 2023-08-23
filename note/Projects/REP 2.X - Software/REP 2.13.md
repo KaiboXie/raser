@@ -48,6 +48,8 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 
 ## 当前进度
 
+[[2023-07-24-TEAM]]
+二维结构以及代码已推，更改电压之后电容不发生变化。猜测掺杂填充问题：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BA%8C%E7%BB%B4%E6%8E%BA%E6%9D%82.png)
 
 [[2023-05-15-TEAM]]
 简单PN结结构：
