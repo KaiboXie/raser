@@ -8,40 +8,51 @@ Created: 2021-03-18
 Updated: 2023-04-25
 ---
 
-
 # RAdiation SEmicondoctoR - RASER
 
-[[史欣]]
 
+## v4.0.1 
 
-## Release 
+- [ ]  Figures using on ROOT
+- [ ]  Input data with RDataFrame
+- [ ]  Debug with 'logging' module
+- [ ]  print with sys.stdout.write
+- [ ]  New code with 'unittest'
+- [ ]  filenames in lowercase
+- [ ]  Clean-up non-used code
 
+Unit testing is a dance: tests lead, code follows.
 
-### 4.X 
+[https://diveintopython3.net/unit-testing.html](https://diveintopython3.net/unit-testing.html)
 
-- Goal:  reduce the library, one task with one software 
+## v4.0.0  (2023-08-31)
 
-#### v4.0  (2024-01-01)
+Goal:  reduce the library, one task with one software 
 
-- Debian: 12.0 
-- Geant4: 
-- ROOT: 
-- DEVSIM 
+- Debian: 12.1
+- Geant4: 11.2
+- ROOT: 6.28
+- DEVSIM: 2.5
 - Remove FEniCS (focus on DEVSIM)
-- Remove matplotlib (focus on ROOT)
+- Re-write 'run' 
 
-### 3.X 
+## v3.3 (2023-08-25)
 
-- Debian: 11.5
-- FEniCS 
-- ROOT: 6.26.06
-- Geant4: 10.7.p02 
-- DEVSIM 
+- [[REP 3.4]]
+- [[REP 3.5]]
+- [[REP 3.6]]
+- [[REP 3.7]]
 
+## v2 
 
+-  [[REP 3.3]]
+
+## v1
+
+- [[REP 3.1]]
+- [[REP 3.2]] 
 
 ## Log
-
 
 ### 2021-03-19 
 
@@ -67,4 +78,4 @@ Candidate names:
 
 Need to be inclusive, not just SiC. 
 
-Talked with Chen, decided to user RASER. 
+Talked with Chen, decided to use 'RASER'. 
