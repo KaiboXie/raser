@@ -21,3 +21,9 @@ ITK Sensor:
 1. 样品类型：ITK strip sensor
 2. 辐照剂量：1.6e15
 3. 辐照4个，未辐照4，共计8个
+
+
+2023-08-11
+
+Requested to ATLAS for 18 pieces. 
+
