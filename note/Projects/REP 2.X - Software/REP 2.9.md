@@ -38,14 +38,18 @@ SiC1000um穿透波长
 现在与北京凌云光电沟通激光器及聚焦系统的升级
 RASER仿真结果：
 波形：
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/REP-2.9-wave.png)
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/23-08-21-report-5.png)
 幅值：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/REP-2.9-new-Amplitude.png)
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/REP-2.9-Amplitude.png)
 电荷收集：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/REP-2.9-new-Charge.png)
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/REP-2.9-Charge.png)
 上升时间：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/REP-2.9-new-RiseTime.png)
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/REP-2.9-RiseTime.png)
 Velprof：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/23-08-21-report-7.png)
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/REP-2.9-Velprofile.png)
 
 Difprofile：
