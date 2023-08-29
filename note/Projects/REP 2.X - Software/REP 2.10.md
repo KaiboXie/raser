@@ -1,7 +1,7 @@
 ---
 REP: 2.10
 Title: SiC in nuclear fusion
-Author: 李星臣
+Author: 李星臣 石航瑞
 Status: 
 Type: Software
 Created: 2023-04-11
@@ -10,10 +10,17 @@ Created: 2023-04-11
 
 # SiC in nuclear fusion 
 
-[[李星臣]]
+[[李星臣]] [[石航瑞]] 
 
 
 ## Introduction 
+
+# beta simulation on SiC
+
+## Introduction
+
+## Waveform
+初步结果为：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230505_shhr_beta_simulation_1.png)
 
 ## Particle and Signal
 
