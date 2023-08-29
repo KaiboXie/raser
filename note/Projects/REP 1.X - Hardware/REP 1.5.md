@@ -72,8 +72,6 @@ Updated: 2023-08-10
 - 各通道噪声（alibava子板1）
 ![alibava_noise_2020814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/alibava_noise_2020814.png)
 
-<<<<<<< HEAD
-=======
 ## ALIBAVA激光测试
 - 20230822测试结果
 	- 在alibava的控制程序上疑似看见了激光信号
@@ -100,7 +98,6 @@ Updated: 2023-08-10
 	- 实验中发现sensor漏电流大小异常，判断为使用的高压源连接线存在问题导致，需要制作替代用的线
 
 
->>>>>>> raser/main
 
 ## 进度
 - [ ] 使用alibava替代T1测试β信号

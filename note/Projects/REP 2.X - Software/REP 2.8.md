@@ -82,13 +82,8 @@ $$I_q(t)dt=q\vec{v_q}\nabla U_\omega \cdot exp(-\frac{t}{\tau _{eff,e,h}})\cdot 
 在估计的计算中，计算top-TCT时，可以忽略激光的直径，只考虑时间展宽，将激光简化为z方向和时间两个维度来简化计算，可以得到$$I=I(0, 0, 0)\cdot exp(\frac{-4t^2}{\tau ^2}) \cdot exp(-\alpha z)$$其中$\alpha = 2.1m^{-1},  \tau = 8.1\times 10^{-9}s$
 对于载流子产生过程，由于忽略了直径，其化为：$$dN_{e-h}dzdt=\alpha dz\frac{I\cdot dz dt}{h\nu}$$对于S-R定理而言，$q=N_{e-h}\cdot e$，加权场为一维z方向场
 根据程序解电场结果，$E(z)\approx 1e7-1e11\cdot z$    (SI)
-<<<<<<< HEAD
-假定电子漂移受电场作用：$F=Eq$, v=ue
-在z处的载流子密度为：$$N(z)=\int \frac{I}{E}\cdot e\cdot dz=\int E_I\cdot exp(\frac{-4(t-\sqrt{\frac{z\cdot m_e}{E\cdot e}})^2}{\tau ^2}) \cdot exp(-\alpha z)\cdot dz$$产生的感应电流为：$$I(t)=\int N(z)e\cdot v\cdot U\cdot dz$$
-=======
 假定电子漂移受电场作用：$v=\mu e$
 在z处的载流子密度为：$$N(z)=\int \frac{I}{E}\cdot e\cdot dz=\int E_I\cdot exp(\frac{-4(t-\mu e)^2}{\tau ^2}) \cdot exp(-\alpha z)\cdot dz$$产生的感应电流为：$$I(t)=\int N(z)e\cdot v\cdot U\cdot dz$$
->>>>>>> raser/main
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230807_top_tct_laser_enengy.png)
 实验测得激光平均功率为$7.2\times 10^{-8}W$, 脉冲频率为10Hz, 即单脉冲能量为$7.2\times 10^{-9}J$
 代入积分可得$I_{max}=0.016A$, 将该电流进行电子学处理可估计出信号理论峰值约为20V
