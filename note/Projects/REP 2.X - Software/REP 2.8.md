@@ -13,28 +13,6 @@ Team Report: 2023-06-05
 # Top-TCT simulation on SiC 
 
 [[石航瑞]], [[解凯博]]
-
-## Introduction 
-
-## Carriers
-
-### 测量激光单脉冲能量
-拟购买Thorlabs：S120VC激光功率探头
-| 价格 | 波长范围 | 误差 | 量程 | 355nm 响应 | 1065nm响应 |
-| ---    | --- | ---|  ---| --- | --- |
-| ￥4225.32 | 200-1100nm | 355-5%, 1064-7% | 50nW-50mW | 16.28mA/W | 17.44mA/W |
-
-我们的激光器10Hz，单脉冲在70uJ左右，功率在100uW-700uW之间
-
-PM101: 
-https://www.thorlabschina.cn/thorproduct.cfm?partnumber=PM101
-Operation manual: 
-https://www.thorlabschina.cn/drawings/4d1ac5f6ea8b7605-9CAA2977-9D35-C9D1-3D7B9ECD730FAF1D/PM101-Manual(English).pdf
-Software: 
-https://www.thorlabs.com/software_pages/ViewSoftwarePage.cfm?Code=OPM
-Operation manual: 
-https://www.thorlabs.com/software/MUC/OPM/v5.0/TL_OPM_V5.0_web-secured.pdf
-
 ## NGspice
 经过 TCT_T1.py 得到 SiC 在激光照射后输出的电流信号 current:e+h ，根据 current:e+h 在描述 T1 电路的文件 paras/T1.cir 的基础上改写输入电流源得到新的可供 ngspice 执行的文件 output/T1_tmp.cir ，执行 output/T1_tmp.cir 即可得到 T1 输出的电压关于时间的数据并保存至 output/t1.raw 供后续使用ROOT画图
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/500V.jpg)
@@ -50,23 +28,14 @@ $\Phi = 3.9e13$
 $\Phi = 7.8e14$
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_trappingtime_7.8e14_result.png)
 
-
-### before
-对于不同的辐照损伤，目前使用trapping time在程序中进行模拟。通过模拟结果与实验比对(辐照剂量分别为0, 3.9e13, 7.8e14 ; 模拟上采用的trapping time 分别为：8.9ns, 0.79ns, 0.06ns)
-3.9e13:
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime_compare_3.9e13.png)
-
-7.8e14
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime_compare_7.8e14.png)
-
 各点辐照和trapping time 值（横轴辐照采用对数坐标）：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230530_shhr_trappingtime_irradiation_logimage.png)
 trapping time 和irradiation的对数成线性关系![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime01.png)
 
 ## Waveform 
 ### Latest
 #### 下降沿
-下降沿模拟和实验相差较大，推测是由于线缆分布电容产生的。下图为添加了1mF后的模拟、实验对照，可以看出在添加了电容后确实有改善，但和原先结果基本没有明显变化。
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230804_top_tct_add_capacitance_compare.png)
+下降沿模拟和实验相差较大，推测是由于线缆分布电容产生的。下图为添加了1mF后的模拟、实验对照，可以看出在添加了电容后在下降沿处会出现明显的负电压情况。
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230815_top_tct_add_capacitance_compare.png)
 
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_trappingtime_0_result.png)
 
@@ -85,6 +54,23 @@ trapping time 和irradiation的对数成线性关系![](https://raser-1314796952
 	- 1000V![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230505_top_tct_exp_and_sim_compare4_1000V.png)
 	- 可以看到在全耗尽（电压大于500V）的情况下，实验模拟结果符合非常好。
 
+### 测量激光单脉冲能量
+拟购买Thorlabs：S120VC激光功率探头
+| 价格 | 波长范围 | 误差 | 量程 | 355nm 响应 | 1065nm响应 |
+| --- | --- | ---|  ---| --- | --- |
+| ￥4225.32 | 200-1100nm | 355-5%, 1064-7% | 50nW-50mW | 16.28mA/W | 17.44mA/W |
+
+我们的激光器10Hz，单脉冲在70uJ左右，功率在100uW-700uW之间
+
+PM101: 
+https://www.thorlabschina.cn/thorproduct.cfm?partnumber=PM101
+Operation manual: 
+https://www.thorlabschina.cn/drawings/4d1ac5f6ea8b7605-9CAA2977-9D35-C9D1-3D7B9ECD730FAF1D/PM101-Manual(English).pdf
+Software: 
+https://www.thorlabs.com/software_pages/ViewSoftwarePage.cfm?Code=OPM
+Operation manual: 
+https://www.thorlabs.com/software/MUC/OPM/v5.0/TL_OPM_V5.0_web-secured.pdf
+
 ## 理论计算
 
 ### 理论估算激光产生信号强度
@@ -96,8 +82,8 @@ $$I_q(t)dt=q\vec{v_q}\nabla U_\omega \cdot exp(-\frac{t}{\tau _{eff,e,h}})\cdot 
 在估计的计算中，计算top-TCT时，可以忽略激光的直径，只考虑时间展宽，将激光简化为z方向和时间两个维度来简化计算，可以得到$$I=I(0, 0, 0)\cdot exp(\frac{-4t^2}{\tau ^2}) \cdot exp(-\alpha z)$$其中$\alpha = 2.1m^{-1},  \tau = 8.1\times 10^{-9}s$
 对于载流子产生过程，由于忽略了直径，其化为：$$dN_{e-h}dzdt=\alpha dz\frac{I\cdot dz dt}{h\nu}$$对于S-R定理而言，$q=N_{e-h}\cdot e$，加权场为一维z方向场
 根据程序解电场结果，$E(z)\approx 1e7-1e11\cdot z$    (SI)
-假定电子漂移受电场作用：$F=Eq$
-在z处的载流子密度为：$$N(z)=\int \frac{I}{E}\cdot e\cdot dz=\int E_I\cdot exp(\frac{-4(t-\sqrt{\frac{z\cdot m_e}{E\cdot e}})^2}{\tau ^2}) \cdot exp(-\alpha z)\cdot dz$$产生的感应电流为：$$I(t)=\int N(z)e\cdot v\cdot U\cdot dz$$
+假定电子漂移受电场作用：$v=\mu e$
+在z处的载流子密度为：$$N(z)=\int \frac{I}{E}\cdot e\cdot dz=\int E_I\cdot exp(\frac{-4(t-\mu e)^2}{\tau ^2}) \cdot exp(-\alpha z)\cdot dz$$产生的感应电流为：$$I(t)=\int N(z)e\cdot v\cdot U\cdot dz$$
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230807_top_tct_laser_enengy.png)
 实验测得激光平均功率为$7.2\times 10^{-8}W$, 脉冲频率为10Hz, 即单脉冲能量为$7.2\times 10^{-9}J$
 代入积分可得$I_{max}=0.016A$, 将该电流进行电子学处理可估计出信号理论峰值约为20V
@@ -112,7 +98,42 @@ $$N=\frac{E_{pulse}}{E}=1.29\times 10^{10}$$
 $$Q'=Q*Gain/R=825.2nC$$式中Gain为放大器放大倍率，R为示波器电阻值。
 实验上的电荷收集为20.57nC，二者相差约40倍
 
-### 之前的计算
+
+## Charge
+
+电荷收集效率比对
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_cce_compare_result.png)
+不同辐照下电荷收集
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_cce_result.png)
+3.9e13
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_3.9e13_th1f_result.png)
+iv：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_iv_result.png)
+
+
+
+
+
+# History
+
+## irradiation
+
+对于不同的辐照损伤，目前使用trapping time在程序中进行模拟。通过模拟结果与实验比对(辐照剂量分别为0, 3.9e13, 7.8e14 ; 模拟上采用的trapping time 分别为：8.9ns, 0.79ns, 0.06ns)
+3.9e13:
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime_compare_3.9e13.png)
+
+7.8e14
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230521_shhr_trappingtime_compare_7.8e14.png)
+
+## cce
+电荷收集效率比对结果为![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230505_top_tct_exp_and_sim_compare4_cce.png)
+>采用NGspice处理后波形（波形输入）；更新时间：23.05.05
+
+### 
+- 原有BB电子学参数下的电荷收集效率![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230403_cce_shhr_01.png)
+- 发现之前设置的激光入场时间和整体时间分辨存在问题，需要更改参数设置，预计更改完成后模拟波形与实验能符合更好。
+>更新时间：23.04.03
+## 之前的计算
 
 在实验上：$I=60A$, $80A-69.86\mu J$
 代入数据计算可得：$I(t)_{max}\approx50\mu A$,  $E=1e-11J$
@@ -190,26 +211,3 @@ raser模拟结果：$I_{max}=150\mu A$
 	  "BB_imp" : 400,
 	  "OscBW" : 20
 - 由于BB电子学只能修改曲线的下降沿，所以图像上下降沿的比对较吻合，上升沿相差较大
-
-## Charge
-### Latest
-电荷收集效率比对
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_cce_compare_result.png)
-不同辐照下电荷收集
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_cce_result.png)
-3.9e13
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_3.9e13_th1f_result.png)
-iv：
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230612_shhr_rd50_iv_result.png)
-### before
-目前的电荷收集效率比对结果为![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230505_top_tct_exp_and_sim_compare4_cce.png)
->采用NGspice处理后波形（波形输入）；更新时间：23.05.05
-
-### 
-- 原有BB电子学参数下的电荷收集效率![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/230403_cce_shhr_01.png)
-- 发现之前设置的激光入场时间和整体时间分辨存在问题，需要更改参数设置，预计更改完成后模拟波形与实验能符合更好。
->更新时间：23.04.03
-
-## Irradiation and Trapping time
-
-
