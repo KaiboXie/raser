@@ -10,9 +10,9 @@ Updated: 2023-06-25
 
 ## Overview 
 idea
-    - [ ]  [[REP 0.11]]
+-  [ ] [[REP 0.11]]
 Hardware 
-	-  [x] SiC PIN [[REP 1.4]]
+-  [x] SiC PIN [[REP 1.4]]
 -  [x] Software 
 	-  [x] Simulation: [[REP 2.5]]	
 	
