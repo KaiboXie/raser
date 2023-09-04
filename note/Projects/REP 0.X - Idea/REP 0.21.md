@@ -5,7 +5,7 @@ Author: 史欣
 Status: Active
 Type: Idea 
 Created: 2023-07-03
-Updated: 2023-07-03
+Updated: 2023-09-03
 ---
 
 
@@ -17,7 +17,6 @@ Updated: 2023-07-03
 
 ## Recruit 
 
-
 - Kechuang Project 
 - Member universities and institutes
 - Public Lecture
@@ -27,7 +26,7 @@ Updated: 2023-07-03
 
 The true selection happens naturally with several milestones in the first ==3== months (90 days): 
 
-- M1:  Create proper member's name with two key elements - REPs, Weekly Plan （ability to plan, execute, communicate and integrate into team) 
+- M1:  Create proper member's name with two key elements - REPs, Weekly Plan（ability to plan, execute, communicate and integrate into team) 
 - M2:  Journal Club (ability to select and develop research topic)
 - M3:  Team Report (ability to present research work in a professional way in English)
 
@@ -37,4 +36,11 @@ The true selection happens naturally with several milestones in the first ==3== 
 - Organize two weekly trainings every year: winter and summer 
 - Everyone can join remotely (will be recorded)
 - Selected members can join locally 
+
+
+## Member in WeCom
+
+- Due to the new policy in WeCom, only selected members can be set as 'internal'
+- New members will be set as 'external' from WeCom
+- Only after one year, members can be added as 'internal' of WeCom
 
