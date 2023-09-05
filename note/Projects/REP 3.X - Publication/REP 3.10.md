@@ -1,7 +1,7 @@
 ---
 REP: 3.9
 Title: Charge collection efficiency of 4H-SiC Low Gain Avalanche Diode
-Author: 何野，王科琪，史欣，王聪聪
+Author: 何野，王科琪，王聪聪
 Status: Revsion1 due 2023-08-30
 Type: Publication 
 Created: 2023-08-07
