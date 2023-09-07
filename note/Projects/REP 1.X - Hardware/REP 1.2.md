@@ -37,11 +37,6 @@ Updated: 2023-06-19
 SICAR1设计参数
 此处省去
 
-
-
-
-
-
 ## 芯片制作
 ### 光刻版1.0设计（M1、M2、M3）
 [[王科琪]]
@@ -202,7 +197,28 @@ SICAR1设计参数
 ---
 ### 第一次欧姆接触测试
 [[何野]]
-
+### 直径1000μm SICAR的IV\CV测试
+[[王科琪]]
+测试器件选择：
+第一次流片中第一片的SICAR1-8-6
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/5c2d8368c6024dc582418bb0bf0b9ce.jpg)
+- IV测试环境
+	- B106探针台
+	- 电源：Keithley 2470 source meter
+	- sensor正面加高压（负），背面接地
+	- 扫描设置：电流限制105$\mu A$，间隔1s
+	- 反向偏压范围(0,600V)，步长1V
+    
+    ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/af5af08b15c4d5f94c178be53da7636.png)
+- CV测试环境
+	- B002探针台
+	- 电源：Keithley 2410 source meter
+	- LCR：Keysight E4980A
+	- sensor正面加高压（负），背面接地
+	- 扫描设置：电流限制100$\mu A$，间隔5s
+	- 反向偏压范围(0,400V)，步长1V
+    
+    ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/f55366b43ce7ae38d63964c9401c6d1.png)
 # Log 
 1、欧姆接触电阻率测试（最优欧姆接触）**何野测试，科琪分析**
 
