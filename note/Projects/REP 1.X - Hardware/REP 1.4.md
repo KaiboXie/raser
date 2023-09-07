@@ -1,29 +1,17 @@
 ---
 REP: 1.4
-Title: 4H-SiC PIN Fabrication  
-Author: 李再一，何野，谢凯博，张希媛*
+Title: 4H-SiC PIN Fabrication（IHEP）
+Author: 王科琪，何野，史欣，王聪聪*
 Status: Active
-Type: Hardware 
+Type: Hardware
 Created: 2022-10-01
 Updated: 2023-06-25
 ---
-
-## Overview 
-idea
--  [ ] [[REP 0.11]]
-Hardware 
--  [x] SiC PIN [[REP 1.4]]
--  [x] Software 
-	-  [x] Simulation: [[REP 2.5]]	
-	
-- Publication  
-   - [ ] 
-
-# SiC PIN IHEP   
+ SiC PIN IHEP   
   
 [[王聪聪]]  [[王科琪]]   
   
-## 外延片用途   
+## 外延片用途   
   
 1、PIN探测器（与LGAD探测器性能对比）  
 2、研究石墨烯/PIN探测器电荷收集+时间分辨性能  
@@ -31,3 +19,4 @@ Hardware
 ## 外延片制作进展  
   
 1、已经与厂家联系，厂家正在评估外延结构生长与价格，最少外延两片。（广东）
+2、仿真PIN外延结构[[王科琪]]
