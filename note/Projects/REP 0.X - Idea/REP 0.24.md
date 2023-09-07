@@ -1,7 +1,7 @@
 ---
 REP: 0.24
 Title: Efficient  TEAM Weekly Meeting Scheme
-Author: 徐子骏, 史欣
+Author: 徐子骏, 史欣, 肖素玉
 Status: In Progress
 Type: Idea
 Created: 2023-09-06
