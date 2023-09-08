@@ -208,6 +208,15 @@ SICAR1设计参数
 	- sensor正面加高压（负），背面接地
 	- 扫描设置：电流限制105$\mu A$，间隔1s
 	- 反向偏压范围(0,600V)，步长1V
+	- 数据位置：/scratchfs/bes/wangkeqi/wangkeqi/SICAR1.1.8-1
+	- 创建新的位置：/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8-1
+	- 转换.csv成.root：
+```
+raser root sicar1.1.8-1
+
+```
+Saved as /publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8/sicar1.1.8-1_iv.root
+
     
     ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/af5af08b15c4d5f94c178be53da7636.png)
 - CV测试环境
