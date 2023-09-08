@@ -41,6 +41,8 @@ RD50前strip模拟任务（按优先级排序）：
 - ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/ElectronGeneration.png)
 - ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Electrons.png)
 - ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Potential.png)
+- 是否可以自己在devsim写一个model直接作用于载流子浓度已及其他深能级缺陷会影响的量
+- 深能级缺陷和非全耗尽在表观上的区别
 
 ## 2023-9-1
 - devsim二维电势![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/potential2D.png)
