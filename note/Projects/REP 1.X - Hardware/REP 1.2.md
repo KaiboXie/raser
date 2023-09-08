@@ -173,14 +173,17 @@ Updated: 2023-06-19
 	- 数据位置：/scratchfs/bes/wangkeqi/wangkeqi/SICAR1.1.8-1
 	- 创建新的位置：/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8-1
 	- 转换.csv成.root：
-```
-raser root sicar1.1.8-1
+  > raser root sicar1.1.8-1
 
-```
-Saved as /publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8/sicar1.1.8-1_iv.root
+Saved as
+> /publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8/sicar1.1.8-1_iv.root
 
-    
-    ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/af5af08b15c4d5f94c178be53da7636.png)
+   
+-  将.root数据文件画出可视化图片
+    > raser draw iv sicar1.1.8-1
+
+![sicar1.1.8-1_iv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-1_iv.png)
+
 - CV测试环境
 	- B002探针台
 	- 电源：Keithley 2410 source meter
