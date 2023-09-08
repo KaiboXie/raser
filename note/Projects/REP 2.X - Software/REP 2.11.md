@@ -7,17 +7,48 @@ Type: Software
 Created: 2023-04-11
 ---
 
+# Si strip experiment
+实验平台搭建
+- [ ] 107向TCT盒子内输入干燥空气能否做到，预期耗时（干燥机，压缩机）
+- [ ] TCT盒子密封水平是否达标
+- [ ] 使用何种冷却装置能使alibava子板固定在TCT支架上，如果不行，将TCT三个方向的步进机全部放在聚焦头一边是否可行（连接上和空间上）
+- [ ] TCT盒子内的空间是否足够（需要容纳alibava母板，冷却装置，TCT平台）
+- [ ] TCT盒子加入干燥空气的管子应该如何布局，不用期间是否需要拆卸
+
+
 
 # Si strip simulation 
 
 [[李星臣]]
 
 
-任务列表：
-	1. strip表面红外激光扫描，研究位置分辨；
-	2. RASER添加strip功能，研究strip电极与间隙宽度对位置分辨的影响；
-	3. 辐照后红外激光测收集电荷，估算俘获时间；
-	4. RASER模拟加入俘获时间贡献，通过改变俘获时间，模拟、测试辐照后位置分辨。
+RD50前strip模拟任务（按优先级排序）：
+	1. strip加入devsim二维电场与加权场；
+		1. 在作者的example下做出二电极
+		2. 将掺杂调至itk参数
+		3. 在网格长宽比过大导致不收敛之前尽可能增多电极数量
+	2. ==devsim加入辐照损伤==（难度系数可能为最高？）；
+	3. ==实验测量电荷收集==，并与模拟对比
+	4. 辐照前TCT扫描
+	5. 粒子入射距离变化与峰值信号和电荷收集的关系
+	6. 不同角度入射下的电荷共享
+	7. 将载流子的产生由单点改为一个空间上的高斯分布（硅和碳化硅应该有相关模型吧），并在产生载流子的同时考虑==俄歇复合==，漂移过程中不再考虑（重荷模拟）；
+	8. 激光角度
+	
+## 2023-9-8
+- devsim的srh复合率和电流连续性方程似乎并不影响载流子的浓度，目前已联系作者询问解决办法
+- ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/USRH.png)
+- ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/ElectronGeneration.png)
+- ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Electrons.png)
+- ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Potential.png)
+
+## 2023-9-1
+- devsim二维电势![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/potential2D.png)
+- devsim二维si strip电势![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/si%20strip%20potential.png)
+
+
+
+
 
 ## Introduction 
 硅微条探测器具有极好的位置分辨率，近年来，世界各大高能物理实验室几乎都采用它作为顶点探测器
