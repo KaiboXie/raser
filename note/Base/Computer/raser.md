@@ -4,6 +4,16 @@
 
 **RA**diation **SE**miconducto**R** 
 
+## Example
+
+### 将csv文件转成root文件
+> raser root sicar1.1.8-1
+
+Saved as
+>/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8/sicar1.1.8-1_iv.root
+
+### 将.root数据文件画出可视化图片
+ > raser draw iv sicar1.1.8-1
 
 ## UserGuide 
 
