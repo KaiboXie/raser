@@ -14,8 +14,13 @@ Updated: 2023-04-25
 ## Overview
 
 - Hardware 
-	- [ ] 
-
+	- [ ] [[REP 1.1]]
+	- [ ] [[REP 1.5]]
+- Software
+	- [ ] [[REP 2.7]]
+	- [ ] [[REP 2.10]]
+- Publication
+	- [ ] [[REP 3.7]]
 
 
 ## Log
