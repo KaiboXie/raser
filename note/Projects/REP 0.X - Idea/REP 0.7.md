@@ -20,6 +20,8 @@ Updated: 2023-04-25
 - [ ]  print with sys.stdout.write
 - [ ]  filenames in lowercase (PEP8: [https://peps.python.org/pep-0008/](https://peps.python.org/pep-0008/))
 - [ ]  Clean-up non-used code
+- [ ]  Use 'unittest' to extend the function of raser 
+
 
 Unit testing is a dance: tests lead, code follows.
 
