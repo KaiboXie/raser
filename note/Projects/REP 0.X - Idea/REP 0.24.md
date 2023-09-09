@@ -18,8 +18,8 @@ Limit the time to 1 hour.
 
 - Consideration for RASER TEAM
 	- Staff chat can happen with face to face in the meeting room before 12:30, during the lunch time. 
-	- 12:30-12:45: Organization related discussion
-	- 12:45-13:15:  Progress report 
+	- 12:30-12:45: TEAM related discussion
+	- 12:45-13:15:  Featured Report from one staff's team
 	- 13:15-13:30:  Journal Club 
 	- Online meeting will be closed sharp at 13:30
 
