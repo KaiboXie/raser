@@ -22,3 +22,6 @@ Streamline the project management process and increase efficiency.
 - Add 'project' in the projects folder.  or just use the Enhancement folder? 
 - Utilize 'Projects' plugin [[Obsidian]]
 
+## Connect REP with Author 
+
+To enhance the deeper connection from task with people, an entry in the author to connect with REP is required weekly before the TEAM meeting.  
