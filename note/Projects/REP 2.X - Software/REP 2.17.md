@@ -26,4 +26,30 @@ Updated: 2023-09-01
 器件结构：直径1mm的圆形SiC PIN器件，本征层厚度100μm。
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/9.jpg)
 
+### 环电极PIN二维仿真
 
+**版本一**（器件尺寸等比缩小为原尺寸的0.01）：
+
+反向偏压500V
+器件直径（y方向） 0.01× 1mm  
+P+层厚度 0.01× 1μm
+N-层厚度 0.01× 100μm
+左侧两个电极：0.01× 50μm
+
+掺杂浓度(cm-3）：
+P+层:1e19
+N-层：5.2e13
+![550](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230910235700.png)
+
+**版本二** （原器件尺寸）：
+（问题待解决：原尺寸的仿真结果异常)
+反向偏压 500V
+器件直径（y方向）1mm  
+P+层厚度 1μm
+N-层厚度 99μm
+左侧两个电极：50μm
+
+掺杂浓度(cm-3）：
+P+层:1e19
+N-层：5.2e13
+![550](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%8E%9F%E5%B0%BA%E5%AF%B8500V.png)
