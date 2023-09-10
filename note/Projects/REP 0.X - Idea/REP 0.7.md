@@ -23,7 +23,11 @@ Updated: 2023-04-25
 - [ ]  Use 'unittest' to extend the function of raser 
 
 
-## v4.0  (2023-08-31)
+Unit testing is a dance: tests lead, code follows.
+
+[https://diveintopython3.net/unit-testing.html](https://diveintopython3.net/unit-testing.html)
+
+## v4.0.0  (2023-08-31)
 
 Goal:  reduce the library, one task with one software 
 
