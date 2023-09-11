@@ -8,10 +8,20 @@ Created: 2021-03-18
 Updated: 2023-04-25
 ---
 
-
 # SiC Based Beam Monitor System - BMOS
 
-[[史欣]]
+
+## Overview
+
+- Hardware 
+	- [ ] [[REP 1.1]]
+	- [ ] [[REP 1.5]]
+- Software
+	- [ ] [[REP 2.7]]
+	- [ ] [[REP 2.10]]
+- Publication
+	- [ ] [[REP 3.7]]
+
 
 ## Log
 
