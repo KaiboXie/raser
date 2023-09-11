@@ -170,17 +170,20 @@ Updated: 2023-06-19
 	- sensor正面加高压（负），背面接地
 	- 扫描设置：电流限制105$\mu A$，间隔1s
 	- 反向偏压范围(0,600V)，步长1V
-	- 数据位置：/scratchfs/bes/wangkeqi/wangkeqi/SICAR1.1.8-1
-	- 创建新的位置：/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8-1
+	- 数据位置：/scratchfs/bes/wangkeqi/wangkeqi/SICAR1.1.8
+	- 创建新的位置：/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8
 	- 转换.csv成.root：
-  > raser root sicar1.1.8-1
+  > raser root sicar1.1.8
 
 Saved as
-> /publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8/sicar1.1.8-1_iv.root
+> /publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8/sicar1.1.8.root
 
    
 -  将.root数据文件画出可视化图片
-    > raser draw iv sicar1.1.8-1
+    > raser draw sicar1.1.8
+
+Saved as
+> /afs/ihep.ac.cn/users/w/wangkeqi/raser/output/fig
 
 ![sicar1.1.8-1_iv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-1_iv.png)
 

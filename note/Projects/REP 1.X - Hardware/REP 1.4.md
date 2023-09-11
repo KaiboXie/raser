@@ -1,6 +1,6 @@
 ---
 REP: 1.4
-Title: 4H-SiC PIN Fabrication（IHEP）
+Title: 4H-SiC PIN Fabrication - SICAR0
 Author: 王科琪，何野，史欣，王聪聪*
 Status: Active
 Type: Hardware
