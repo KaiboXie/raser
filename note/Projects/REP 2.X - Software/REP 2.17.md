@@ -62,7 +62,7 @@ N-层：5.2e13
 ![350](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20230911095240.png)
 
 推导过程：
-![400](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/_de7841970cc2e97dbc45b0f86a761c0e_1015609287_%E6%B3%8A%E6%9D%BE%E6%96%B9%E7%A8%8B.jpg)
+![401](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/_de7841970cc2e97dbc45b0f86a761c0e_1015609287_%E6%B3%8A%E6%9D%BE%E6%96%B9%E7%A8%8B.jpg)
 
 结论：
 和二维直角坐标系下的泊松方程相比，柱坐标系下泊松方程的左端多了一项，所以我们不能把环电极产生的电场看作两个条型电极绕半圈的叠加。
