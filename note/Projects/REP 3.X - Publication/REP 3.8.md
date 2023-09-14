@@ -1,4 +1,3 @@
-
 ---
 REP: 3.8
 Title: ITk Strip Silicon Sensor Irradiation with 80MeV Proton Beam

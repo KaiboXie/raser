@@ -72,6 +72,32 @@ Updated: 2023-08-10
 - 各通道噪声（alibava子板1）
 ![alibava_noise_2020814.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/alibava_noise_2020814.png)
 
+## ALIBAVA激光测试
+- 20230822测试结果
+	- 在alibava的控制程序上疑似看见了激光信号
+	- ![laser_signal_20230822.jpg](https://raser-1314796952.cos.ap-beijing.myqcloud.com/laser_signal_20230822.jpg)
+	- 之后发现噪声水平不正常（左上，第一张为实验前，第二张为实验后）
+	- ![noise_true_20230822.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/noise_true_20230822.bmp)
+	- ![noise_false_20230822.bmp](https://raser-1314796952.cos.ap-beijing.myqcloud.com/noise_false_20230822.bmp)
+	- 数据处理后未能复现实验时所见结果，目前判断是在hitmap的数据保存上存在问题，正在解决
+- 噪声异常原因分析
+	- 拔掉与高压源连线时噪声表现非常好
+	- 与高压源连线后高压源处于关闭、开机不输出、输出状态或者高压源不接电时噪声都会增大非常多
+	- 一天不同时段噪声水平不同（早上实验开始时正常，中午发现变高，晚上开始时和中午一致，很晚时变回正常水平）
+	- 使用干电池串联后58V电压接入，噪声与拔掉高压源连线时相当
+- 20230823测试结果
+	- 使用干电池测试未能看见信号
+	- 尝试使用高压源复现20230823结果，未能复现
+	- 发现alibava系统出现数据异常
+	- 经过实验，确定只要在激光打在sensor时alibava采集了数据就会出现异常，需要将alibava母板断电一段时间才可恢复正常
+	- 结合20230822测试噪声异常原因分析，系统可能在昨天测试时就开始出现异常
+
+## ALIBAVA β测试
+
+- 20230824测试结果
+	- 实验中发现sensor漏电流大小异常，判断为使用的高压源连接线存在问题导致，需要制作替代用的线
+
+
 
 ## 进度
 - [ ] 使用alibava替代T1测试β信号

@@ -48,3 +48,20 @@ A novel 4H-SiC lateral bipolar junction transistor structure with high voltage a
 
 ![BJT6.png|546](https://raser-1314796952.cos.ap-beijing.myqcloud.com/BJT6.png)
 Improved Current Gain in 4H-SiC BJTs Passivated with Deposited Oxides Followed by Nitridation 2011 器件 电流增益86
+
+文章：15 kV-Class Implantation-Free 4H-SiC BJTs With Record High Current Gain
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media20230903003755.png)
+器件结构
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media20230903003918.png)
+增益与漏电流
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media20230903003941.png)
+电压与增益倍数之间的关系
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media20230903004005.png)
+不同位置的电场强度，结果表明，19kV时电场分布均匀，边缘没有电场峰值
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media20230903004025.png)
+不同形状的电极对增益倍数的影响
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media20230903004521.png)
+三种不同的电极形状
+![image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media20230903004038.png)
+不同的基极宽度对增益的影响
+发射极宽度WE=40μm和基极宽度WB=30μm足以具有高电流增益。我们的观察结果是，比最佳尺寸更宽的发射极和基极宽度只会增加成本，而没有其他改进。

@@ -1,10 +1,9 @@
-
 ---
 REP: 1.2
 Title: SICAR1 Fabrication
 Author: 张希媛,王聪聪,何野,王科琪
 Status: Active
-Todo: 测试直径1000μm SICAR的IV\CV，整理欧姆接触电阻率
+Todo: 测试小器件IV和CV（王科琪 何野）
 Type: Hardware 
 Created: 2022-10-01
 Updated: 2023-06-19
@@ -16,13 +15,13 @@ Updated: 2023-06-19
 
 ## Overview 
 
-- SICAR1 Run1 
+- SICAR1 Run1 （已完成）
    - [ ] 测试IV和CV，分析数据[[何野]]
    - [ ] 分析和整理欧姆接触电阻率，可以重新测试，测量小器件的IV和CV[[王科琪]]
    - [ ] 分析完IV和CV后7月初完成划片准备测试电荷收集和时间分辨[[何野]] 
    - [ ] 测试和整理电荷收集，俘获时间等参数，撰写论文 [[[[何野]]]]（8月29日之前完成）
    - [ ] 测试时间分辨[[[[王科琪]]]]（8月29日之前完成）
-- SICAR1 Run2 
+- SICAR1 Run2  （已完成）
    - 钝化层厚度=500nm，流片工艺进行了优化。
    - 8月18日完成N电极制作，并进行退火（7月29日之前完成）[[王科琪]]
    - 8月31日前完成第二次流片 [[王科琪]]
@@ -34,57 +33,14 @@ Updated: 2023-06-19
   - 减小漏电流设计（保护环设计等查找论文）
 -  [x] Presentation
 	-  [ ]   The 42nd RD50 Workshop 
-## 芯片外延
-SICAR1设计参数
-此处省去
+
+## 第一次流片1mm器件 IV和CV测试
+[[何野]] [[王科琪]]
 
 
-
-
-
-
-## 芯片制作
-### 光刻版1.0设计（M1、M2、M3）
-[[王科琪]]
-- 整体效果：
-    ![photolithography.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/photolithography.png)
-
-
-### 第一次流片工艺
-[[王科琪]]， [[何野]]
-
-
-### 第一次流片工艺流程图
-[[王科琪]]
-
-### 第一次流片工艺花销（大致）
-
-| 序号 | 工艺 | 数量 | 花销 |
-| : - : | : - : | : - : | : - : |
-| 1 | 光刻P电极 | 2 | 1300 |
-| 2 | 蒸镀P电极金属 | 2 |1500 |
-| 3 | 退火 | 2 | 3000 |
-| 4 | 光刻台面+台面刻蚀 | 6 | 11195 |
-| 5 | 光刻P电极 | 2 | 1300（估计） |
-| 6 | 蒸镀P电极金属 | 2 | 3000 |
-| 7 | 蒸镀N电极金属 | 4 | 1500 |
-| 8 | 退火 | 4 | 6000 |
-| 9 | PECVD 二氧化硅 | 4 | 1000 |
-| 10 | 光刻钝化层 | 4 | 1900 |
-| 11 | 刻蚀钝化层 | 4 |
-| 12 | 光刻钝化层 | 4 | 1900 |
-| 13 | 刻蚀钝化层 | 4 |
-| 14 | 磁控溅射 | 4 | 2200 |
-| 总计 | | 4 | 35795 |
-
-### 第一次流片问题与后期改进
-[[王科琪]]
-
-### 第一次流片工艺总结
-[[何野]]
 
 --- 
-### 第一次流片IV和CV测试
+### 第一次流片5mm×5mm器件 IV和CV测试
 [[何野]]， [[解凯博]]
 #### 不同尺寸器件的IV测试、取数、作图
 - 测试环境
@@ -203,7 +159,43 @@ SICAR1设计参数
 ---
 ### 第一次欧姆接触测试
 [[何野]]
+### 直径1000μm SICAR的IV\CV测试
+[[王科琪]]
+测试器件选择：
+第一次流片中第一片的SICAR1-8-6
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/5c2d8368c6024dc582418bb0bf0b9ce.jpg)
+- IV测试环境
+	- B106探针台
+	- 电源：Keithley 2470 source meter
+	- sensor正面加高压（负），背面接地
+	- 扫描设置：电流限制105$\mu A$，间隔1s
+	- 反向偏压范围(0,600V)，步长1V
+	- 数据位置：/scratchfs/bes/wangkeqi/wangkeqi/SICAR1.1.8
+	- 创建新的位置：/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8
+	- 转换.csv成.root：
+  > raser root sicar1.1.8
 
+Saved as
+> /publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8/sicar1.1.8.root
+
+   
+-  将.root数据文件画出可视化图片
+    > raser draw sicar1.1.8
+
+Saved as
+> /afs/ihep.ac.cn/users/w/wangkeqi/raser/output/fig
+
+![sicar1.1.8-1_iv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-1_iv.png)
+
+- CV测试环境
+	- B002探针台
+	- 电源：Keithley 2410 source meter
+	- LCR：Keysight E4980A
+	- sensor正面加高压（负），背面接地
+	- 扫描设置：电流限制100$\mu A$，间隔5s
+	- 反向偏压范围(0,400V)，步长1V
+    
+    ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/f55366b43ce7ae38d63964c9401c6d1.png)
 # Log 
 1、欧姆接触电阻率测试（最优欧姆接触）**何野测试，科琪分析**
 
@@ -230,6 +222,10 @@ SICAR1设计参数
 4、电荷收集和时间分辨研究
 
 - [ ] 电荷收集和时间分辨测试（何野+谢凯博测试）
+
+
+
+
 # SICAR1 Fabrication(第二次)
 
 [[张希媛]], [[王聪聪]]
