@@ -1,9 +1,9 @@
 ---
 REP: 1.4
-Title: 4H-SiC PIN Fabrication - SICAR0
-Author: 王科琪，何野，史欣，王聪聪*
+Title: 4H-SiC PIN and 石墨烯/4H-SiC PIN Fabrication  
+Author: 李再一，何野，谢凯博，张希媛*
 Status: Active
-Type: Hardware
+Type: Hardware 
 Created: 2022-10-01
 Updated: 2023-06-25
 ---
@@ -19,4 +19,4 @@ Updated: 2023-06-25
 ## 外延片制作进展  
   
 1、已经与厂家联系，厂家正在评估外延结构生长与价格，最少外延两片。（广东）
-2、仿真PIN外延结构[[王科琪]]
+2、利用软件仿真PIN结构 [[王科琪]]
