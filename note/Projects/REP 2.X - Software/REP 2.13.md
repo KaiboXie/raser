@@ -47,6 +47,15 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 
 
 ## 当前进度
+
+
+[[2023-09-11-TEAM]]
+针对sicar1.6系列
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar116.png)
+2维小器件在120v可以收敛的区间出现双成结
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/firstrightcv.png)
+执行raser field sicar1.1.6_cv_0-1v
+目前遇到的计算机问题是需要搞清楚devsim生成的dat文件每一行对应的标题名。无法通过devsim自带的函数取值并判断。
 [[2023-08-21-TEAM]]
 
 二维CV已经搭建起来，目前是cv趋势和实验对不上
