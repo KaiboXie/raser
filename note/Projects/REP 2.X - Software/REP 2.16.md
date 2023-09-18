@@ -86,5 +86,9 @@ TAICHU3是多层硅像素顶点径迹探测器，目前已经完成了两次Test
 	- Allpix square: 像素探测器的模拟输出数据结构为pixel对象，包含所处的index以及对应的local/global 坐标
 		- 考虑我们的需求，可以只记录index（[x , y])，每层芯片保留所有击中的像素的index。在下一个模块中再根据外部文件，计算该像素对应的位置
 
- - v4版本中执行telescope的方式：raser spaceres pixeldetector_telescope
+ - v4版本中执行telescope的方式：raser spaceres taichu_vi.j  i为版本，.j可以为任意
+	 - v1:执行从原初电离到扩散到重建全套过程
+	 - v2:得到不考虑扩散效应，在固定外延层厚度的时候，改变像素尺寸分辨率对应的变化关系
+		 - ![Res vs size.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Res%20vs%20size.png)
+
 
