@@ -97,6 +97,17 @@ Updated: 2023-08-10
 - 20230824测试结果
 	- 实验中发现sensor漏电流大小异常，判断为使用的高压源连接线存在问题导致，需要制作替代用的线
 
+- 20230925测试结果
+	- 底板开孔：![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/IMG_20230922_155351.jpg)
+	![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/IMG_20230922_155358.jpg)
+	- β源计数：
+		- β源直接放在闪烁体上：1660/min
+		- 宇宙线：214/min
+		- 取下sensor，β放在底板的开孔上：900/min
+		- 放上sensor（有铜层），β放在底板的开孔上：500/min
+		- 放上sensor（无铜层），β放在底板的开孔 500/min
+		- β放在pcb上：300/min
+
 
 
 ## 进度
