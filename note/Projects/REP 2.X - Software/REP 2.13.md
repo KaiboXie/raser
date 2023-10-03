@@ -48,7 +48,11 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 
 ## 当前进度
 
-
+[[2023-09-25-TEAM]]
+对于想要了解简单的二维器件仿真的同学
+提供了简单pn解的仿真
+运行 raser field simple_2d_pnjunction_simulate
+运行结果使用tecplot软件打开即可(主要实现器件内部信息可视化)
 [[2023-09-11-TEAM]]
 针对sicar1.6系列
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar116.png)
