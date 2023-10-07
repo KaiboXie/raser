@@ -34,6 +34,11 @@ Team Report: 2023-05-15
 
 ## Log 
 
+
+### 2023-09-18 
+
+Online:  https://doi.org/10.1016/j.nima.2023.168677
+
 ### 2023-09-09 
 
 Confirmed acceptance. 

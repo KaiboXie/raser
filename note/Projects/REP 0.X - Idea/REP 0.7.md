@@ -13,21 +13,22 @@ Updated: 2023-04-25
 
 ## v4.1 (2023-09-30)
 
-- [ ]  Remove 'run' (use 'raser')
-- [ ]  Figures using on ROOT
-- [ ]  Input data with RDataFrame
-- [ ]  Debug with 'logging' module
-- [ ]  print with sys.stdout.write
-- [ ]  filenames in lowercase (PEP8: [https://peps.python.org/pep-0008/](https://peps.python.org/pep-0008/))
-- [ ]  Clean-up non-used code
-- [ ]  Use 'unittest' to extend the function of raser 
+-  [x]  Remove 'run' (use 'raser')
+-  [x]  Figures using on ROOT
+-  [x]  Input data with RDataFrame
+-  [x]  Debug with 'logging' module
+-  [x]  print with sys.stdout.write
+-  [x]  filenames in lowercase (PEP8: [https://peps.python.org/pep-0008/](https://peps.python.org/pep-0008/))
+-  [x]  Clean-up non-used code
+-  [x]  Use 'unittest' to extend the function of raser 
+-  [x]  Add ACTS 
 
 
 Unit testing is a dance: tests lead, code follows.
 
 [https://diveintopython3.net/unit-testing.html](https://diveintopython3.net/unit-testing.html)
 
-## v4.0.0  (2023-08-31)
+## v4.0  (2023-08-31)
 
 Goal:  reduce the library, one task with one software 
 
