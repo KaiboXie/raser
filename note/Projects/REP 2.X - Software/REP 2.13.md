@@ -57,6 +57,11 @@ IV曲线仿真
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/njupiniv2000.png)
 出现1500v左右的极大值猜测在1600v附近已经击穿
 比较实验数据与仿真结果
+运行raser root njupin_iv_v1
+将实验数据csv文件转化为root文件
+csv路径：/afs/ihep.ac.cn/users/s/senzhao/njupin
+root路径：publicfs/atlas/atlasnew/silicondet/itk/raser/zhaosen/njupin_iv
+之后
 运行raser draw compare_nju_iv
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/njupinbijiao.png)
 
