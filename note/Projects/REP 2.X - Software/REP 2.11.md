@@ -34,7 +34,14 @@ RD50前strip模拟任务（按优先级排序）：
 	6. 不同角度入射下的电荷共享
 	7. 将载流子的产生由单点改为一个空间上的高斯分布（硅和碳化硅应该有相关模型吧），并在产生载流子的同时考虑==俄歇复合==，漂移过程中不再考虑（重荷模拟）；
 	8. 激光角度
-	
+
+## 2023-10-9
+- devsim二维电势电场均已解决，strip加权场临时解决![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/field.png)
+- 将场带入raser，geant4模拟粒子入射产生信号已实现![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/drift_path.png)
+- 全耗尽下电荷收集模拟与实验对比较好，非全耗尽下对比不理想，推测和加权场的设定有关![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/cc.png)
+- 辐照后电场未解决
+
+
 ## 2023-9-8
 - devsim的srh复合率和电流连续性方程似乎并不影响载流子的浓度，目前已联系作者询问解决办法
 - ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/USRH.png)
