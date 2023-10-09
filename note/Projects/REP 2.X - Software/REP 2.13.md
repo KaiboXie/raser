@@ -49,6 +49,28 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 ## 当前进度
 
 
+
+
+高电压收敛
+sicar1.1.6看趋势在350v左右全耗尽
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.6cv.png)
+
+
+得出$C^2$ 趋势大概320v左右全耗尽
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/cap%5E-2.png)
+
+单独读取300-500v的趋势图：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar300-500cv.png)
+
+iv可以跑到1000v,但是结果是错误的
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/firstiv.png)
+
+
+[[2023-09-25-TEAM]]
+对于想要了解简单的二维器件仿真的同学
+提供了简单pn解的仿真
+运行 raser field simple_2d_pnjunction_simulate
+运行结果使用tecplot软件打开即可(主要实现器件内部信息可视化)
 [[2023-09-11-TEAM]]
 针对sicar1.6系列
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar116.png)
