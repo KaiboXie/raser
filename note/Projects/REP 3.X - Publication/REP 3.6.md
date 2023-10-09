@@ -28,14 +28,20 @@ Team Report: 2023-05-15
 	-  [x] Journal: revision 
 
 
-
 - Source code: 
   https://code.ihep.ac.cn/raser/paper/p6-sic-lgad-sim
 
 
 ## Log 
 
-### 
+
+### 2023-09-18 
+
+Online:  https://doi.org/10.1016/j.nima.2023.168677
+
+### 2023-09-09 
+
+Confirmed acceptance. 
 
 ### 2023-06-12 
 

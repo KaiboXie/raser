@@ -18,9 +18,9 @@ def draw_iv(input_dir, output_dir, label):
 
     for i in range(len(com_name)):
         name = com_name[i]
-        if label == 'compare_sicar1.1.8' and not name.startswith('sicar1.1.8'):
+        if label == 'sicar1.1.8' and not name.startswith('sicar1.1.8'):
             continue
-        elif label == 'compare_sicar1.1.8-1_sicar1.1.8-2' and not (name.startswith('sicar1.1.8-1_')) and not (name.startswith('sicar1.1.8-2_')):
+        elif label == 'sicar1.1.8-1,sicar1.1.8-2_iv' and not (name.startswith('sicar1.1.8-1_')) and not (name.startswith('sicar1.1.8-2_')):
             continue
 
         name = name.split('.root')[0]
@@ -31,8 +31,7 @@ def draw_iv(input_dir, output_dir, label):
             file = ROOT.TFile(input_file, "READ")
             tree = file.Get("myTree")
             graph1 = ROOT.TGraph()
-            legend_name.append(name.split('_')[0])
-
+            legend_name.append(name.split('_')[0])   
             for i, event in enumerate(tree):
                 x = event.Value
                 x = abs(x)
@@ -78,8 +77,12 @@ def draw_iv(input_dir, output_dir, label):
     c_i.SaveAs(os.path.join(output_dir, file_name_i))
 
 def main(label):
-    input_dir = '/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8'
-    output_dir = '/afs/ihep.ac.cn/users/w/wangkeqi/raser/output/fig'
+    if label=='itk_md8_compare_dataandsim':
+        input_dir = '/publicfs/atlas/atlasnew/silicondet/itk/raser/lizhan/itkmd8/comparison'
+        output_dir = '/afs/ihep.ac.cn/users/l/lizhan/disk/scrathfs/raser/output/fig'
+    else:
+        input_dir = '/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8'
+        output_dir = '/afs/ihep.ac.cn/users/w/wangkeqi/raser/output/fig'
 
     draw_iv(input_dir, output_dir, label)
 

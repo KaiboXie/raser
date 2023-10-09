@@ -187,6 +187,8 @@ Saved as
 
 ![sicar1.1.8-1_iv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-1_iv.png)
 
+![sicar1.1.8_iv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8_iv.png)
+
 - CV测试环境
 	- B002探针台
 	- 电源：Keithley 2410 source meter
@@ -196,6 +198,9 @@ Saved as
 	- 反向偏压范围(0,400V)，步长1V
     
     ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/f55366b43ce7ae38d63964c9401c6d1.png)
+
+    ![sicar1.1.8_cv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8_cv.png)
+
 # Log 
 1、欧姆接触电阻率测试（最优欧姆接触）**何野测试，科琪分析**
 

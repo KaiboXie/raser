@@ -1,7 +1,7 @@
 [
     {
         "geant4_model" : "pixeldetector",
-        "total_events" : 10,
+        "total_events" : 1000,
 
         "object" : {
             "pixel"  : {
@@ -139,8 +139,8 @@
         "par_outx" : 0,
         "par_outy" : 0,
         "par_outz" : 100000,
-        "par_randx": 62.5,
-        "par_randy": 62.5
+        "par_randx": 750,
+        "par_randy": 750
     },
 
     {
@@ -298,7 +298,7 @@
 
     {
         "geant4_model" : "Si_strip",
-        "total_events" : 1000,
+        "total_events" : 10000,
         
         "object":{},
 
@@ -307,10 +307,10 @@
         "par_energy" : 2.28,
         "maxstep" : 2,
         "g4_vis" : 0,
-        "par_inx" : 0,
+        "par_inx" : -25,
         "par_iny" : 0,
         "par_inz" : 1000,
-        "par_outx" : 0,
+        "par_outx" : -25,
         "par_outy" : 0,
         "par_outz" : 0
     },

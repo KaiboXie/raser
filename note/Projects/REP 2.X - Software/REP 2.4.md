@@ -8,6 +8,11 @@ Created: 2021-10-01
 Updated: 2023-04-25
 ---
 
+# SiC-LGAD C-V simulation
+
+### sicar1.1.8 一维C-V仿真（与测试结果有一定差距）
+> raser field sicar1.1.8_cv_0-1v
+![1D_SICAR1_LGAD_reverse_cv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/1D_SICAR1_LGAD_reverse_cv.png)
 
 # SiC-LGAD Timing simulation
 
