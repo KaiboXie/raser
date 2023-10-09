@@ -1,12 +1,8 @@
 ---
-REP: 1.10
-Title: Si strip 
-Author: 肖素玉 
-Status: Active
-Type: Hardware 
-Todo: 
-Created: 2023-08-09
-Updated: 2023-08-09
+Title: ITK strip
+Maintainer: 
+Created: 2023-10-09
+Updated: 2023-10-09
 ---
 
 
@@ -25,5 +21,4 @@ ITK Sensor:
 
 2023-08-11
 
-Requested to ATLAS for 18 pieces. 
-
+Requested to ATLAS for 20 pieces. 

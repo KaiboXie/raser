@@ -12,8 +12,18 @@ Created: 2023-04-11
 
 [[李星臣]] [[石航瑞]] 
 
+- 4GeV mu-
+![d54f68f04885f81a03a96de3320a0ad.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/d54f68f04885f81a03a96de3320a0ad.png)
+![ec3d4f4fd35b55f1225e33556c5aa29.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/ec3d4f4fd35b55f1225e33556c5aa29.png)
 
-## Introduction 
+- 80MeV proton
+![5e16a1842cadb2e2be9de73c9e28e86.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/5e16a1842cadb2e2be9de73c9e28e86.png)
+![b36eb31096c00fd897358ef42d4d034.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/b36eb31096c00fd897358ef42d4d034.png)
+
+- 1.6GeV proton
+![a25b2488701f4adf3d6616c2a9125a8.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/a25b2488701f4adf3d6616c2a9125a8.png)
+![6ebf4760bd2eeaea7dd99f95abe3327.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/6ebf4760bd2eeaea7dd99f95abe3327.png)
+
 
 # beta simulation on SiC
 
