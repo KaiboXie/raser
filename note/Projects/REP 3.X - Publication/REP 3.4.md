@@ -65,7 +65,12 @@ Team Report: 2023-05-22
 
 
 ##  Log 
-  
+
+
+### 2023-10-07 
+
+Resubmit to NIMA 
+
 ### 2023-05-22
 当前结果
 	迁移率模型：Reggiani
