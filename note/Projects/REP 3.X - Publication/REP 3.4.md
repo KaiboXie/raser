@@ -24,9 +24,9 @@ Team Report: 2023-05-22
 -  [x] Presentation
 	-  [x] [[肖素玉]] The 36th RD50 Workshop [slides](https://indico.cern.ch/event/918298/contributions/3880551/attachments/2050616/3437058/RD50_TRACSforLGAD_suyu.pdf)
 	-  [x] [[符晨曦]] The 41st RD50 Workshop [slides](https://indico.cern.ch/event/1132520/contributions/5149650/attachments/2555302/4409343/Edge-TCT%20simulation%20of%20LGADs%20in%20RASER.pdf)
--  [ ] Publication
+-  [x] Publication
 	-  [x] arXiv: http://arxiv.org/abs/2302.10020 
-	-  [x] Journal: review 
+	-  [ ] Journal: review
 	-  [ ] Webpage: 
 
 
@@ -53,19 +53,24 @@ Team Report: 2023-05-22
 	-  [x] 投稿杂志期刊 
 
 - v1.1 (due 2023-05-05)
-	-  [ ] 做literature，确立文章创新点
-	-  [ ] 明确数据储存的位置
+	-  [x] 做literature，确立文章创新点
+	-  [x] 明确数据储存的位置
 - v1.2 (due 2023-05-12)
-	-  [ ] 对主要数据处理过程做误差分析
-	-  [ ] 重制文章主要数据部分
-		-  [ ] trapping time
-		-  [ ] guard ring侧面结构
+	-  [x] 对主要数据处理过程做误差分析
+	-  [x] 重制文章主要数据部分
+		-  [x] trapping time
+		-  [x] guard ring侧面结构
 - v1.3 
-	-  [ ] 回复编辑部/预备重投稿
+	-  [x] 回复编辑部/预备重投稿
 
 
 ##  Log 
-  
+
+
+### 2023-10-07 
+
+Resubmit to NIMA 
+
 ### 2023-05-22
 当前结果
 	迁移率模型：Reggiani
