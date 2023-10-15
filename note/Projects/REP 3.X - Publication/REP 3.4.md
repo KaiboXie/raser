@@ -26,8 +26,8 @@ Team Report: 2023-05-22
 	-  [x] [[符晨曦]] The 41st RD50 Workshop [slides](https://indico.cern.ch/event/1132520/contributions/5149650/attachments/2555302/4409343/Edge-TCT%20simulation%20of%20LGADs%20in%20RASER.pdf)
 -  [x] Publication
 	-  [x] arXiv: http://arxiv.org/abs/2302.10020 
-	-  [x] Journal: https://doi.org/10.1016/j.nima.2023.168677
-	-  [x] Webpage: https://raser.team/docs/publications/p6_sic_lgad_sim/
+	-  [x] Journal:
+	-  [x] Webpage: 
 
 
 - Source code: 
