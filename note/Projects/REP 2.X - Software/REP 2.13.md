@@ -48,6 +48,7 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 
 ## 当前进度
 
+[[2023-10-16-TEAM]]
 
 IV曲线仿真
 运行raser field NJUPIN_iv_v1，改变上线参数800/2000V
@@ -65,8 +66,11 @@ root路径：publicfs/atlas/atlasnew/silicondet/itk/raser/zhaosen/njupin_iv
 运行raser draw compare_nju_iv
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/njupinbijiao.png)
 
-
-
+加入新的物理模型
+单独iv曲线
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231015194919.png)
+与实验比较
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/scaniv.png)
 
 
 
