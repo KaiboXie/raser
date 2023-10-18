@@ -25,7 +25,8 @@ Team Report: 2023-05-15
 	-  [x] [[杨涛]] The 40th RD50 Workshop [slides](https://indico.cern.ch/event/1157463/contributions/4922751/attachments/2466954/4230861/yangtao_40th_rd50_workshop_20220622.pdf)
 -  [x] Publication
 	-  [x] arXiv:  https://arxiv.org/abs/2206.10191 
-	-  [x] Journal: revision 
+	-  [x] Journal:  https://doi.org/10.1016/j.nima.2023.168677
+	-  [x] Webpage:  https://raser.team/docs/publications/p6_sic_lgad_sim/
 
 
 - Source code: 
