@@ -38,7 +38,7 @@ def Create2DMesh(device,region,simname):
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="y", pos=10e-4 , ps=1e-4)        
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=0     , ps=1e-4)
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=10e-4  , ps=1e-4)
-        devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=1e-6     , ps=1e-6)
+        devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=1e-4    , ps=1e-6)
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=-1e-5     , ps=1e-5)
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=10.1e-4     , ps=1e-5)
         devsim.add_2d_region   (mesh="NJUPIN", material="SiliconCarbide", region=region)
@@ -55,8 +55,7 @@ def Create2DMesh(device,region,simname):
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="y", pos=10e-4 , ps=1e-4)        
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=0     , ps=1e-4)
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=10e-4  , ps=1e-4)
-        devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=1e-6     , ps=1e-6)
-        devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=2e-6     , ps=1e-6)
+        devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=1e-4     , ps=1e-6)
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=-1e-5     , ps=1e-5)
         devsim.add_2d_mesh_line(mesh="NJUPIN", dir="x", pos=10.1e-4     , ps=1e-5)
         devsim.add_2d_region   (mesh="NJUPIN", material="SiliconCarbide", region=region)
@@ -70,6 +69,13 @@ def Create2DMesh(device,region,simname):
         devsim.create_device   (mesh="NJUPIN", device=device)
     elif simname=="3d_pixel":
         devsim.create_gmsh_mesh (mesh="pin", file="./output/parainprogram/pixel.msh")
+        devsim.add_gmsh_region  (mesh="pin", gmsh_name="bulk",    region=region, material="SiliconCarbide")
+        devsim.add_gmsh_contact (mesh="pin", gmsh_name="top",    region=region, material="metal", name="top")
+        devsim.add_gmsh_contact (mesh="pin", gmsh_name="bot", region=region, material="metal", name="bot")
+        devsim.finalize_mesh    (mesh="pin")
+        devsim.create_device    (mesh="pin", device=device)
+    elif simname=="3d_lgad":
+        devsim.create_gmsh_mesh (mesh="pin", file="./output/parainprogram/3d_lgad.msh")
         devsim.add_gmsh_region  (mesh="pin", gmsh_name="bulk",    region=region, material="SiliconCarbide")
         devsim.add_gmsh_contact (mesh="pin", gmsh_name="top",    region=region, material="metal", name="top")
         devsim.add_gmsh_contact (mesh="pin", gmsh_name="bot", region=region, material="metal", name="bot")
@@ -90,8 +96,10 @@ def SetParameters(device, region):
 def SetNetDoping(device, region,simname):
     
     if simname=="sicar1.1.6":
+        #node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")
         node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")
-        node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
+        node_in_2d.CreateNodeModel(device, region, "Donors",    "7.0e16*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
+        #node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
         node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
     elif simname =="PNwithGainlayer":
         node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")
@@ -101,15 +109,19 @@ def SetNetDoping(device, region,simname):
         devsim.edge_from_node_model(device=device,region=region,node_model="NetDoping")
         devsim.edge_from_node_model(device=device,region=region,node_model="Donors")
     elif simname=="NJUPIN":
-        node_in_2d.CreateNodeModel(device,region,"Acceptors", "1.0e20*step(1e-6-x)")
-        node_in_2d.CreateNodeModel(device,region,"Donors",    "5.2e13*step(x-1e-6)")
+        node_in_2d.CreateNodeModel(device,region,"Acceptors", "1.0e18*step((1e-4)-x)")
+        node_in_2d.CreateNodeModel(device,region,"Donors",    "5.2e15*step(x-(1e-4))")
         node_in_2d.CreateNodeModel(device,region,"NetDoping",  "Donors-Acceptors")
     elif simname=="NJUPIN_defect":
         node_in_2d.CreateNodeModel(device,region,"Acceptors", "1e19*step(1e-6-x)")
         node_in_2d.CreateNodeModel(device,region,"Donors",     "5.2e10*step(x-1e-6)")
         node_in_2d.CreateNodeModel(device,region,"NetDoping",  "Donors-Acceptors")
     elif simname=="3d_pixel":
-        node_in_2d.CreateNodeModel(device, region, "Acceptors", "1.0e19*step(1e-8-z)")      
-        node_in_2d.CreateNodeModel(device, region, "Donors",    "5.2e13*step(z-1e-8)")
+        node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")      
+        node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
+        node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
+    elif simname=="3d_lgad":
+        node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")      
+        node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
         node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
     

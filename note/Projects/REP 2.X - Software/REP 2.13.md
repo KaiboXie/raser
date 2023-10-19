@@ -49,6 +49,25 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 ## 当前进度
 
 [[2023-10-16-TEAM]]
+sicar1-1-8器件
+改变了掺杂
+
+```
+node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")
+
+node_in_2d.CreateNodeModel(device, region, "Donors",    "7.0e16*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
+
+node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
+```
+cv图像
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1-1-8.png)
+改变常数项
+```
+defect_R="1.7*abs(ElectricField)^2.5*exp(abs(ElectricField)/1.5e5)"
+```
+iv图像
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1-1-8iv.png)
+
 
 IV曲线仿真
 运行raser field NJUPIN_iv_v1，改变上线参数800/2000V
@@ -66,7 +85,9 @@ root路径：publicfs/atlas/atlasnew/silicondet/itk/raser/zhaosen/njupin_iv
 运行raser draw compare_nju_iv
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/njupinbijiao.png)
 
-加入新的物理模型
+加入新的物理模型：
+CreateImpactGenerationSiliconCarbide(device, region)，同时直接再SRH后减了常数
+USRH="-q*(Electrons*Holes - $n_i^2$)/(taup*(Electrons + n1) + taun*(Holes + p1))-1e12"
 单独iv曲线
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231015194919.png)
 与实验比较
