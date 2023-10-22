@@ -47,7 +47,15 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 
 
 ## 当前进度
+对于不规则器件，电场仿真可用2维也可用3维，iv和cv只能用2维。器件可以拓展到非规则器件。
+2D:4H-SiCmesh，bias=500V
 
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/4HSICMESH.png)
+电势
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/dianshi4hsic.png)
+电场
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/diancahng4hsic.png)
+3D
 环形电极器件（用lgad的掺杂）
 器件几何
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%8E%AF%E5%BD%A2%E7%94%B5%E6%9E%81%E5%87%A0%E4%BD%95.png)
