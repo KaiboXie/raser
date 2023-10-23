@@ -9,3 +9,6 @@
 - CV
 	20230907
 	![sicar1.1.8-5_cv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-5_cv.png)
+	20231018(106)
+	![sicar1.1.8-5-2_cv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-5-2_cv.png)
+
