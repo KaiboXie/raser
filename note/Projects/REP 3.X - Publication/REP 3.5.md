@@ -55,7 +55,10 @@ Updated: 2023-04-01
 
 - [ ] arXiv:http://arxiv.org/abs/2306.09576
 The paper password for this article is: ai8q8
-- [ ] 投稿RDTM：revision
-     - [x] 审稿人提问
-     - [x] 回复审稿人
-	
+
+- 投稿RDTM(due 2023-06-16)
+    -  [x] 审稿人提问(due 2023-08-03)
+    -  [x] 回复审稿人(due 2023-08-25)
+    -  [x] 审稿人提问(due 2023-09-14)
+    -  [x] 回复审稿人(due 2023-10-06)
+    -  [x] 同意接收(due 2023-10-26)
