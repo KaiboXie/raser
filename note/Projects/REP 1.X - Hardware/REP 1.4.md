@@ -24,6 +24,7 @@ SiC PIN IHEP 
 3、泰科天润工程师访问探讨技术（随时可以沟通），代理外延片以及代加工碳化硅芯片， JBS MPS SBD 二极管和MOS   PiN  GTO  都有在流片的项目，BJT几年前也做过。
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-09-18%20090955.jpg)
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-09-18%20091012.jpg)
+4、完成两个合同的审批，准备签订合同。
 
 Silvaco Tacd仿真4H-SiC的CV特性
 [[蒋震宇]]
