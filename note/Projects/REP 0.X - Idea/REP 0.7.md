@@ -11,6 +11,29 @@ Updated: 2023-04-25
 # RAdiation SEmicondoctoR - RASER
 
 
+## Logo Design
+
+- Logo V1 Candidates 
+	- R1-C1 
+![R1-C1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C1.png)
+
+- R1-C2 
+
+![R1-C2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C2.png)
+
+   - R1-C3
+
+![R1-C3.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C3.png)
+
+ - R1-C4 
+
+![R1-C4.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C4.png)
+
+- R1-C5 
+![R1-C5.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C5.png)
+  
+
+
 ## v4.1 (2023-09-30)
 
 -  [x]  Remove 'run' (use 'raser')
