@@ -27,7 +27,12 @@ Updated: 2023-05-12
 
 ## Log 
 
-### 2023-05-12 
+
+
+- 2023-10-24
+   Sent the v0.3 to ITk Sensor. 
+   
+- 2023-05-12 
 
 Todo: 
 
