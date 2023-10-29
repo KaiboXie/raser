@@ -25,7 +25,6 @@ SiC PIN IHEP 
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-09-18%20090955.jpg)
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-09-18%20091012.jpg)
 
-
 Silvaco Tacd仿真4H-SiC的CV特性
 [[蒋震宇]]
 
@@ -54,7 +53,7 @@ Silvaco Tacd仿真4H-SiC的CV特性
 ![#left|全耗尽电压随I区厚度变化趋势](https://raser-1314796952.cos.ap-beijing.myqcloud.com/L:%5Cpicgo67de61f17aea43b0c47eb28479f1451.png)
 全耗尽电压随着 I 区厚度的减小而减小，与理论相符。
 
-3、如果要求全耗尽电压在300-350之间，则根据仿真结果推测，I 区厚度应该在78.5-85之间
+4、如果要求全耗尽电压在300-350之间，则根据仿真结果推测，I 区厚度应该在78.5-85之间
 
 d=78.5um时的全耗尽电压
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/L:%5Cpicgo6015a535e19e3976cd5c9686eb1d3a7.png)
@@ -62,3 +61,4 @@ d=78.5um时的全耗尽电压
 
 d=85um时全耗尽电压
 !["d=85um时全耗尽电压"|800](https://raser-1314796952.cos.ap-beijing.myqcloud.com/L:%5Cpicgoad4ec106a09b7294f36513daf7447e3.png)
+
