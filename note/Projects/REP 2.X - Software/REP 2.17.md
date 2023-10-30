@@ -17,6 +17,8 @@ Updated: 2023-09-01
 - [ ] 2、环电极（非均匀电场，理想欧姆接触）LGAD探测器电荷收集、时间分辨影响
 1mm 圆形SICAR1器件结构
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/8.jpg)
+三维模型
+![企业微信截图_16985726455373.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_16985726455373.png)
 
 主题2：
     研究电场分布对PIN探测器电荷收集、时间分辨影响（环电极和面电极）[[吴思语]] [[石航瑞]] [[李星臣]]
