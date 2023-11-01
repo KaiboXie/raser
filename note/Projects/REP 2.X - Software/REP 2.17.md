@@ -17,6 +17,8 @@ Updated: 2023-09-01
 - [ ] 2、环电极（非均匀电场，理想欧姆接触）LGAD探测器电荷收集、时间分辨影响
 1mm 圆形SICAR1器件结构
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/8.jpg)
+三维模型
+![企业微信截图_16985726455373.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_16985726455373.png)
 
 主题2：
     研究电场分布对PIN探测器电荷收集、时间分辨影响（环电极和面电极）[[吴思语]] [[石航瑞]] [[李星臣]]
@@ -66,3 +68,26 @@ N-层：5.2e13
 
 结论：
 和二维直角坐标系下的泊松方程相比，柱坐标系下泊松方程的左端多了一项，所以我们不能把环电极产生的电场看作两个条型电极绕半圈的叠加。
+
+### Comsol仿真三维PIN
+[[吴思语]]
+仿真参数如图：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_16946693097683.png)
+
+建成的模型如图：
+![500](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231030105546.png)
+（建模时电极没有做成立体的，而是直接使用”金属接触“功能加电压。）
+
+##### <结果图>
+一开始5V就不收敛了，
+使用辅助扫描功能（引入迭代机制）后，反向偏压到27.995V时不收敛
+
+
+反向偏压5V和27V的 **电场模** 的对比
+左图（环电极0V，面电极5V）                                          右图（环电极0V，面电极27V）
+![800](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231030103924.png)
+
+
+反向偏压5V和27V的 **电势** 的对比
+左图（环电极0V，面电极5V）                                          右图（环电极0V，面电极27V）
+![800](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231030110427.png)

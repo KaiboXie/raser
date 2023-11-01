@@ -74,6 +74,27 @@ def Create2DMesh(device,region,simname):
         devsim.add_gmsh_contact (mesh="pin", gmsh_name="bot", region=region, material="metal", name="bot")
         devsim.finalize_mesh    (mesh="pin")
         devsim.create_device    (mesh="pin", device=device)
+    elif simname=="3d_lgad":
+        devsim.create_gmsh_mesh (mesh="pin", file="./output/parainprogram/3d_lgad.msh")
+        devsim.add_gmsh_region  (mesh="pin", gmsh_name="bulk",    region=region, material="SiliconCarbide")
+        devsim.add_gmsh_contact (mesh="pin", gmsh_name="top",    region=region, material="metal", name="top")
+        devsim.add_gmsh_contact (mesh="pin", gmsh_name="bot", region=region, material="metal", name="bot")
+        devsim.finalize_mesh    (mesh="pin")
+        devsim.create_device    (mesh="pin", device=device)
+    elif simname=="3d_time":
+        devsim.create_gmsh_mesh (mesh="3d_time", file="./output/parainprogram/3d_time.msh")
+        devsim.add_gmsh_region  (mesh="3d_time", gmsh_name="bulk",    region=region, material="SiliconCarbide")
+        devsim.add_gmsh_contact (mesh="3d_time", gmsh_name="top",    region=region, material="metal", name="top")
+        devsim.add_gmsh_contact (mesh="3d_time", gmsh_name="bot", region=region, material="metal", name="bot")
+        devsim.finalize_mesh    (mesh="3d_time")
+        devsim.create_device    (mesh="3d_time", device=device)
+    elif simname=="3d_ringcontact":
+        devsim.create_gmsh_mesh (mesh="RINGdevice", file="./output/parainprogram/RINGdevice.msh")
+        devsim.add_gmsh_region  (mesh="RINGdevice", gmsh_name="bulk",    region=region, material="SiliconCarbide")
+        devsim.add_gmsh_contact (mesh="RINGdevice", gmsh_name="top",    region=region, material="metal", name="top")
+        devsim.add_gmsh_contact (mesh="RINGdevice", gmsh_name="bot", region=region, material="metal", name="bot")
+        devsim.finalize_mesh    (mesh="RINGdevice")
+        devsim.create_device    (mesh="RINGdevice", device=device)
 
 
 
@@ -89,8 +110,10 @@ def SetParameters(device, region):
 def SetNetDoping(device, region,simname):
     
     if simname=="sicar1.1.6":
+        #node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")
         node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")
-        node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
+        node_in_2d.CreateNodeModel(device, region, "Donors",    "7.0e16*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
+        #node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
         node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
     elif simname =="PNwithGainlayer":
         node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")
@@ -108,7 +131,19 @@ def SetNetDoping(device, region,simname):
         node_in_2d.CreateNodeModel(device,region,"Donors",     "5.2e10*step(x-1e-6)")
         node_in_2d.CreateNodeModel(device,region,"NetDoping",  "Donors-Acceptors")
     elif simname=="3d_pixel":
-        node_in_2d.CreateNodeModel(device, region, "Acceptors", "1.0e19*step(1e-8-z)")      
-        node_in_2d.CreateNodeModel(device, region, "Donors",    "5.2e13*step(z-1e-8)")
+        node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")      
+        node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
         node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
+    elif simname=="3d_lgad":
+        node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")      
+        node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
+        node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
+    elif simname=="3d_time":
+        #正向偏压
+        node_in_2d.CreateNodeModel(device, region, "NetDoping", "1e13")
+    elif simname=="3d_ringcontact":
+        node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-z)")      
+        node_in_2d.CreateNodeModel(device, region, "Donors",    "1.0e17*( step((1.3e-4)-z) -step((3e-5)-z) ) + 1.0e14*( step((51.3e-4)-z) - step((1.3e-4)-z) ) + 1.0e18*( step((56.3e-4)-z) - step((51.3e-4)-z) )+ 1.0e19*( step((66.3e-4)-z) - step((56.3e-4)-z) )")
+        node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
+    
     

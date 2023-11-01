@@ -40,6 +40,21 @@ export DISPLAY={IP address of local computer}:0.0
 
 5. Restart local computer.
 
+Mac OS 实现方法：
+1. 下载XQuartz，在其中设置“允许从网络客户端连接”；
+2. 配置vscode插件，同windows；
+3. 在ssh配置文件中，为向服务器连接的字段添加ForwardX11 yes；
+4. 连接服务器。如果失败，执行以下步骤然后重新登录。
+	1. 从终端登入服务器，
+	2. （如果是免密登陆）获取正式登陆身份
+		1. 输入kinit，提示输入密码；
+		2. 输入aklog -d 获取正式登陆身份
+	3. 删除~/.Xauthority配置文件
+
+如果成功：在服务器终端输入xclock，本地电脑会弹出一个窗口，里面有时钟图案
+
+免密登陆情形，如果仍然无法从vscode连接到服务器并成功执行xclock，可能是因为~/.Xauthority配置文件没有被正确的自动修改，可以参考以下步骤：
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/005808efcfccaf64ce04cdea15cb5a94.png)
 
 ## VSCode in terminal 
 [[史欣]]

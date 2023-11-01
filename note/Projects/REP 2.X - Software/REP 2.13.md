@@ -47,8 +47,48 @@ devsim.edge_model(device=device, region=region, name="delAz",equation="(Az@n1 - 
 
 
 ## 当前进度
+对于不规则器件，电场仿真可用2维也可用3维，iv和cv只能用2维。器件可以拓展到非规则器件。
+2D:4H-SiCmesh，bias=500V
 
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/4HSICMESH.png)
+电势
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/dianshi4hsic.png)
+电场
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/diancahng4hsic.png)
+3D
+环形电极器件（用lgad的掺杂）
+器件几何
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%8E%AF%E5%BD%A2%E7%94%B5%E6%9E%81%E5%87%A0%E4%BD%95.png)
+电势纵切面
+
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%8E%AF%E5%BD%A2%E7%94%B5%E6%9E%81%E7%94%B5%E5%8A%BF%E7%BA%B5%E5%88%87%E9%9D%A2.png)
+电势横切面（从上到下取了20个截面）
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%8E%AF%E5%BD%A2%E7%94%B5%E6%9E%81%E7%94%B5%E5%8A%BF%E6%A8%AA%E5%88%87%E9%9D%A2.png)
+电场
+电场纵截面
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%94%B5%E5%9C%BA%E7%BA%B5%E6%88%AA%E9%9D%A2.png)
+电场横切面（从上到下取了10个截面）
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/%E7%94%B5%E5%9C%BA%E6%A8%AA%E5%88%87%E9%9D%A2.png)
 [[2023-10-16-TEAM]]
+sicar1-1-8器件
+改变了掺杂
+
+```
+node_in_2d.CreateNodeModel(device, region, "Acceptors", "2.0e19*step(3e-5-x)")
+
+node_in_2d.CreateNodeModel(device, region, "Donors",    "7.0e16*( step((1.3e-4)-x) -step((3e-5)-x) ) + 1.0e14*( step((51.3e-4)-x) - step((1.3e-4)-x) ) + 1.0e18*( step((56.3e-4)-x) - step((51.3e-4)-x) )+ 1.0e19*( step((66.3e-4)-x) - step((56.3e-4)-x) )")
+
+node_in_2d.CreateNodeModel(device, region, "NetDoping", "Donors-Acceptors")
+```
+cv图像
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1-1-8.png)
+改变常数项
+```
+defect_R="1.7*abs(ElectricField)^2.5*exp(abs(ElectricField)/1.5e5)"
+```
+iv图像
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1-1-8iv.png)
+
 
 IV曲线仿真
 运行raser field NJUPIN_iv_v1，改变上线参数800/2000V
@@ -66,7 +106,9 @@ root路径：publicfs/atlas/atlasnew/silicondet/itk/raser/zhaosen/njupin_iv
 运行raser draw compare_nju_iv
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/njupinbijiao.png)
 
-加入新的物理模型
+加入新的物理模型：
+CreateImpactGenerationSiliconCarbide(device, region)，同时直接在SRH后减了常数
+USRH="-q*(Electrons*Holes - $n_i^2$)/(taup*(Electrons + n1) + taun*(Holes + p1))-1e12"
 单独iv曲线
 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231015194919.png)
 与实验比较
