@@ -1,17 +1,24 @@
 ---
 REP: 2.10
 Title: SiC in nuclear fusion
-Author: 李星臣 石航瑞
+Author: 李星臣 石航瑞 田智钰
 Status: 
 Type: Software
 Created: 2023-04-11
 ---
 
+# Time Table
+- [ ] SICAR simulation [[石航瑞]]
+	- [ ] 验证程序掺杂添加
+	- [ ] 确认电场正确性
+- [ ] NJU-PIN simulation [[田智钰]]
+	- [ ] 在新版本下复现之前结果
+	- [ ] 提交批量作业，得到 沉积能量-振幅、沉积能量-上升时间 图. （振幅-上升时间 (半峰宽or 下降沿)? ）
+- [ ] basic part
+	- [ ] 批量作业提交
+	- [ ] ngspice批量
 
-# SiC in nuclear fusion 
-
-[[李星臣]] [[石航瑞]] 
-
+# NJU-PIN Pulse shape discrimination
 - 4GeV mu-
 ![d54f68f04885f81a03a96de3320a0ad.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/d54f68f04885f81a03a96de3320a0ad.png)
 ![ec3d4f4fd35b55f1225e33556c5aa29.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/ec3d4f4fd35b55f1225e33556c5aa29.png)
@@ -24,6 +31,14 @@ Created: 2023-04-11
 ![a25b2488701f4adf3d6616c2a9125a8.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/a25b2488701f4adf3d6616c2a9125a8.png)
 ![6ebf4760bd2eeaea7dd99f95abe3327.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/6ebf4760bd2eeaea7dd99f95abe3327.png)
 
+# SiC LGAD simulation
+初步结果，ngspice输出异常，电场不合理，需校对输入掺杂和devsim输出电场。
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/231030_shhr_rep2.10_sicar0.1_ngspice.png)
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/231030_shhr_rep2.10_sicar0.1_current.png)
+![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/231030_shhr_rep2.10_sicar0.1_efield.png)
+
+# Basic
+使用`raser ngspice_t1`可调用ngspice运行t1电子学部分。
 
 # beta simulation on SiC
 
@@ -43,5 +58,5 @@ Created: 2023-04-11
 [[2023-03-20-TEAM]]
 -  [x] 不同能量gamma和e-在sic中能量沉积分布 ![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3-24-p1.png)
 -  [x] 1.33MeV gamma的能量沉积分布和峰值电压分布          ![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3-24-p2.png)  ![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3-24-p3.png)
--  [x] 峰值电流在5mV附近的波形和载流子漂移路径                ![350](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3-24-p4.png) ![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3-24-p5.png)
+-  [x] 峰值电流在5mV附近的波形和载流子漂移路径             ![350](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3-24-p4.png) ![300](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/3-24-p5.png)
 	- SIC: 30um, Ni: 0.1um, 环境：真空,  电压：500V, Gamma粒子能量沉积事例数：500-1000/1e6
