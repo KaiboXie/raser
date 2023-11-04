@@ -53,8 +53,7 @@ Mac OS 实现方法：
 
 如果成功：在服务器终端输入xclock，本地电脑会弹出一个窗口，里面有时钟图案
 
-免密登陆情形，如果仍然无法从vscode连接到服务器并成功执行xclock，可能是因为~/.Xauthority配置文件没有被正确的自动修改，可以参考以下步骤：
-![](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/005808efcfccaf64ce04cdea15cb5a94.png)
+免密登陆情形，如果仍然无法从vscode连接到服务器并成功执行xclock，可能是因为~/.Xauthority配置文件没有被正确的自动修改。解决办法正在探索中。
 
 ## VSCode in terminal 
 [[史欣]]
