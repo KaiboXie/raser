@@ -15,22 +15,22 @@ Updated: 2023-04-25
 
 - Logo V1 Candidates 
 	- R1-C1 
-![R1-C1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C1.png)
+![R1-C1.png|200](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C1.png)
 
 - R1-C2 
 
-![R1-C2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C2.png)
+![R1-C2.png|200](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C2.png)
 
    - R1-C3
 
-![R1-C3.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C3.png)
+![R1-C3.png|200](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C3.png)
 
  - R1-C4 
 
-![R1-C4.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C4.png)
+![R1-C4.png|200](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C4.png)
 
 - R1-C5 
-![R1-C5.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C5.png)
+![R1-C5.png|200](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/R1-C5.png)
   
 
 
