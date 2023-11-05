@@ -1,0 +1,32 @@
+{
+	"nodes":[
+		{"id":"d04d5a72db9698b0","x":1180,"y":40,"width":96,"height":60,"type":"text","text":"Gitlab"},
+		{"id":"fe1cbfea7a2832d2","x":1360,"y":-60,"width":250,"height":60,"type":"text","text":"Gitlab的组群代码库"},
+		{"id":"b55cbf95e920588b","x":1360,"y":120,"width":250,"height":60,"type":"text","text":"Gitlab的个人代码库"},
+		{"id":"eae5dfb306061727","x":-290,"y":-220,"width":150,"height":50,"type":"text","text":"抗强辐照传感器"},
+		{"id":"b2c51ec60227ea6a","x":0,"y":-320,"width":250,"height":79,"type":"text","text":"MIP粒子和传感器相互作用产生信号机制的介绍"},
+		{"id":"0a25abd969e6be36","x":380,"y":-312,"width":288,"height":63,"type":"text","text":"利用电子线路（讯工程原理和技术）进行信号转换。"},
+		{"id":"5a881210f377decc","x":0,"y":-20,"width":250,"height":60,"type":"text","text":"对预计的产品性能进行评估"},
+		{"id":"b466a058c335dd2c","x":320,"y":120,"width":250,"height":60,"type":"text","text":"涉及的具体仿真软件"},
+		{"id":"b692be94c6f2879c","x":320,"y":-120,"width":250,"height":50,"type":"text","text":"模拟仿真的基本原理"},
+		{"id":"519efab40ede5f0b","x":668,"y":120,"width":72,"height":60,"type":"text","text":"PC"},
+		{"id":"c8276d5664a5d466","x":800,"y":120,"width":250,"height":60,"type":"text","text":"VS Code（程序编码器）"},
+		{"id":"6666d93ca160ec26","x":800,"y":-60,"width":250,"height":60,"type":"text","text":"高能所远程服务器"}
+	],
+	"edges":[
+		{"id":"6461b1dd83a14e0b","fromNode":"b2c51ec60227ea6a","fromSide":"right","toNode":"0a25abd969e6be36","toSide":"left"},
+		{"id":"48344c03f3d72ad6","fromNode":"eae5dfb306061727","fromSide":"right","toNode":"b2c51ec60227ea6a","toSide":"left"},
+		{"id":"22e59866eb69c3f3","fromNode":"eae5dfb306061727","fromSide":"right","toNode":"5a881210f377decc","toSide":"left"},
+		{"id":"9b42c6c59199112d","fromNode":"5a881210f377decc","fromSide":"right","toNode":"b692be94c6f2879c","toSide":"left"},
+		{"id":"602bfad4cac50f4c","fromNode":"5a881210f377decc","fromSide":"right","toNode":"b466a058c335dd2c","toSide":"left"},
+		{"id":"380a849967099318","fromNode":"b466a058c335dd2c","fromSide":"right","toNode":"519efab40ede5f0b","toSide":"left"},
+		{"id":"3cb2b08c2b94b72f","fromNode":"519efab40ede5f0b","fromSide":"right","toNode":"c8276d5664a5d466","toSide":"left"},
+		{"id":"438004fd10b239c2","fromNode":"c8276d5664a5d466","fromSide":"top","toNode":"6666d93ca160ec26","toSide":"bottom"},
+		{"id":"4d9fa0fe8d700486","fromNode":"6666d93ca160ec26","fromSide":"right","toNode":"d04d5a72db9698b0","toSide":"left"},
+		{"id":"3e4a156e45849b66","fromNode":"d04d5a72db9698b0","fromSide":"right","toNode":"fe1cbfea7a2832d2","toSide":"left"},
+		{"id":"0fcfec27e5d0b4d2","fromNode":"d04d5a72db9698b0","fromSide":"right","toNode":"b55cbf95e920588b","toSide":"left"},
+		{"id":"0193d5f753b87cf7","fromNode":"c8276d5664a5d466","fromSide":"right","toNode":"d04d5a72db9698b0","toSide":"left"},
+		{"id":"cf03e14628a4c052","fromNode":"fe1cbfea7a2832d2","fromSide":"bottom","toNode":"b55cbf95e920588b","toSide":"top"},
+		{"id":"f872905b1a73040e","fromNode":"b55cbf95e920588b","fromSide":"top","toNode":"fe1cbfea7a2832d2","toSide":"bottom"}
+	]
+}

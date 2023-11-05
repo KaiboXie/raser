@@ -1,0 +1,23 @@
+{
+	"nodes":[
+		{"id":"a078cec642988064","x":-455,"y":-445,"width":1337,"height":193,"type":"text","text":"## Improved performance of SiC radiation detectors due to optimized ohmic contact electrode by graphene insertion\n\tLink： https://www.webofscience.com/wos/alldb/full-record/WOS:000663127800004\n\tJournal： Diamond & Related Materials 115 (2021) 108355 \n\tAuthor:  Yuping Jia, et al."},
+		{"id":"e737bc8544ca3e57","x":-197,"y":946,"width":821,"height":662,"type":"file","file":"img/JC152/Pulse height spectra.png"},
+		{"id":"edff349d0d55b1f2","x":739,"y":1375,"width":845,"height":402,"type":"text","text":"A graphene layer is inserted between metal ohmic electrode and SiC. The graphene promotes the formation of carbon compounds and thus decreases ohmic contact resistance. Meanwhile, due to the Fermi level adjustable of graphene by external bias, the barrier of interface at graphene insert layer is enlarged at reverse bias. The built-in field accelerates the separation of photo-generated electronhole pairs. As a result, the graphene inserted device annealed at 400 ℃ achieved a 3.9%@-40 V energy resolution, and the device even without annealing achieved a 4.4%@-40 V energy resolution for 239Pu alpha source, which are both better than that of traditional device without graphene layer annealed at 880 ℃ (6%@-40 V). The detailed mechanism has been discussed and suggested."},
+		{"id":"4804411aa62582c2","x":251,"y":1481,"width":250,"height":60,"type":"text","text":"anneal time?"},
+		{"id":"738a641327af5c40","x":-197,"y":946,"width":821,"height":662,"type":"text","text":"![JC152-Pulse height spectra.png|750](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/JC152-Pulse%20height%20spectra.png)"},
+		{"id":"e777b27b377daa67","x":-883,"y":179,"width":428,"height":210,"type":"text","text":"![JC152-Process.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/JC152-Process.png)"},
+		{"id":"4ed374eb8cc0698b","x":-1075,"y":548,"width":272,"height":247,"type":"text","text":"![JC152-AFM image.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/JC152-AFM%20image.png)"},
+		{"id":"7fe0e50ca792425e","x":-186,"y":532,"width":799,"height":263,"type":"text","text":"![JC152-I-V curves.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/JC152-I-V%20curves.png)"},
+		{"id":"8e6dd1db0cbb92c7","x":108,"y":-43,"width":211,"height":263,"type":"text","text":"![Structure.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/Structure.png)"},
+		{"id":"b4b49b138ecbac9e","x":-197,"y":1647,"width":821,"height":259,"type":"text","text":"![JC152-239Pu.png|700](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/JC152-239Pu.png)"},
+		{"id":"4796f5f6e6fcf6b5","x":-610,"y":548,"width":310,"height":249,"type":"text","text":"![JC152-Raman spectra.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/JC152-Raman%20spectra.png)"}
+	],
+	"edges":[
+		{"id":"8c1d67afdeeb3c92","fromNode":"a078cec642988064","fromSide":"bottom","toNode":"8e6dd1db0cbb92c7","toSide":"top"},
+		{"id":"737eaa001cf57e25","fromNode":"8e6dd1db0cbb92c7","fromSide":"bottom","toNode":"7fe0e50ca792425e","toSide":"top"},
+		{"id":"ac55836636d26391","fromNode":"8e6dd1db0cbb92c7","fromSide":"left","toNode":"e777b27b377daa67","toSide":"top"},
+		{"id":"fa24a58f3f87e0cc","fromNode":"e777b27b377daa67","fromSide":"bottom","toNode":"4ed374eb8cc0698b","toSide":"top"},
+		{"id":"efca6eaf9df4dcfd","fromNode":"e777b27b377daa67","fromSide":"bottom","toNode":"4796f5f6e6fcf6b5","toSide":"top"},
+		{"id":"1a261ead84d5cdc8","fromNode":"7fe0e50ca792425e","fromSide":"bottom","toNode":"e737bc8544ca3e57","toSide":"top"}
+	]
+}
