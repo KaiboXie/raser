@@ -8,6 +8,9 @@ Created: 2021-03-18
 Updated: 2023-04-25
 ---
 
+
+- [ ] Update on CSNS-II meeting 📅 2023-11-08
+
 # SiC Based Beam Monitor System - BMOS
 
 
