@@ -1,6 +1,6 @@
 ---
 REP: 0.7
-Title: RAdiation SEmicondoctoR - RASER 
+Title: RASER
 Author: 史欣、刘凯、谭雨航、杨涛
 Status: Active
 Type: Idea
@@ -8,9 +8,9 @@ Created: 2021-03-18
 Updated: 2023-04-25
 ---
 
-# RAdiation SEmicondoctoR - RASER
+# RASER
 
-
+RAdiation SEmicondoctoR  Software  -  RASER 
 ## Logo Design
 
 - Logo V1 Candidates 

@@ -1,6 +1,6 @@
 ---
 REP: 0.6
-Title: Silicon Carbide Sensors
+Title: SiC
 Author: 史欣、杨涛
 Status: Active
 Type: Idea
@@ -9,7 +9,9 @@ Updated: 2023-04-25
 ---
 
 
-# Silicon Carbide Sensors 
+# SiC 
+
+Research line: Silicon Carbide - SiC  
 
 [[史欣]],  [[杨涛]]
 
