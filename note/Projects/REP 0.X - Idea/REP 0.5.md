@@ -1,6 +1,6 @@
 ---
 REP: 0.5
-Title: Low Gain Avalanche Diodes - LGAD
+Title: LGAD
 Author: 史欣、杨涛
 Status: Active
 Type: Idea
@@ -9,7 +9,9 @@ Updated: 2023-04-25
 ---
 
 
-# Low Gain Avalanche Diodes - LGAD 
+# LGAD 
+
+Low Gain Avalanche Diodes - LGAD
 
 [[史欣]],  [[杨涛]]
 
