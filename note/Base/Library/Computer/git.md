@@ -91,3 +91,11 @@ Make what you forked synchronize with the original one [1]:
 - 创建文件之后才想到要ignore [[符晨曦]]
 	- git -rm --cached 想ignore的文件
 	- commit
+
+
+## Git Large File Storage 
+
+https://git-lfs.com
+
+1. Install git lfs in your system 
+2. Pull the large files from remote : $ git lfs pull 
