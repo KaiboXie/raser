@@ -8,11 +8,10 @@ Created: 2023-08-07
 Team Report: 2023-08-07
 ---
 
-- [ ] Release for internal review 📅 2023-11-30
+
 # Gain performance study for Novel 4H-SiC Low Gain Avalanche Diode 辐照前
 
 [[王科琪]]，[[赵森]]，[[何野]]， [[李再一]]， [[王聪聪]]*
-
 
 ## Overview 
 

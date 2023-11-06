@@ -1,6 +1,6 @@
 ---
 REP: 0.8
-Title: SICAR
+Title: Silicon Carbide - SICAR 
 Author: 史欣、符晨曦
 Status: Active
 Type: Idea
@@ -9,11 +9,7 @@ Updated: 2023-04-25
 ---
 
 
-# SICAR 
-
-
-Silicon Carbide Device - SICAR 
-
+# Silicon Carbide - SICAR 
 
 [[史欣]]
 

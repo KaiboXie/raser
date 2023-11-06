@@ -7,14 +7,11 @@ Type: Hardware
 Created: 2022-10-01
 Updated: 2023-06-25
 ---
-
-- [ ] Design for the first mask 📅 2023-11-30
-# SiC PIN IHEP   
+SiC PIN IHEP   
   
 [[王聪聪]]  [[王科琪]]   
-
   
-## 外延片用途   
+## 外延片用途   
   
 1、PIN探测器（与LGAD探测器性能对比）  
 2、研究石墨烯/PIN探测器电荷收集+时间分辨性能  

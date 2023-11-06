@@ -1,14 +1,12 @@
 ---
 REP: 2.4
-Title: SiC-LGAD Timing simulation
+Title: SiC-LGAD Timing simulation and Fabrication
 Author: 符晨曦,杨涛,王科琪
 Status: implemented
 Type: Software
 Created: 2021-10-01
 Updated: 2023-04-25
 ---
-
-- [ ] Update electronics simulation 📅 2023-11-20
 
 # SiC-LGAD C-V simulation
 

@@ -8,8 +8,6 @@ Created: 2022-10-01
 Updated: 2023-08-10
 ---
 
-- [ ] Draw conclusion on T1.0 📅 2023-11-30
-
 # 正在进行的工作
 -  [x] 使用alibava替代T1做NJU-SiC-PIN的β测试
 	-  [x] 制作可以供NJU-SiC-PIN使用的Detector Board
