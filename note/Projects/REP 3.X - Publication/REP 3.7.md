@@ -1,3 +1,4 @@
+
 ---
 REP: 3.7
 Title: Design of SiC beam monitor online system
@@ -8,10 +9,10 @@ Created: 2021-10-01
 Updated: 2023-04-25
 ---
 
-- [ ] Release to team for review 📅 2023-11-10
 # SiC BMOS
 
 [[何野]],  [[李星臣]], [[肖素玉]]* 
+
 
 ## Overview 
 
