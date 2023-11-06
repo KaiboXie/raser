@@ -5,7 +5,26 @@
 - IV
 	20230907
 	![sicar1.1.8-8_iv.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8_iv.png)
-
+	20231025
+	![sicar1.1.8-8-2.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-2.png)
+    20231025
+    ![sicar1.1.8-8-3.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-3.png)
+    20231025
+    ![sicar1.1.8-8-4.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-4.png)
+    20231025
+    ![sicar1.1.8-8-1p.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-1p.png)
+    20231025
+    ![sicar1182z.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1182z.png)
+	20231102（时间间隔5s step=1V）
+	![sicar1.1.8-8-6.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-6.png)
+	20231102（时间间隔5s step=1V）
+	![sicar1.1.8-8-7.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-7.png)
+	20231102（时间间隔5s step=1V）
+	![sicar1.1.8-8-8.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-8.png)
+	20231102（时间间隔10s step=0.2V）
+	![sicar1.1.8-8-9.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-9.png)
+	20231102（时间间隔10s step=0.2V）
+	![sicar1.1.8-8-10.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/sicar1.1.8-8-10.png)
 
 - CV
 	20230907
