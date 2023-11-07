@@ -1,5 +1,6 @@
 ---
-Title: "Silicon detectors with 3-D electrode arrays: fabrication and initial test results"
+annotation-target: Kenney1999.pdf
+tags:
+  - 3D
+Year: "1999"
 ---
-
-![[Kenney et al_1999_Silicon detectors with 3-D electrode arrays.pdf]]

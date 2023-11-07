@@ -1,9 +1,8 @@
 ---
-Title: "TRACS: A multi-thread transient current simulator for micro strips and pad detectors"
-Published: "2019"
 tags:
   - TCT
   - simulation
+Year: "2019"
 ---
 
-![[Calvo et al. - 2019 - TRACS A multi-thread transient current simulator .pdf]]
+![[Calvo2019.pdf]]

@@ -1,0 +1,85 @@
+{
+  "version": 2,
+  "projects": [
+    {
+      "fieldConfig": {
+        "Year": {}
+      },
+      "defaultName": "",
+      "templates": [],
+      "excludedNotes": [],
+      "isDefault": false,
+      "dataSource": {
+        "kind": "folder",
+        "config": {
+          "path": "Base/Library/Articles",
+          "recursive": true
+        }
+      },
+      "newNotesFolder": "",
+      "views": [
+        {
+          "config": {
+            "orderFields": [
+              "name",
+              "Title",
+              "Year",
+              "tags",
+              "annotation-target"
+            ],
+            "fieldConfig": {
+              "path": {
+                "hide": true
+              },
+              "Year": {
+                "width": 102
+              },
+              "Title": {
+                "width": 486
+              },
+              "name": {
+                "width": 154
+              },
+              "tags": {
+                "width": 168
+              }
+            }
+          },
+          "filter": {
+            "conditions": []
+          },
+          "colors": {
+            "conditions": []
+          },
+          "sort": {
+            "criteria": [
+              {
+                "field": "Year",
+                "order": "desc",
+                "enabled": true
+              }
+            ]
+          },
+          "id": "3e75b301-006e-458f-90e6-3b56c761c1bb",
+          "name": "Table",
+          "type": "table"
+        }
+      ],
+      "id": "2575b1cc-f6d3-465d-821a-7b263e7be9ea",
+      "name": "Articles"
+    }
+  ],
+  "archives": [],
+  "preferences": {
+    "projectSizeLimit": 1000,
+    "frontmatter": {
+      "quoteStrings": "PLAIN"
+    },
+    "commands": [
+      {
+        "project": "4a19c324-e33d-4db2-95e1-b0d1702ef9bc"
+      }
+    ],
+    "linkBehavior": "open-editor"
+  }
+}
