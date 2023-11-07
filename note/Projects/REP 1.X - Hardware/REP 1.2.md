@@ -9,9 +9,15 @@ Created: 2022-10-01
 Updated: 2023-06-19
 ---
 
+
+- [ ] SICAR1.1 Timing Results📅 2023-11-20
+	- [ ] Get ready for the timing measurement 📅 2023-11-09
+
+
 # SICAR1 Fabrication（第一次）
 
 [[张希媛]], [[王聪聪]]
+
 
 ## Overview 
 

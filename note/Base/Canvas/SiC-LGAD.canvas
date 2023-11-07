@@ -1,0 +1,11 @@
+{
+	"nodes":[
+		{"id":"c03663f94bdf944b","type":"text","text":"SiC-LGAD","x":340,"y":-190,"width":160,"height":50},
+		{"id":"72955d030877d929","type":"file","file":"Projects/REP 0.X - Idea/REP 0.5.md","x":-320,"y":-420,"width":280,"height":160},
+		{"id":"e57b7f9d7af261a4","type":"file","file":"Projects/REP 0.X - Idea/REP 0.6.md","x":-320,"y":-218,"width":263,"height":157}
+	],
+	"edges":[
+		{"id":"a31bde86a390aaf5","fromNode":"72955d030877d929","fromSide":"right","toNode":"c03663f94bdf944b","toSide":"left"},
+		{"id":"974e7a894ae32299","fromNode":"e57b7f9d7af261a4","fromSide":"right","toNode":"c03663f94bdf944b","toSide":"left"}
+	]
+}
