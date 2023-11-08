@@ -14,6 +14,16 @@ Updated: 2023-11-07
 - 软件
 	-  [ ] 输入电路（模拟部分）信号仿真
 	-  [ ] ADC及FPGA（数字部分）仿真
+
+- 数字电路设计流程
+	- 1.实现功能：verilog描述电路功能
+	- 2.验证电路功能的正确性：软件仿真、硬件仿真
+	- 3.将代码变为实际存在的电路：把HDL描述变成基于库的电路描述
+	- 4.电路的布局布线：保证时序要求的情况下，把你的电路映射到其固定的资源分布图中间
+	- 5.输出FPGA配置文件：由PC下载到FPGA上，再由FPGA芯片来配置其他电路
+# Plan
+
+
 ### DRS4读出板--R1 设计图
 ![R1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231107163911.png)
 
@@ -23,6 +33,13 @@ Updated: 2023-11-07
 假设信号由UCSC产生，模拟Sr90 $\beta$源产生的信号，经过输入电路和DRS4芯片后，产生的模拟信号为
 ![analog_out.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231107164850.png)
 模拟功能在raser elec drs4_get_analog完成
+
+### DRS4、ADC、FPGA布线的原理图
+![dsr4_1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231108145225.png)
+![adc1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231108145248.png)
+![connect1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231108145304.png)
+![fpga1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231108145318.png)
+![power1.png](https://raser-1314796952.cos.ap-beijing.myqcloud.com/media/20231108145337.png)
 
 ### ADC及FPGA仿真
 输入电路部分已经获得了ADC输入的模拟信号，需要在ADC仿真中实现模拟信号转换为数字信号，然后由FPGA进行处理
