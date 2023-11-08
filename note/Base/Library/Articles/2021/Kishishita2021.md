@@ -1,8 +1,8 @@
 ---
-Title: SiC p+n Junction Diodes Toward Beam Monitor Applications
 tags:
   - beam
   - SiC
+Year: "2021"
 ---
 
-![[Kishishita et al. - 2021 - SiC p+n Junction Diodes Toward Beam Monitor Applic.pdf]]
+![[Kishishita2021.pdf]]

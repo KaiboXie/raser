@@ -1,7 +1,7 @@
 ---
-Title: Timing performance of small cell 3D silicon detectors
+Year: "2019"
 ---
 
 
 
-![[Kramberger et al_2019_Timing performance of small cell 3D silicon detectors.pdf]]
+![[Kramberger2019.pdf]]
