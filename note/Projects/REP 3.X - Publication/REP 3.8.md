@@ -8,10 +8,10 @@ Created: 2023-05-01
 Updated: 2023-05-12
 ---
 
+- [ ] Submit to journal 📅 2023-11-10 
 # ITk Strip Silicon Sensor Irradiation with 80 MeV proton beam
 
 李晖、李瞻、[[史欣]]* 
-
 
 ## Overview 
 
@@ -27,7 +27,12 @@ Updated: 2023-05-12
 
 ## Log 
 
-### 2023-05-12 
+
+
+- 2023-10-24
+   Sent the v0.3 to ITk Sensor. 
+   
+- 2023-05-12 
 
 Todo: 
 
