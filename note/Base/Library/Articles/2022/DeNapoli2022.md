@@ -1,5 +1,7 @@
 ---
+Year: "2022"
 Title: "SiC detectors: A review on the use of silicon carbide as radiation detection material"
+annotation-target: DeNapoli2022.pdf
+tags:
+  - SiC
 ---
-
-![[De Napoli - 2022 - SiC detectors A review on the use of silicon carb.pdf]]

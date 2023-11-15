@@ -1,6 +1,6 @@
 ---
-Title: The Silicon Electron Multiplier sensor
+Year: "2022"
 ---
 
 
-![[Halvorsen et al. - 2022 - The Silicon Electron Multiplier sensor.pdf]]
+![[Halvorsen2022.pdf]]

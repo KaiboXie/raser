@@ -1,7 +1,6 @@
 ---
-Title: "PyMTL3: A Python Framework for Open-Source Hardware Modeling, Generation, Simulation, and Verification"
-Published: "2023"
 tags:
+Year: "2020"
 ---
 
-![[Jiang et al. - 2020 - PyMTL3 A Python Framework for Open-Source Hardwar.pdf]]
+![[Jiang2020.pdf]]

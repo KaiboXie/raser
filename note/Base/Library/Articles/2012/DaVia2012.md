@@ -1,7 +1,4 @@
 ---
-Title: "3D silicon sensors: Design, large area production and quality assurance for the ATLAS IBL pixel detector upgrade"
-PDF: "[[Da Via et al_2012_3D silicon sensors.pdf]]"
+annotation-target: DaVia2012.pdf
+Year: "2012"
 ---
-	
-
-![[Da Via et al_2012_3D silicon sensors.pdf]]

@@ -1,9 +1,7 @@
 ---
-Title: A radiation hard RISC-V microprocessor for high-energy physics applications
-Published: "2023"
 tags:
   - RISC-V
+Title: A radiation hard RISC-V microprocessor for high-energy physics applications
+annotation-target: Walsemann2023.pdf
+Year: "2023"
 ---
-
-
-![[Walsemann et al. - 2023 - A radiation hard RISC-V microprocessor for high-en.pdf]]

@@ -97,5 +97,13 @@ Make what you forked synchronize with the original one [1]:
 
 https://git-lfs.com
 
-1. Install git lfs in your system 
+1. Install git lfs in your system ：$ git lfs install
 2. Pull the large files from remote : $ git lfs pull 
+
+
+## Git Add others repository
+
+$ git remote add shixin https://code.ihep.ac.cn/shixin/raser.git 
+$ git remote update 
+$ git merge shixin/main
+
