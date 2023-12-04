@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
-import driftdiffusion_2d 
-import node_in_2d
+from . import driftdiffusion_2d 
+from . import node_in_2d
 import devsim
 import math
 import pickle
@@ -426,8 +426,8 @@ def CreateImpactGenerationSiliconCarbide(device, region):
     node_in_2d.CreateEdgeModelDerivatives(device, region, "Ion_coeff_n", Ion_coeff_n, "Potential")
     node_in_2d.CreateEdgeModel(device, region, "Ion_coeff_p", Ion_coeff_p)
     node_in_2d.CreateEdgeModelDerivatives(device, region, "Ion_coeff_p", Ion_coeff_p, "Potential")
-    #defect_R="1.7*abs(ElectricField)^2.5*exp(abs(ElectricField)/3e5)"
-    defect_R="1.7*abs(ElectricField)^2.5*exp(abs(ElectricField)/1.5e5)"
+    defect_R="1.7*abs(ElectricField)^2.5*exp(abs(ElectricField)/3e5)"
+    # defect_R="1.7*abs(ElectricField)^2.5*exp(abs(ElectricField)/1.5e5)"
     node_in_2d.CreateEdgeModel(device, region, "defect_R", defect_R)
     node_in_2d.CreateEdgeModelDerivatives(device,region,"defect_R",defect_R,"Potential")
  
