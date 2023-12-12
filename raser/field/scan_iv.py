@@ -7,8 +7,8 @@ import json
 
 
 def main(simname, field_flag=False):
-    device="MyDevice"
-    region="MyRegion"
+    device=simname
+    region=simname
     # 指定文件夹路径
     folder_path = "./output/parainprogram"
 
@@ -33,7 +33,7 @@ def main(simname, field_flag=False):
         print("do 0-2000")
         params = {
         'bias_v': "0",
-        'voltage': "400"
+        'voltage': "200"
     }
         with open('./output/parainprogram/config_loopiv.json', 'w') as f:
             json.dump(params, f)
