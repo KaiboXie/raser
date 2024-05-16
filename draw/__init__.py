@@ -4,6 +4,9 @@ from . import iv
 from . import cv
 from . import compare_iv
 from . import compare_cv
+from . import draw_iv_cv_paper9
+from . import alpha_ana_SICAR
+from . import data_convolution
 def main(kwargs):
     label = kwargs['label']
 
@@ -80,6 +83,18 @@ def main(kwargs):
         path1="/publicfs/atlas/atlasnew/silicondet/itk/raser/wangkeqi/sicar1.1.8/sicar1.1.8-11_iv.root"
         path2="./output/2Dresult/simsicar1.1.6/simIV650.0to650.0.root"
         compare_iv.main(label,path1,path2)
+    elif label =="p9": 
+        csv_folder="/publicfs/atlas/atlasnew/silicondet/itk/raser/zhaosen/samples"
+        for file in os.listdir(csv_folder):
+            if file.endswith(".csv"):
+                csv_filename = os.path.join(csv_folder, file)
+                root_filename = file.replace(".csv", ".root")
+                root_fullpath = os.path.join(csv_folder, root_filename)
+                draw_iv_cv_paper9.create_root_file(csv_filename, root_fullpath)
+        draw_iv_cv_paper9.main()
+        alpha_ana_SICAR.main()
+        data_convolution.landau_mirror()
+        data_convolution.energy_sim()
     else: 
         raise NameError(label)
     
