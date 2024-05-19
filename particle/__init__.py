@@ -5,8 +5,12 @@ def main(kwargs):
         from . import cal_temp
         cal_temp.main()
 
-    if label == 'cflm_v1':
+    elif label == 'cflm_v1':
         from . import cflm
         cflm.main()
+    elif label == "test":
+        from . import g4_sic_energy_deposition
+        command="./cfg/gui.mac"
+        g4_sic_energy_deposition.main()
     else:
         raise NameError(label)
