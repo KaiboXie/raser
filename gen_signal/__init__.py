@@ -8,7 +8,10 @@
 '''
 import sys
 import os
+import array
 import time
+import subprocess
+import ROOT
 
 from field import build_device as bdv
 from particle import g4simulation as g4s
@@ -94,10 +97,12 @@ def main(kwargs):
         my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
 
     if 'ngspice' in amplifier:
-        my_current.save_current(my_d, my_f, "fz_abs")
-        input_p=ngsip.set_input(my_current, my_d, "fz_abs")
+        save_current(my_d, my_current,my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
+        input_p=ngsip.set_input(my_current, my_d, key=None)
         input_c=','.join(input_p)
-        ng.ngspice(input_c, input_p)
+        ng.ngspice_t0(input_c, input_p)
+        subprocess.run(['ngspice -b -r t0.raw output/T0_tmp.cir'], shell=True)
+        ng.plot_waveform()
     else:
         ele_current = rdout.Amplifier(my_current, amplifier)
         draw_save.draw_plots(my_d,ele_current,my_f,my_g4p,my_current)
@@ -148,6 +153,47 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
             del ele_current
     detection_efficiency =  effective_number/(end_n-start_n) 
     print("detection_efficiency=%s"%detection_efficiency)
+
+
+
+def save_current(my_d,my_current,my_f,key):
+    if key!=None:
+        if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
+            path = os.path.join('output', 'pintct', my_d.det_name, )
+        elif "lgad3D" in my_d.det_model:
+            path = os.path.join('output', 'lgadtct', my_d.det_name, )
+        if os.path.exists(path):
+            os.mkdir(path)
+        L = eval("my_l.{}".format(key))
+        #L is defined by different keys
+    elif key==None:
+        if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
+            path = os.path.join('output', 'PIN', my_d.det_name, )
+        elif "lgad3D" in my_d.det_model:
+            path = os.path.join('output', 'LGAD', my_d.det_name, )
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+        #L is defined by different keys
+    time = array.array('d', [999.])
+    current = array.array('d', [999.])
+    fout = ROOT.TFile(os.path.join(path, "sim-current")  + ".root", "RECREATE")
+    t_out = ROOT.TTree("tree", "signal")
+    t_out.Branch("time", time, "time/D")
+    for i in range(my_f.read_ele_num):
+        t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
+        for j in range(my_current.n_bin):
+            current[0]=my_current.sum_cu[i].GetBinContent(j)
+            time[0]=j*my_current.t_bin
+            t_out.Fill()
+        t_out.Write()
+        fout.Close()
+
+
+
+
+
+
 
 if __name__ == '__main__':
     args = sys.argv[1:]

@@ -120,10 +120,10 @@ class Detector:
 
     def createGmshMesh(self):
         mesh_name = self.device
-        devsim.create_gmsh_mesh (mesh=mesh_name, file=mesh['file'])
         mesh = self.device_dict["mesh"]["gmsh_mesh"]
+        devsim.create_gmsh_mesh (mesh=mesh_name, file=mesh['file'])
         for region in mesh["region"]:
-            devsim.add_gmsh_region   (mesh=mesh_name, **region)
+            devsim.add_gmsh_region   (mesh=mesh_name ,**region)
         for contact in mesh["contact"]:
             devsim.add_gmsh_contact  (mesh=mesh_name, **contact)
         devsim.finalize_mesh(mesh=mesh_name)

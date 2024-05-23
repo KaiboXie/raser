@@ -214,15 +214,18 @@ def landau_mirror():
         output_file_2.close()
         output_file_2 = open("charge_histogram.{}txt".format(input_name), "w")
 
-        npars=3
+        npars=6
         #f2=ROOT.TF1("f2","0.5*[0]*[1]/TMath::Pi() /TMath::Max( 1.e-10,(x-[2])*(x-[2])+ .25*[1]*[1]")
-        f2 = ROOT.TF1("f2", "[2]*TMath::Landau(2*[0]-x, [0], [1])", 30, 200,npars)
-        f2.SetParLimits(0,30.,160)
-        f2.SetParLimits(1,0.,20)
-        f2.SetParLimits(2,0.,500)
-        f2.SetParameters(150,2,400)
-        #h=ROOT.TH1F("h","data",75,150,350)
-        charge_graph.Fit(f2,"2")
+        f2 = ROOT.TF1("f2", "[2]*TMath::Landau(2*[0]-x, [0], [1])+[5]*TMath::Gaus(x,[3],[4])", 30, 200,npars)
+        f2.SetParLimits(0,150.,155)
+        f2.SetParLimits(1,0.,10)
+        f2.SetParLimits(2,0.,1000)
+        f2.SetParLimits(3,150.,155)
+        f2.SetParLimits(4,0.,10)
+        f2.SetParLimits(5,0.,1000)
+        f2.SetParameters(150,2,0,150,2,0)
+        
+        charge_graph.Fit(f2,"w")
         # 计算拟合曲线上的点
         num_points = 1000  # 设置需要计算的点的数量
         fit_points = []
