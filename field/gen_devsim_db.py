@@ -98,6 +98,18 @@ def CreateSiliconConstant():
     devsim.add_db_entry(material="Silicon",   parameter="taup",  value=7e-3,    unit="s",         description="Constant SRH Lifetime of Hole")
 
 
+def Create_Fine_exponential_models():
+    epsilon_model_in = 10 *1.6*1e-19#J
+    epsilon_model_ip = 7 *1.6*1e-19
+    epsilon_model_0 = 0.36*1.6*1e-19
+    lambda_model_n = 2.99 *1e-7
+    lambda_model_p = 3.25 *1e-7
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="epsilon_model_in",        value=epsilon_model_in,   unit="j",        description="The carrier collides with ionization energy")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="epsilon_model_ip",        value=epsilon_model_ip,   unit="j",        description="The carrier collides with ionization energy")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="epsilon_model_0",        value=epsilon_model_0,   unit="j",        description="Optical wave phonon energy")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="lambda_model_n",        value=lambda_model_n,   unit="cm",        description="The mean free path of electrons")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="lambda_model_p",        value=lambda_model_p,   unit="cm",        description="The mean free path of holes")
+
 def CreateHatakeyamaImpact():
     '''
     The Hatakeyama avalanche model describes the anisotropic behavior in 4H-SiC power devices. The impact ionization coefficient is obtainedaccording to the Chynoweth law.
@@ -187,6 +199,7 @@ def main():
     path = output(__file__, "")
     CreateDataBase(os.path.join(path, "SICARDB.db"))
     CreateGlobalConstant()
+    Create_Fine_exponential_models()
     CreateSiliconCarbideConstant()
     CreateSiliconConstant()
     CreateHatakeyamaImpact()

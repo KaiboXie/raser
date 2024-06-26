@@ -64,6 +64,7 @@ def CreateSiliconPotentialOnly(device, region):
              node_model="PotentialIntrinsicCharge", edge_model="PotentialEdgeFlux", variable_update="log_damp")
 
 
+
 def CreateSiliconPotentialOnlyContact(device, region, contact, is_circuit=False):
     '''
       Creates the potential equation at the contact
@@ -75,10 +76,7 @@ def CreateSiliconPotentialOnlyContact(device, region, contact, is_circuit=False)
     if not InEdgeModelList(device, region, "contactcharge_edge"):
         CreateEdgeModel(device, region, "contactcharge_edge", "Permittivity*ElectricField")
         CreateEdgeModelDerivatives(device, region, "contactcharge_edge", "Permittivity*ElectricField", "Potential")
-
-    # set_parameter(device=device, region=region, name=GetContactBiasName(contact), value=0.0)
-
-    contact_model = "Potential -{0} + ifelse(NetDoping > 0, \
+    contact_model = "Potential -{0} + ifelse(NetDoping >0, \
                     -Volt_thermal*log({1}/n_i), \
                     Volt_thermal*log({2}/n_i))".format(GetContactBiasName(contact), celec_model, chole_model)
 
@@ -87,6 +85,7 @@ def CreateSiliconPotentialOnlyContact(device, region, contact, is_circuit=False)
     # Simplify it too complicated
     CreateContactNodeModel(device, contact, "{0}:{1}".format(contact_model_name,"Potential"), "1")
     if is_circuit:
+        # add_circuit_node(name=str(GetContactBiasName(contact)),value=0)
         CreateContactNodeModel(device, contact, "{0}:{1}".format(contact_model_name,GetContactBiasName(contact)), "-1")
 
     if is_circuit:
@@ -305,20 +304,19 @@ def CreateOxidePotentialOnly(device, region, update_type="default"):
         print("Creating Node Solution Potential")
         CreateSolution(device, region, "Potential")
 
-    efield="(Potential@n0 - Potential@n1)*EdgeInverseLength"
     # this needs to remove derivatives w.r.t. independents
-    CreateEdgeModel(device, region, "ElectricField", efield)
-    CreateEdgeModelDerivatives(device, region, "ElectricField", efield, "Potential")
-    dfield="Permittivity*ElectricField"
-    CreateEdgeModel(device, region, "PotentialEdgeFlux", dfield)
-    CreateEdgeModelDerivatives(device, region, "PotentialEdgeFlux", dfield, "Potential")
+    CreateEdgeModel(device, region, "ElectricField", "(Potential@n0 - Potential@n1)*EdgeInverseLength")
+    CreateEdgeModelDerivatives(device, region, "ElectricField", "(Potential@n0 - Potential@n1)*EdgeInverseLength", "Potential")
+    CreateEdgeModel(device, region, "PotentialEdgeFlux", "Permittivity * ElectricField")
+    CreateEdgeModelDerivatives(device, region, "PotentialEdgeFlux", "Permittivity * ElectricField", "Potential")
     equation(device=device, region=region, name="PotentialEquation", variable_name="Potential",
              edge_model="PotentialEdgeFlux", variable_update=update_type)
 
 
 #in the future, worry about workfunction
 def CreateOxideContact(device, region, contact):
-    conteq="Permittivity*ElectricField"
+    set_parameter(name = "Permittivity", value=9.76*8.85e-14)
+    conteq="Permittivity *ElectricField"
     contact_bias_name  = GetContactBiasName(contact)
     contact_model_name = GetContactNodeModelName(contact)
     eq = "Potential - {0}".format(contact_bias_name)
@@ -327,8 +325,8 @@ def CreateOxideContact(device, region, contact):
 
     #TODO: make everyone use dfield
     if not InEdgeModelList(device, region, contactcharge_edge):
-        CreateEdgeModel(device, region, contactcharge_edge, "Permittivity*ElectricField")
-        CreateEdgeModelDerivatives(device, region, contactcharge_edge, "Permittivity*ElectricField", "Potential")
+        CreateEdgeModel(device, region, contactcharge_edge, "Permittivity * ElectricField")
+        CreateEdgeModelDerivatives(device, region, contactcharge_edge, "Permittivity * ElectricField", "Potential")
 
     contact_equation(device=device, contact=contact, name="PotentialEquation",
                      node_model=contact_model_name, edge_charge_model= contactcharge_edge)
