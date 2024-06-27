@@ -30,9 +30,11 @@ class Detector:
         self.device = device_name
         self.region = device_name
         device_json = "./setting/detector/" + device_name + ".json"
+        control_json = "./setting/devsim_general.json"
+        with open(control_json) as control:
+            self.control_dict = json.load(control)
         with open(device_json) as f:
             self.device_dict = json.load(f)
-
         self.dimension = self.device_dict['default_dimension']
 
         self.l_x = self.device_dict['lx'] 
@@ -113,10 +115,18 @@ class Detector:
         for region in mesh["region"]:
             # Must define material regions before air regions when material borders not clarified!
             devsim.add_2d_region   (mesh=mesh_name, **region)
-        for contact in mesh["contact"]:
+        
+        for contact in mesh["contact"] :
             devsim.add_2d_contact  (mesh=mesh_name, **contact)
+        if self.control_dict["ac-weightfield"] == True:
+            print("==============================================")
+            for ac_contact in mesh["ac_contact"] :
+                devsim.add_2d_contact  (mesh=mesh_name, **ac_contact)
+            for interface in mesh["interface"]:
+                devsim.add_2d_interface(mesh=mesh_name, **interface)
         devsim.finalize_mesh(mesh=mesh_name)
         devsim.create_device(mesh=mesh_name, device=mesh_name)
+        devsim.write_devices(file="test", type="tecplot")
 
     def createGmshMesh(self):
         mesh_name = self.device
@@ -133,6 +143,12 @@ class Detector:
         '''
         Doping
         '''
+        if self.control_dict["ac-weightfield"] == True:
+            self.device_dict["doping"]["Acceptors"] = "0"
+            self.device_dict["doping"]["Donors"] = "1"
+            self.device_dict.update({"doping": self.device_dict["doping"]})
+        elif self.control_dict["ac-weightfield"] == False:
+            pass
         if 'Acceptors_ir' in self.device_dict['doping']:
           model_create.CreateNodeModel(self.device, self.region, "Acceptors",    self.device_dict['doping']['Acceptors']+"+"+self.device_dict['doping']['Acceptors_ir'])
         else:

@@ -102,9 +102,10 @@ def CreateContinuousInterfaceModel(device, interface, variable):
     meq = "{0}@r0 - {0}@r1".format(variable)
     mname0 = "{0}:{1}@r0".format(mname, variable)
     mname1 = "{0}:{1}@r1".format(mname, variable)
-    CreateInterfaceModel(device, interface, mname, meq)
     CreateInterfaceModel(device, interface, mname0,  "1")
     CreateInterfaceModel(device, interface, mname1, "-1")
+    CreateInterfaceModel(device, interface, mname, meq)
+
     return mname
 
 

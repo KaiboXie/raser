@@ -41,20 +41,26 @@ def InitialSolution(device, region, circuit_contacts=None):
     CreateNodeModel(device, region, "InitialHole", "abs(NetDoping)")
     devsim.edge_from_node_model(device=device,region=region,node_model="InitialElectron")
     devsim.edge_from_node_model(device=device,region=region,node_model="InitialHole")
-    
-    # Create potential only physical models
     CreateSiliconPotentialOnly(device, region)
-   
-
+    if paras["ac-weightfield"]==True:
+        CreateOxidePotentialOnly(device=device, region="SiO2", update_type="default")
+        for interface in devsim.get_interface_list(device=device):
+            CreateSiliconOxideInterface(device=device, interface=interface)
     # Set up the contacts applying a bias
     for i in devsim.get_contact_list(device=device):
-        if circuit_contacts and i in circuit_contacts:
+        devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
+        #if circuit_contacts and i in circuit_contacts:
+        if circuit_contacts in i :
             CreateSiliconPotentialOnlyContact(device, region, i, True)
+            if paras["ac-weightfield"]==True:
+                CreateOxideContact(device=device, region="SiO2", contact=i)
         else:
             ###print "FIX THIS"
             ### it is more correct for the bias to be 0, and it looks like there is side effects
-            devsim.set_parameter(device=device, name=GetContactBiasName(i), value=0.0)
+            devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
             CreateSiliconPotentialOnlyContact(device, region, i)
+            if paras["ac-weightfield"]==True:
+                CreateOxideContact(device=device, region="SiO2", contact=i)
 
 
 def DriftDiffusionInitialSolution(device, region, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None):
@@ -79,10 +85,13 @@ def DriftDiffusionInitialSolution(device, region, irradiation_label=None, irradi
     ###
     ### Set up equations
     ###
+    
     CreateSiliconDriftDiffusion(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label)
     for i in devsim.get_contact_list(device=device):
-        if circuit_contacts and i in circuit_contacts:
+        if circuit_contacts in i:
+            devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
             CreateSiliconDriftDiffusionAtContact(device, region, i, True)
         else:
+            devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
             CreateSiliconDriftDiffusionAtContact(device, region, i)
 

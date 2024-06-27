@@ -30,17 +30,31 @@ paras = {
     "voltage_step" : 1,
     "acreal" : 1.0, 
     "acimag" : 0.0,
-    "frequency" : 1.0
+    "frequency" : 1.0,
+    "ac-weightfield" : False,
 }
 
 def main(kwargs):
     simname = kwargs['label']
     is_cv = kwargs['cv']
+    is_wf = kwargs["wf"]
+
 
     with open('setting/devsim_general.json') as file:
-        paras.update(json.load(file))
+        data = json.load(file)
+        if is_wf:
+            data["ac-weightfield"] = True
+        else:
+            data["ac-weightfield"] = False
+
+        with open('setting/devsim_general.json', 'w') as file:
+            json.dump(data, file, indent=4)
+        with open('setting/devsim_general.json') as file_read:
+            file_read.seek(0) 
+            paras.update(json.load(file_read))
 
     devsim.open_db(filename="./output/field/SICARDB.db", permission="readonly")
+
     device = simname
     region = simname
     MyDetector = Detector(device)
@@ -59,6 +73,7 @@ def main(kwargs):
     E_g=1.12*1.6e-19
     N_i=pow(N_c*N_v,0.5)*math.exp(-E_g/(2*k*T))
     devsim.add_db_entry(material="Silicon",   parameter="n_i",    value=N_i,   unit="/cm^3",     description="Intrinsic Electron Concentration")
+    devsim.add_db_entry(material="SiliconCarbide",   parameter="n_i",    value=N_i,   unit="/cm^3",     description="Intrinsic Electron Concentration")
     devsim.add_db_entry(material="Silicon",   parameter="n1",     value=N_i,   unit="/cm^3",     description="n1")
     devsim.add_db_entry(material="Silicon",   parameter="p1",     value=N_i,   unit="/cm^3",     description="p1")
 
@@ -80,8 +95,12 @@ def main(kwargs):
         model_create.CreateNodeModel(device,region,"U_const",U_const)
     else:
         model_create.CreateNodeModel(device,region,"U_const",0)
-      
-    circuit_contacts = MyDetector.device_dict['bias']['electrode']
+    if paras["ac-weightfield"]==True:
+        circuit_contacts = []
+        for read_out_lsit in MyDetector.device_dict["mesh"]["2D_mesh"]["ac_contact"]:
+            circuit_contacts.append( read_out_lsit["name"])
+    else:
+        circuit_contacts = MyDetector.device_dict['bias']['electrode']
 
     T1 = time.time()
 
@@ -90,10 +109,15 @@ def main(kwargs):
     devsim.set_parameter(name = "extended_equation", value=True)
     devsim.circuit_element(name="V1", n1=physics_drift_diffusion.GetContactBiasName(circuit_contacts), n2=0,
                            value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
+    if paras["ac-weightfield"]==True:
+        for contact in circuit_contacts:
+            initial.InitialSolution(device, region, circuit_contacts=contact)
+            devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
+    else:
+        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts)
+        devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
     
-    initial.InitialSolution(device, region, circuit_contacts=circuit_contacts)
-    devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
-
+    
     if "irradiation" in MyDetector.device_dict:
         irradiation_label=MyDetector.device_dict['irradiation']['irradiation_label']
         irradiation_flux=MyDetector.device_dict['irradiation']['irradiation_flux']
@@ -105,10 +129,12 @@ def main(kwargs):
         impact_label=MyDetector.device_dict['avalanche_model']
     else:
         impact_label=None
-
-    initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts)
+    if paras["ac-weightfield"] == True:
+        pass
+    else:
+        initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts)
         
-    devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'])
+        devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'])
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons")
     devsim.delete_node_model(device=device, region=region, name="IntrinsicHoles")
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons:Potential")
@@ -153,9 +179,24 @@ def main(kwargs):
         voltage_step = paras['voltage_step']
     else: 
         voltage_step = -1 * paras['voltage_step']
-
     while abs(v) <= abs(v_max):
         voltage.append(v)
+        if paras["ac-weightfield"]==True:
+            v=-1
+            for contact in circuit_contacts:
+
+                print("+++++++++++++++++++++\n begin simulate Weight field\n +++++++++++++++++++++")
+                print(contact)
+                devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=v)
+                devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
+                paras["milestone_step"] == 1
+                paras.update({"milestone_step":paras["milestone_step"]})
+                path = output(__file__, device,contact)
+                milestone_save_wf_2D(device, region, v, path,contact)
+                devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=0)
+            exit()
+        elif paras["ac-weightfield"] ==False:
+            pass
         devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(circuit_contacts), value=v)
         devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
         physics_drift_diffusion.PrintCurrents(device, circuit_contacts)
@@ -277,6 +318,41 @@ def milestone_save_2D(device, region, v, path):
 
     for name in ['Potential', 'TrappingRate_p', 'TrappingRate_n']: # scalar field on mesh point (instead of on edge)
         with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:
+            data = {}
+            data['values'] = eval(name) # refer to the object with given name
+            merged_list = [x, y]
+            transposed_list = list(map(list, zip(*merged_list)))
+            data['points'] = transposed_list
+            data['metadata'] = metadata
+            pickle.dump(data, file)
+
+
+
+def milestone_save_wf_2D(device, region, v, path,contact):
+    x = np.array(devsim.get_node_model_values(device=device, region=region, name="x")) # get x-node values
+    y = np.array(devsim.get_node_model_values(device=device, region=region, name="y")) # get y-node values
+    Potential = np.array(devsim.get_node_model_values(device=device, region=region, name="Potential")) # get the potential data
+
+    devsim.element_from_edge_model(edge_model="ElectricField",   device=device, region=region)
+    devsim.edge_average_model(device=device, region=region, node_model="x", edge_model="xmid")
+    devsim.edge_average_model(device=device, region=region, node_model="y", edge_model="ymid")
+    ElectricField=np.array(devsim.get_edge_model_values(device=device, region=region, name="ElectricField"))
+    x_mid = np.array(devsim.get_edge_model_values(device=device, region=region, name="xmid")) 
+    y_mid = np.array(devsim.get_edge_model_values(device=device, region=region, name="ymid")) 
+
+    draw2D(x,y,Potential,"Potential",v, path)
+    draw2D(x_mid,y_mid,ElectricField,"ElectricField",v, path)
+
+
+    dd = os.path.join(path, str(v),str(contact)+'V.dd')
+    devsim.write_devices(file=dd, type="tecplot")
+
+    metadata = {}
+    metadata['voltage'] = v
+    metadata['dimension'] = 2
+
+    for name in ['Potential']: # scalar field on mesh point (instead of on edge)
+        with open(os.path.join(path, "{}_{}_{}V.pkl".format(name,v,contact)),'wb') as file:
             data = {}
             data['values'] = eval(name) # refer to the object with given name
             merged_list = [x, y]

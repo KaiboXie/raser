@@ -23,8 +23,10 @@ def CreateImpactGeneration(device, region, impact_label,custom_ion_n='0', custom
         
         if material == 'Silicon' and impact_label != "CustomAvalanche":
             Ion_coeff_n, Ion_coeff_p = CreateImpactModel_vanOvenstraeten(device, region)
-        elif material=='SiliconCarbide' and impact_label != "CustomAvalanche":
+        elif material=='SiliconCarbide' and impact_label != "CustomAvalanche" and impact_label != "Fine_exponential_models":
             Ion_coeff_n, Ion_coeff_p = CreateImpactModel_Hatakeyama(device, region)#default SiC model
+        elif material=='SiliconCarbide' and impact_label == "Fine_exponential_models":
+            Ion_coeff_n, Ion_coeff_p = CreateImpactModel_Fine_exponential_models(device, region)
             #changebale models
             if impact_label=="Hatakeyama":
                 pass
@@ -139,6 +141,14 @@ def CreateImpactModel_Hatakeyama(device, region, cutoff_angle = 4):
 
     return Ion_coeff_n, Ion_coeff_p
 
+
+
+def CreateImpactModel_Fine_exponential_models(device, region):
+    
+    Ion_coeff_n  = "(ElectronCharge*(ElectricField+1) / epsilon_model_in) * exp(-(epsilon_model_in*epsilon_model_0/pow(ElectronCharge*(ElectricField+1)*lambda_model_n,2)))"
+    Ion_coeff_p  = "(ElectronCharge*(ElectricField+1) / epsilon_model_ip) * exp(-(epsilon_model_ip*epsilon_model_0/ElectronCharge*(ElectricField+1)*lambda_model_p*(epsilon_model_0+ElectronCharge*(ElectricField+1)*lambda_model_p)))"
+
+    return Ion_coeff_n, Ion_coeff_p
 
 def CreateTunnelModel_Zaiyi(device, region):
 
