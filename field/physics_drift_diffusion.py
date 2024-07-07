@@ -65,7 +65,7 @@ def CreateSiliconPotentialOnly(device, region):
 
 
 
-def CreateSiliconPotentialOnlyContact(device, region, contact, is_circuit=False):
+def CreateSiliconPotentialOnlyContact(device, region, contact, contact_type, is_circuit=False):
     '''
       Creates the potential equation at the contact
       if is_circuit is true, than use node given by GetContactBiasName
@@ -76,9 +76,25 @@ def CreateSiliconPotentialOnlyContact(device, region, contact, is_circuit=False)
     if not InEdgeModelList(device, region, "contactcharge_edge"):
         CreateEdgeModel(device, region, "contactcharge_edge", "Permittivity*ElectricField")
         CreateEdgeModelDerivatives(device, region, "contactcharge_edge", "Permittivity*ElectricField", "Potential")
-    contact_model = "Potential -{0} + ifelse(NetDoping >0, \
-                    -Volt_thermal*log({1}/n_i), \
-                    Volt_thermal*log({2}/n_i))".format(GetContactBiasName(contact), celec_model, chole_model)
+
+    if contact_type["type"] == "Schottky":
+        workfun = contact_type["workfun"]
+        affinity = contact_type["affinity"]
+        # gamma=1: Schottky, gamma=0: Bardeen, else: Sze
+        if "gamma" in contact_type:
+            gamma = contact_type["gamma"]
+        else:
+            if "delta" in contact_type and "D_s" in contact_type:
+                gamma = "Permittivity / (Permittivity + ElectronCharge*ElectronCharge*{0}*{1})".format(contact_type["delta"], contact_type["D_s"])
+            else:
+                gamma = 1
+        phi_0 = "E_g/(3*ElectronCharge)"
+        contact_model = "Potential - {0} + {3}*({1} - {2}) - {3}*E_g/ElectronCharge + ({3}-1)*{4} + Volt_thermal*log(N_v/n_i)".format(GetContactBiasName(contact), workfun, affinity, gamma, phi_0)
+        # The units of affinity and workfun are eV, assume q=1e to get the V
+    else:
+        contact_model = "Potential -{0} + ifelse(NetDoping >0, \
+                        -Volt_thermal*log({1}/n_i), \
+                        Volt_thermal*log({2}/n_i))".format(GetContactBiasName(contact), celec_model, chole_model)
 
     contact_model_name = GetContactNodeModelName(contact)
     CreateContactNodeModel(device, contact, contact_model_name, contact_model)
@@ -257,13 +273,33 @@ def CreateSiliconDriftDiffusion(device, region, mu_n="mu_n", mu_p="mu_p", irradi
     CreateHCE(device, region, mu_p, impact_label=impact_label)
 
 
-def CreateSiliconDriftDiffusionAtContact(device, region, contact, is_circuit=False): 
+def CreateSiliconDriftDiffusionAtContact(device, region, contact, contact_type, is_circuit=False): 
     '''
       Restrict electrons and holes to their equilibrium values
       Integrates current into circuit
     '''
-    contact_electrons_model = "Electrons - ifelse(NetDoping > 0, {0}, n_i^2/{1})".format(celec_model, chole_model)
-    contact_holes_model = "Holes - ifelse(NetDoping < 0, +{1}, +n_i^2/{0})".format(celec_model, chole_model)
+    if contact_type["type"] == "Schottky":
+        workfun = contact_type["workfun"]
+        affinity = contact_type["affinity"]
+        # gamma=1: Schottky, gamma=0: Bardeen, else: Sze
+        if "gamma" in contact_type:
+            gamma = contact_type["gamma"]
+        else:
+            if "delta" in contact_type and "D_s" in contact_type:
+                gamma = "Permittivity / (Permittivity + ElectronCharge*ElectronCharge*{0}*{1})".format(contact_type["delta"], contact_type["D_s"])
+            else:
+                gamma = 1
+        phi_0 = "E_g/(3*ElectronCharge)"
+        Phi_Bn = "{2}*({0}-{1})+(1-{2})*(E_g/ElectronCharge-{3})".format(workfun, affinity, gamma, phi_0)
+        Equi_Electrons = "N_c * exp(-({0}) / Volt_thermal)".format(Phi_Bn)
+        Equi_Holes = "N_v * exp((-E_g/ElectronCharge + {0}) / Volt_thermal)".format(Phi_Bn)
+        # The units of affinity and workfun are eV, assume q=1e to get the V
+        contact_electrons_model = "Electrons - {0}".format(Equi_Electrons)
+        contact_holes_model = "Holes - {0}".format(Equi_Holes)
+    else:
+        contact_electrons_model = "Electrons - ifelse(NetDoping > 0, {0}, n_i^2/{1})".format(celec_model, chole_model)
+        contact_holes_model = "Holes - ifelse(NetDoping < 0, +{1}, +n_i^2/{0})".format(celec_model, chole_model)
+
     contact_electrons_name = "{0}nodeelectrons".format(contact)
     contact_holes_name = "{0}nodeholes".format(contact)
 

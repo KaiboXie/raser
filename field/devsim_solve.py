@@ -104,6 +104,11 @@ def main(kwargs):
 
     T1 = time.time()
 
+    if "set_contact_type" in MyDetector.device_dict:
+        set_contact_type = MyDetector.device_dict["set_contact_type"]
+    else:
+        set_contact_type = None
+
     devsim.set_parameter(name = "extended_solver", value=True)
     devsim.set_parameter(name = "extended_model", value=True)
     devsim.set_parameter(name = "extended_equation", value=True)
@@ -111,10 +116,10 @@ def main(kwargs):
                            value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
     if paras["ac-weightfield"]==True:
         for contact in circuit_contacts:
-            initial.InitialSolution(device, region, circuit_contacts=contact)
+            initial.InitialSolution(device, region, circuit_contacts=contact, set_contact_type=set_contact_type)
             devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
     else:
-        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts)
+        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type)
         devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
     
     
@@ -132,7 +137,7 @@ def main(kwargs):
     if paras["ac-weightfield"] == True:
         pass
     else:
-        initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts)
+        initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type)
         
         devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'])
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons")
