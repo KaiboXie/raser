@@ -117,10 +117,10 @@ def main(kwargs):
     if paras["ac-weightfield"]==True:
         for contact in circuit_contacts:
             initial.InitialSolution(device, region, circuit_contacts=contact, set_contact_type=set_contact_type)
-            devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
+            devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'], info=True)
     else:
         initial.InitialSolution(device, region, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type)
-        devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
+        devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'], info=True)
     
     
     if "irradiation" in MyDetector.device_dict:
@@ -139,7 +139,7 @@ def main(kwargs):
     else:
         initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type)
         
-        devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'])
+        devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'], info=True)
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons")
     devsim.delete_node_model(device=device, region=region, name="IntrinsicHoles")
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons:Potential")
@@ -203,7 +203,7 @@ def main(kwargs):
         elif paras["ac-weightfield"] ==False:
             pass
         devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(circuit_contacts), value=v)
-        devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
+        devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'], info=True)
         physics_drift_diffusion.PrintCurrents(device, circuit_contacts)
         electron_current= devsim.get_contact_current(device=device, contact=circuit_contacts, equation="ElectronContinuityEquation")
         hole_current    = devsim.get_contact_current(device=device, contact=circuit_contacts, equation="HoleContinuityEquation")
