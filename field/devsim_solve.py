@@ -60,6 +60,9 @@ def main(kwargs):
     MyDetector = Detector(device)
     MyDetector.mesh_define()
 
+    if "frequency" in MyDetector.device_dict:
+        paras.update({"frequency": MyDetector.device_dict['frequency']})
+
     T = MyDetector.device_dict['temperature']
     k = 1.3806503e-23  # J/K
     q = 1.60217646e-19 # coul
