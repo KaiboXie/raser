@@ -10,10 +10,6 @@ import devsim
 from .model_create import *
 from .physics_drift_diffusion import *
 
-paras={}
-with open('setting/devsim_general.json') as file:
-        paras.update(json.load(file))
-
 def switch_Cylindrical_coordinate(device,region):
     devsim.set_parameter(device=device, name="raxis_variable", value="x")
     devsim.set_parameter(device=device, name="raxis_zero",     value=0)
@@ -29,7 +25,7 @@ def switch_Cylindrical_coordinate(device,region):
     devsim.set_parameter(name="element_node1_volume_model",value="ElementCylindricalNodeVolume@en1")
 
 
-def InitialSolution(device, region, circuit_contacts=None):
+def InitialSolution(device, region, circuit_contacts=None, set_contact_type=None, paras=None):
     if paras["Cylindrical_coordinate"]==True:
         switch_Cylindrical_coordinate(device,region)
     else:
@@ -48,22 +44,27 @@ def InitialSolution(device, region, circuit_contacts=None):
             CreateSiliconOxideInterface(device=device, interface=interface)
     # Set up the contacts applying a bias
     for i in devsim.get_contact_list(device=device):
+        if set_contact_type and i in set_contact_type:
+            contact_type = set_contact_type[i]
+        else:
+            contact_type = {"type" : "Ohmic"}
+
         devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
         #if circuit_contacts and i in circuit_contacts:
         if circuit_contacts in i :
-            CreateSiliconPotentialOnlyContact(device, region, i, True)
+            CreateSiliconPotentialOnlyContact(device, region, i, contact_type, True)
             if paras["ac-weightfield"]==True:
                 CreateOxideContact(device=device, region="SiO2", contact=i)
         else:
             ###print "FIX THIS"
             ### it is more correct for the bias to be 0, and it looks like there is side effects
             devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
-            CreateSiliconPotentialOnlyContact(device, region, i)
+            CreateSiliconPotentialOnlyContact(device, region, i, contact_type)
             if paras["ac-weightfield"]==True:
                 CreateOxideContact(device=device, region="SiO2", contact=i)
 
 
-def DriftDiffusionInitialSolution(device, region, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None):
+def DriftDiffusionInitialSolution(device, region, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None, set_contact_type=None, paras=None):
     if paras["Cylindrical_coordinate"]==True:
         switch_Cylindrical_coordinate(device,region)
     else:
@@ -88,10 +89,15 @@ def DriftDiffusionInitialSolution(device, region, irradiation_label=None, irradi
     
     CreateSiliconDriftDiffusion(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label)
     for i in devsim.get_contact_list(device=device):
+        if set_contact_type and i in set_contact_type:
+            contact_type = set_contact_type[i]
+        else:
+            contact_type = {"type" : "Ohmic"}
+
         if circuit_contacts in i:
             devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
-            CreateSiliconDriftDiffusionAtContact(device, region, i, True)
+            CreateSiliconDriftDiffusionAtContact(device, region, i, contact_type, True)
         else:
             devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
-            CreateSiliconDriftDiffusionAtContact(device, region, i)
+            CreateSiliconDriftDiffusionAtContact(device, region, i, contact_type)
 
