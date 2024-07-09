@@ -20,9 +20,17 @@ import time
 import math
 
 paras = {
-    "absolute_error" : 1e10, 
-    "relative_error" : 1e-5, 
-    "maximum_iterations" : 1000,
+    "absolute_error_Initial" : 1e-10, 
+    "relative_error_Initial" : 1e-10, 
+    "maximum_iterations_Initial" : 1000,
+
+    "absolute_error_DriftDiffusion" : 1e5, 
+    "relative_error_DriftDiffusion" : 1e-5, 
+    "maximum_iterations_DriftDiffusion" : 1000,
+
+    "absolute_error_VoltageSteps" : 1e10, 
+    "relative_error_VoltageSteps" : 1e-5, 
+    "maximum_iterations_VoltageSteps" : 1000,
 
     "milestone_mode" : True,
     "milestone_step" : 100,
@@ -31,6 +39,8 @@ paras = {
     "acreal" : 1.0, 
     "acimag" : 0.0,
     "frequency" : 1.0,
+
+    "Cylindrical_coordinate": False,
     "ac-weightfield" : False,
 }
 
@@ -39,25 +49,16 @@ def main(kwargs):
     is_cv = kwargs['cv']
     is_wf = kwargs["wf"]
 
-
-    with open('setting/devsim_general.json') as file:
-        data = json.load(file)
-        if is_wf:
-            data["ac-weightfield"] = True
-        else:
-            data["ac-weightfield"] = False
-
-        with open('setting/devsim_general.json', 'w') as file:
-            json.dump(data, file, indent=4)
-        with open('setting/devsim_general.json') as file_read:
-            file_read.seek(0) 
-            paras.update(json.load(file_read))
+    if is_wf:
+        paras.update({"ac-weightfield": True})
+    else:
+        paras.update({"ac-weightfield": False})
 
     devsim.open_db(filename="./output/field/SICARDB.db", permission="readonly")
 
     device = simname
     region = simname
-    MyDetector = Detector(device)
+    MyDetector = Detector(device, paras)
     MyDetector.mesh_define()
 
     if "frequency" in MyDetector.device_dict:
@@ -119,10 +120,10 @@ def main(kwargs):
                            value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
     if paras["ac-weightfield"]==True:
         for contact in circuit_contacts:
-            initial.InitialSolution(device, region, circuit_contacts=contact, set_contact_type=set_contact_type)
+            initial.InitialSolution(device, region, circuit_contacts=contact, set_contact_type=set_contact_type, paras=paras)
             devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'], info=True)
     else:
-        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type)
+        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type, paras=paras)
         devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'], info=True)
     
     
@@ -140,7 +141,7 @@ def main(kwargs):
     if paras["ac-weightfield"] == True:
         pass
     else:
-        initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type)
+        initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type, paras=paras)
         
         devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'], info=True)
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons")

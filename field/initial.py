@@ -10,10 +10,6 @@ import devsim
 from .model_create import *
 from .physics_drift_diffusion import *
 
-paras={}
-with open('setting/devsim_general.json') as file:
-        paras.update(json.load(file))
-
 def switch_Cylindrical_coordinate(device,region):
     devsim.set_parameter(device=device, name="raxis_variable", value="x")
     devsim.set_parameter(device=device, name="raxis_zero",     value=0)
@@ -29,7 +25,7 @@ def switch_Cylindrical_coordinate(device,region):
     devsim.set_parameter(name="element_node1_volume_model",value="ElementCylindricalNodeVolume@en1")
 
 
-def InitialSolution(device, region, circuit_contacts=None, set_contact_type=None):
+def InitialSolution(device, region, circuit_contacts=None, set_contact_type=None, paras=None):
     if paras["Cylindrical_coordinate"]==True:
         switch_Cylindrical_coordinate(device,region)
     else:
@@ -68,7 +64,7 @@ def InitialSolution(device, region, circuit_contacts=None, set_contact_type=None
                 CreateOxideContact(device=device, region="SiO2", contact=i)
 
 
-def DriftDiffusionInitialSolution(device, region, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None, set_contact_type=None):
+def DriftDiffusionInitialSolution(device, region, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None, set_contact_type=None, paras=None):
     if paras["Cylindrical_coordinate"]==True:
         switch_Cylindrical_coordinate(device,region)
     else:
