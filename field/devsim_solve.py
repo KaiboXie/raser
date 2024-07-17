@@ -58,7 +58,7 @@ def main(kwargs):
 
     device = simname
     region = simname
-    MyDetector = Detector(device, paras)
+    MyDetector = Detector(device, devsim_solve_paras=paras)
     MyDetector.mesh_define()
 
     if "frequency" in MyDetector.device_dict:
