@@ -25,12 +25,12 @@ class Detector:
     ---------
         2023/12/03
     """ 
-    def __init__(self, device_name, paras):
+    def __init__(self, device_name, devsim_solve_paras=None):
         self.det_name = device_name
         self.device = device_name
         self.region = device_name
         device_json = "./setting/detector/" + device_name + ".json"
-        self.control_dict = paras
+        self.control_dict = devsim_solve_paras
         with open(device_json) as f:
             self.device_dict = json.load(f)
         self.dimension = self.device_dict['default_dimension']
