@@ -14,8 +14,8 @@ def read_file(file_path,wave_name):
 
         for point in points:
             try:
-                time.append(float(point.strip('\n').strip().split(',')[3])*1e9)
-                volt.append(float(point.strip('\n').strip().split(',')[4])*1e3)
+                time.append(float(point.strip('\n').strip().split(',')[0])*1e9)
+                volt.append(float(point.strip('\n').strip().split(',')[1])*-1e3)
             except Exception as e:
                 pass
 
@@ -69,22 +69,22 @@ def get_charge(time_list,volt_list,baseline):
         tmp_integrate += volt_cut_baseline_list[tmp_index]*time_bin
         tmp_index += 1
 
-    charge = tmp_integrate*(1e-12)/50/100*(1e15)
+    # charge = tmp_integrate*(1e-12)/50/100*(1e15)
+    charge = tmp_integrate*(1e-12)/50/10*(1e15)
 
     return charge
 
 def main():
 
-    input_name = sys.argv[1]
-    path = '/scratchfs/atlas/lizaiyi/data/alpha_readout/' + input_name
+    path = '/scratchfs/bes/wangkeqi/sicar/output/gen_signal/HPK-Si-LGAD-CCE/batch'
     waves = os.listdir(path)
     time,volt = [],[]
     window = 1000
 
     c = ROOT.TCanvas('c','c',1500,600)
     c.Divide(2,1)
-    charge_graph = ROOT.TH1F('charge','charge',100,20,1000)
-    volt_graph = ROOT.TH1F('volt',"volt",100,0,1500)
+    charge_graph = ROOT.TH1F('charge','charge',15,40,100)
+    volt_graph = ROOT.TH1F('volt',"volt",20,15,35)
 
     for wave in waves:
 
@@ -107,7 +107,7 @@ def main():
     c.cd(2)
     volt_graph.Draw()
 
-    c.SaveAs('./output/'+ input_name + '_distribution.pdf')
+    c.SaveAs('./output/HPK-Si-LGAD-CCE_distribution.pdf')
 
 if __name__ == '__main__':
     main()
