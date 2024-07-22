@@ -17,8 +17,8 @@ import ROOT
 import math
 from util.output import output
 
-noise_avg = -0.133
-noise_rms = 2.671
+noise_avg = -0.001
+noise_rms = 0.01
 
 # ROOT file parameters difinition
 Events=array('i',[0])
