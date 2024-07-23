@@ -75,7 +75,7 @@ def get_charge(time_list, volt_list, baseline):
     return charge
 
 def main():
-    path = './sicar/output/gen_signal/HPK-Si-LGAD-CCE/batch'
+    path = './output/gen_signal/HPK-Si-LGAD-CCE/batch'
     csv_files = filter_csv_files(path)
 
     c = ROOT.TCanvas('c', 'c', 1500, 600)
@@ -102,7 +102,7 @@ def main():
     c.cd(2)
     volt_graph.Draw()
 
-    c.SaveAs('./sicar/output/HPK-Si-LGAD-CCE_distribution.pdf')
+    c.SaveAs('./output/HPK-Si-LGAD-CCE_distribution.pdf')
 
 if __name__ == '__main__':
     main()
