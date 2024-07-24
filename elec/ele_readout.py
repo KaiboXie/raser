@@ -99,8 +99,8 @@ class Amplifier:
         self.time_unit = my_current.t_bin*self.undersampling
         self.CDet_j = 0     # CSA readout mode
         
-        # self.qtot = [0.0]*self.read_ele_num
-        self.qtot = [0.0]
+        self.qtot = [0.0]*self.read_ele_num
+        # self.qtot = [0.0]
         # get total charge
         for k in range(self.read_ele_num):
             i=0
