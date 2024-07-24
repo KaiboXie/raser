@@ -169,7 +169,8 @@ class AddNoise:
         random_gauss = ROOT.gRandom.Gaus
         for j in range (0,len(list_c)):
             time= float(list(filter(None,list_c[j].split(",")))[0])
-            noise_height=random_gauss(noise_avg,noise_rms)
+            # noise_height=random_gauss(noise_avg,noise_rms)
+            noise_height=0
             ampl_nps=-float(list(filter(None,list_c[j].split(",")))[1])+noise_height
             ampl_s=-float(list(filter(None,list_c[j].split(",")))[1])
             self.time_list.append(time)
