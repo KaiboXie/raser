@@ -70,7 +70,7 @@ if number>=1:
             input_c.append(str(0))
 
         input_p=','.join(input_c)
-        with open('/scratchfs/atlas/xingchenli/raser/paras/T1.cir', 'r') as f:
+        with open('/scratchfs/atlas/xingchenli/raser/paras/circuitT1.cir', 'r') as f:
             lines = f.readlines()
             lines[113] = 'I1 2 0 PWL('+str(input_p)+') \n'
             lines[140] = 'tran 0.1p ' + str((input_c[len(input_c) - 2])) + '\n'
@@ -142,7 +142,7 @@ else:
             input_c.append(str(0))
 
         input_p=','.join(input_c)
-        with open('/scratchfs/atlas/xingchenli/raser/paras/T1.cir', 'r') as f:
+        with open('/scratchfs/atlas/xingchenli/raser/paras/circuitT1.cir', 'r') as f:
             lines = f.readlines()
             lines[113] = 'I1 2 0 PWL('+str(input_p)+') \n'
             lines[140] = 'tran 0.1p ' + str((input_c[len(input_c) - 2])) + '\n'
