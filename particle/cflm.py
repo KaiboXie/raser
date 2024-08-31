@@ -299,7 +299,7 @@ def main():
 
     UImanager = g4b.G4UImanager.GetUIpointer()
 
-    UImanager.ApplyCommand("/control/execute cfg/init_vis.mac")
+    UImanager.ApplyCommand("/control/execute paras/g4macro/init_vis.mac")
 
     UImanager.ApplyCommand('/run/initialize')
     UImanager.ApplyCommand('/tracking/verbose 2')

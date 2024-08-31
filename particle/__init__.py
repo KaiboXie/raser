@@ -10,7 +10,7 @@ def main(kwargs):
         cflm.main()
     elif label == "test":
         from . import g4_sic_energy_deposition
-        command="./cfg/gui.mac"
+        command="./paras/g4macro/gui.mac"
         g4_sic_energy_deposition.main()
     else:
         raise NameError(label)
