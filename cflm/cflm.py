@@ -108,7 +108,7 @@ class cflmDetectorConstruction(g4b.G4VUserDetectorConstruction):
                      detectorSizeX/2, detectorSizeY/2, detectorSizeZ/2)  # its size
 
         detectorLV = g4b.G4LogicalVolume(detectorS,         # its solid
-                                air,  # its material
+                                detectorMaterial,  # its material
                                 "Detector")        # its name
 
         self.fdetectorPV = g4b.G4PVPlacement(None,                                  # no rotation
@@ -282,7 +282,7 @@ class cflmRunAction(g4b.G4UserRunAction):
             print(" rms =", g4b.G4BestUnit(analysisManager.GetH1(1).rms(),  "Energy"))
         # save histograms & ntuple
         analysisManager.Write()
-        with open('./xxx_200_air.txt', 'w') as file:  
+        with open('./200SIC_100000.txt', 'w') as file:  
             for i in range(len(Particle)):
                 file.write(f"{Particle[i]} {X_position[i]} {Z_position[i]} {Y_position[i]}\n")
         
@@ -319,13 +319,10 @@ def main():
     visManager.Initialize()
 
     UImanager = g4b.G4UImanager.GetUIpointer()
-    print("++++++++++++++++++++++++++++++++++++++++++++++===================================")
     UImanager.ApplyCommand("/control/execute paras/g4macro/init_vis.mac")
-
     UImanager.ApplyCommand('/run/initialize')
-    UImanager.ApplyCommand('/run/setCut 10.0 um')
     UImanager.ApplyCommand('/tracking/verbose 2')
-    UImanager.ApplyCommand('/run/beamOn 1')
+    UImanager.ApplyCommand('/run/beamOn 100000')
     UImanager.ApplyCommand("/vis/geometry/set/visibility World 0 false")
     UImanager.ApplyCommand("/vis/geometry/set/forceSolid World")
 

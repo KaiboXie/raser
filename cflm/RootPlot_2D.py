@@ -13,7 +13,7 @@ gr2 = ROOT.TGraph()
 gr3 = ROOT.TGraph()
 gr4 = ROOT.TGraph()
 
-with open('./xxx_100_air.txt', 'r') as file:
+with open('raser/cflm/xxx_200_air.txt', 'r') as file:
     for line in file:
         columns = line.split()
         column.append(columns[0])  
@@ -32,18 +32,18 @@ for i in range(len(X_position)):
     particle = column[i]
     if particle == 'gamma':
         gr1.SetMarkerStyle(20)
-        gr1.SetMarkerColor(ROOT.kGreen)
+        gr1.SetMarkerColor(ROOT.kBlack)
         gr1.SetPoint(i, X_position[i], Z_position[i])
     elif particle == 'e-':
-        gr2.SetMarkerStyle(20)
-        gr2.SetMarkerColor(ROOT.kRed)
+        gr2.SetMarkerStyle(22)
+        gr2.SetMarkerColor(ROOT.kBlack)
         gr2.SetPoint(i, X_position[i], Z_position[i])
     elif particle == 'e+':
-        gr3.SetMarkerStyle(20)
-        gr3.SetMarkerColor(ROOT.kBlue)
+        gr3.SetMarkerStyle(24)
+        gr3.SetMarkerColor(ROOT.kBlack)
         gr3.SetPoint(i, X_position[i], Z_position[i])
     else:
-        gr4.SetMarkerStyle(20)
+        gr4.SetMarkerStyle(28)
         gr4.SetMarkerColor(ROOT.kBlack)
         gr4.SetPoint(i, X_position[i], Z_position[i])
 
@@ -68,5 +68,6 @@ legend.SetFillColor(0)
 legend.SetTextSize(0.03)
 
 legend.Draw()
+
 
 c1.SaveAs("RootPlot100air_2D.png")
