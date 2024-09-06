@@ -124,7 +124,7 @@ class Detector:
                 devsim.add_2d_interface(mesh=mesh_name, **interface)
         devsim.finalize_mesh(mesh=mesh_name)
         devsim.create_device(mesh=mesh_name, device=mesh_name)
-        devsim.write_devices(file="test", type="tecplot")
+        devsim.write_devices(file="output/field/test", type="tecplot")
 
     def createGmshMesh(self):
         mesh_name = self.device
