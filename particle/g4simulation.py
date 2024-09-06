@@ -88,7 +88,7 @@ class Particles:
             visManager = g4b.G4VisExecutive()
             visManager.Initialize()
             UImanager = g4b.G4UImanager.GetUIpointer()
-            UImanager.ApplyCommand('/control/execute init_vis.mac')
+            UImanager.ApplyCommand('/control/execute paras/g4macro/init_vis.mac')
         else:
             UImanager = g4b.G4UImanager.GetUIpointer()
             UImanager.ApplyCommand('/run/initialize')

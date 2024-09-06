@@ -17,8 +17,8 @@ import ROOT
 import math
 from util.output import output
 
-noise_avg = -0.133
-noise_rms = 2.671
+noise_avg = -0.001
+noise_rms = 0.01
 
 # ROOT file parameters difinition
 Events=array('i',[0])
@@ -169,7 +169,8 @@ class AddNoise:
         random_gauss = ROOT.gRandom.Gaus
         for j in range (0,len(list_c)):
             time= float(list(filter(None,list_c[j].split(",")))[0])
-            noise_height=random_gauss(noise_avg,noise_rms)
+            # noise_height=random_gauss(noise_avg,noise_rms)
+            noise_height=0
             ampl_nps=-float(list(filter(None,list_c[j].split(",")))[1])+noise_height
             ampl_s=-float(list(filter(None,list_c[j].split(",")))[1])
             self.time_list.append(time)

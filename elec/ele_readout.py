@@ -100,6 +100,7 @@ class Amplifier:
         self.CDet_j = 0     # CSA readout mode
         
         self.qtot = [0.0]*self.read_ele_num
+        # self.qtot = [0.0]
         # get total charge
         for k in range(self.read_ele_num):
             i=0
@@ -185,7 +186,7 @@ class Amplifier:
 
     def fill_CSA_out(self,i,j,dif_shaper_Q):
         """ Fill CSA out variable"""     
-        self.shaper_out_Q[i+j] += self.tau_rise/(self.tau_fall-self.tau_rise) \
+        self.shaper_out_Q[i+j] += self.tau_fall/(self.tau_fall+self.tau_rise) \
                                   * dif_shaper_Q*(math.exp(-j*self.time_unit
                                   / self.tau_fall)-math.exp(
                                   - j*self.time_unit/self.tau_rise))
@@ -196,9 +197,9 @@ class Amplifier:
                                 * math.exp(-j*self.time_unit/self.tau_scope)
         self.Iout_BB_RC[i+j] += (dif_shaper_Q)/self.tau_BBA \
                                 * math.exp(-j*self.time_unit/self.tau_BBA)
-        self.BBGraph[i+j] = self.BBGain * self.Iout_BB_RC[i+j]
+        self.BBGraph[i+j] = 1e3 * self.BBGain * self.Iout_BB_RC[i+j]
         R_in = 50 # the input impedance of the amplifier
-        self.Vout_scope[i+j] = self.BBGain * R_in * self.Iout_BB_RC[i+j]
+        self.Vout_scope[i+j] = R_in * self.Iout_C50[i+j]
 #        if (abs(self.BBGraph[i+j]) > 800):
 #            self.BBGraph[i+j] = 800*self.BBGraph[i+j]/abs(self.BBGraph[i+j])
 
@@ -221,9 +222,9 @@ class Amplifier:
                 self.shaper_out_V[i] = 0.0
             elif self.CDet_j == 0:
 
-                #self.shaper_out_V[i] = self.shaper_out_Q[i]*self.trans_imp\
-                #                       * 1e15*self.qtot[k]*Qfrac/self.sh_max     
-                self.shaper_out_V[i] = self.shaper_out_Q[i]*self.trans_imp/(self.CDet*1e-12) #C_D=3.7pF
+                self.shaper_out_V[i] = self.shaper_out_Q[i]*self.trans_imp\
+                                      * 1e15*self.qtot[k]*Qfrac/self.sh_max     
+                # self.shaper_out_V[i] = self.shaper_out_Q[i]*self.trans_imp/(self.CDet*1e-12) #C_D=3.7pF
                 
             elif self.CDet_j ==1:
                 self.shaper_out_V[i] = self.shaper_out_Q[i]*self.trans_imp\
