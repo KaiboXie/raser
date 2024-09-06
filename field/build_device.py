@@ -97,6 +97,7 @@ class Detector:
         mesh = self.device_dict["mesh"]["1D_mesh"]
         for mesh_line in mesh["mesh_line"]:
             devsim.add_1d_mesh_line(mesh=mesh_name, **mesh_line)
+        
         for region in mesh["region"]:
             devsim.add_1d_region   (mesh=mesh_name, **region)
         for contact in mesh["contact"]:
@@ -110,6 +111,10 @@ class Detector:
         mesh = self.device_dict["mesh"]["2D_mesh"]
         for mesh_line in mesh["mesh_line"]:
             devsim.add_2d_mesh_line(mesh=mesh_name, **mesh_line)
+        if self.control_dict["ac-weightfield"] == True:
+            mesh["region"]["material"] = "gas"
+        else:
+            pass
         for region in mesh["region"]:
             # Must define material regions before air regions when material borders not clarified!
             devsim.add_2d_region   (mesh=mesh_name, **region)
@@ -130,6 +135,10 @@ class Detector:
         mesh_name = self.device
         mesh = self.device_dict["mesh"]["gmsh_mesh"]
         devsim.create_gmsh_mesh (mesh=mesh_name, file=mesh['file'])
+        if self.control_dict["ac-weightfield"] == True:
+            mesh["region"][0]['material']="gas"
+        else:
+            pass
         for region in mesh["region"]:
             devsim.add_gmsh_region   (mesh=mesh_name ,**region)
         for contact in mesh["contact"]:
