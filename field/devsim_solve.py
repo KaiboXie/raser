@@ -39,7 +39,7 @@ paras = {
     "acreal" : 1.0, 
     "acimag" : 0.0,
     "frequency" : 1.0,
-
+    
     "Cylindrical_coordinate": False,
     "ac-weightfield" : False,
 }
@@ -78,6 +78,7 @@ def main(kwargs):
     N_i=pow(N_c*N_v,0.5)*math.exp(-E_g/(2*k*T))
     devsim.add_db_entry(material="Silicon",   parameter="n_i",    value=N_i,   unit="/cm^3",     description="Intrinsic Electron Concentration")
     devsim.add_db_entry(material="SiliconCarbide",   parameter="n_i",    value=N_i,   unit="/cm^3",     description="Intrinsic Electron Concentration")
+    devsim.add_db_entry(material="gas",   parameter="n_i",    value="1e-9",   unit="/cm^3",     description="Intrinsic Electron Concentration")
     devsim.add_db_entry(material="Silicon",   parameter="n1",     value=N_i,   unit="/cm^3",     description="n1")
     devsim.add_db_entry(material="Silicon",   parameter="p1",     value=N_i,   unit="/cm^3",     description="p1")
 
@@ -99,19 +100,19 @@ def main(kwargs):
         model_create.CreateNodeModel(device,region,"U_const",U_const)
     else:
         model_create.CreateNodeModel(device,region,"U_const",0)
+    circuit_contacts=[]
     if paras["ac-weightfield"]==True:
-        circuit_contacts = []
-        for read_out_lsit in MyDetector.device_dict["mesh"]["2D_mesh"]["ac_contact"]:
-            circuit_contacts.append( read_out_lsit["name"])
+        if MyDetector.device_dict.get("mesh", {}).get("2D_mesh", {}).get("ac_contact"):
+            print("====================================\nACLGAD is simulating\n++++++++++++++++++++++++++")
+            for read_out_lsit in MyDetector.device_dict["mesh"]["2D_mesh"]["ac_contact"]:
+                circuit_contacts.append( read_out_lsit["name"])
+        else:
+            print("====================================\nACLGAD is skipping")
+            circuit_contacts.append( MyDetector.device_dict['bias']['electrode'])
     else:
-        circuit_contacts = MyDetector.device_dict['bias']['electrode']
+        circuit_contacts=MyDetector.device_dict['bias']['electrode']
 
     T1 = time.time()
-
-    if "set_contact_type" in MyDetector.device_dict:
-        set_contact_type = MyDetector.device_dict["set_contact_type"]
-    else:
-        set_contact_type = None
 
     devsim.set_parameter(name = "extended_solver", value=True)
     devsim.set_parameter(name = "extended_model", value=True)
@@ -119,12 +120,18 @@ def main(kwargs):
     devsim.circuit_element(name="V1", n1=physics_drift_diffusion.GetContactBiasName(circuit_contacts), n2=0,
                            value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
     if paras["ac-weightfield"]==True:
-        for contact in circuit_contacts:
-            initial.InitialSolution(device, region, circuit_contacts=contact, set_contact_type=set_contact_type, paras=paras)
-            devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'], info=True)
+        if MyDetector.device_dict.get("mesh", {}).get("2D_mesh", {}).get("ac_contact"):
+            for contact in circuit_contacts:
+                initial.InitialSolution(device, region, circuit_contacts=contact,paras=paras)
+                devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
+        else:
+            print("====================================\nACLGAD is skipping")
+            print(circuit_contacts)
+            initial.InitialSolution(device, region, circuit_contacts=circuit_contacts,paras=paras)
+            devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
     else:
-        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type, paras=paras)
-        devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'], info=True)
+        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts,paras=paras)
+        devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
     
     
     if "irradiation" in MyDetector.device_dict:
@@ -141,9 +148,9 @@ def main(kwargs):
     if paras["ac-weightfield"] == True:
         pass
     else:
-        initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts, set_contact_type=set_contact_type, paras=paras)
+        initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts)
         
-        devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'], info=True)
+        devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'])
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons")
     devsim.delete_node_model(device=device, region=region, name="IntrinsicHoles")
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons:Potential")
@@ -191,9 +198,9 @@ def main(kwargs):
     while abs(v) <= abs(v_max):
         voltage.append(v)
         if paras["ac-weightfield"]==True:
-            v=-1
+            v=1
             for contact in circuit_contacts:
-
+                print(type(circuit_contacts))
                 print("+++++++++++++++++++++\n begin simulate Weight field\n +++++++++++++++++++++")
                 print(contact)
                 devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=v)
@@ -207,13 +214,13 @@ def main(kwargs):
         elif paras["ac-weightfield"] ==False:
             pass
         devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(circuit_contacts), value=v)
-        devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'], info=True)
+        devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
         physics_drift_diffusion.PrintCurrents(device, circuit_contacts)
         electron_current= devsim.get_contact_current(device=device, contact=circuit_contacts, equation="ElectronContinuityEquation")
         hole_current    = devsim.get_contact_current(device=device, contact=circuit_contacts, equation="HoleContinuityEquation")
         total_current   = electron_current + hole_current
         
-        if(abs(total_current/area_factor)>105e-6): break
+        # if(abs(total_current/area_factor)>105e-6): break
         
         current.append(abs(total_current/area_factor))
         writer_iv.writerow([v,abs(total_current/area_factor)])
