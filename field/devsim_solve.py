@@ -213,7 +213,9 @@ def main(kwargs):
         hole_current    = devsim.get_contact_current(device=device, contact=circuit_contacts, equation="HoleContinuityEquation")
         total_current   = electron_current + hole_current
         
-        if(abs(total_current/area_factor)>105e-6): break
+        if(abs(total_current/area_factor)>105e-6): 
+            print("current is too large !")
+            # break
         
         current.append(abs(total_current/area_factor))
         writer_iv.writerow([v,abs(total_current/area_factor)])
