@@ -44,7 +44,7 @@ if "ngspice" in args:
     my_current.save_current(dset,my_d,my_l,my_f,"fx_rel")
     input_p=ngsip.set_input(dset,my_current,my_l,my_d,"fx_rel")
     input_c=','.join(input_p)
-    with open('paras/circuitT1.cir', 'r') as f:
+    with open('param_file/circuit/T1.cir', 'r') as f:
         lines = f.readlines()
         lines[113] = 'I1 2 0 PWL('+str(input_c)+') \n'
         lines[140] = 'tran 0.1p ' + str((input_p[len(input_p) - 2])) + '\n'
