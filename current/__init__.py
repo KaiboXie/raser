@@ -1,4 +1,4 @@
-from . import *
+
 def main(kwargs):
     label = kwargs['label']
 

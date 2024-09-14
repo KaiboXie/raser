@@ -19,6 +19,8 @@ import random
 
 import json
 
+verbose = 0
+
 # Geant4 main process
 class Particles:
     #model name for other class to use
@@ -70,7 +72,6 @@ class Particles:
         g4RunManager.SetUserInitialization(my_g4d)
         # set physics list
         physics_list =  g4b.FTFP_BERT()
-        physics_list.SetVerboseLevel(1)
         physics_list.RegisterPhysics(g4b.G4StepLimiterPhysics())
         g4RunManager.SetUserInitialization(physics_list)
         # define global parameter
@@ -88,9 +89,12 @@ class Particles:
             visManager = g4b.G4VisExecutive()
             visManager.Initialize()
             UImanager = g4b.G4UImanager.GetUIpointer()
-            UImanager.ApplyCommand('/control/execute paras/g4macro/init_vis.mac')
+            UImanager.ApplyCommand('/control/execute param_file/g4macro/init_vis.mac')
         else:
             UImanager = g4b.G4UImanager.GetUIpointer()
+            # reduce verbose from physics list
+            UImanager.ApplyCommand('/process/em/verbose %d'%(verbose))
+            UImanager.ApplyCommand('/process/had/verbose %d'%(verbose))
             UImanager.ApplyCommand('/run/initialize')
             
         g4RunManager.BeamOn(int(g4_dic['total_events']))

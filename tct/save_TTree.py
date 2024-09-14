@@ -1,13 +1,13 @@
 import os
-from util.output import output
+from util.output import create_path
 from array import array
 import ROOT
 
-def save_signal_TTree(dset,my_d,key,ele_current,my_f):
+def save_signal_TTree(my_d,key,ele_current,my_f):
     if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
-        path = os.path.join("output", "pintct", dset.det_name, "data",)
+        path = os.path.join("output", "pintct", my_d.det_name, "data",)
     elif "lgad3D" in my_d.det_model:
-        path = os.path.join("output", "lgadtct", dset.det_name, "data",)
+        path = os.path.join("output", "lgadtct", my_d.det_name, "data",)
     create_path(path) 
     for j in range(my_f.read_ele_num):
         volt = array('d', [999.])

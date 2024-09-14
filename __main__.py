@@ -48,9 +48,6 @@ parser_gen_signal.add_argument('-abs', '--absorber', type=str, help='model of pa
 parser_gen_signal.add_argument('-amp', '--amplifier', type=str, help='amplifier')
 parser_gen_signal.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
 
-parser_gsignal = subparsers.add_parser('particle', help='calculate particle')
-parser_gsignal.add_argument('label', help='LABEL to identify spaceres files')
-
 parser_root = subparsers.add_parser('root', help='root files conversion')
 parser_root.add_argument('label', help='LABEL to identify root files')
 
@@ -60,6 +57,14 @@ parser_spaceres.add_argument('label', help='LABEL to identify spaceres files')
 parser_spaceres = subparsers.add_parser('timeres', help='time resolution calculation')
 parser_spaceres.add_argument('det_name', help='name of the detector')
 
+parser_tct = subparsers.add_parser('tct', help='TCT simulation')
+parser_tct.add_argument('label', help='LABEL to identify TCT options')
+parser_tct.add_argument('det_name', help='name of the detector')
+parser_tct.add_argument('laser', help='name of the laser')
+parser_tct.add_argument('-vol', '--voltage', type=str, help='bias voltage')
+parser_tct.add_argument('-amp', '--amplifier', type=str, help='amplifier')
+parser_tct.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
+
 args = parser.parse_args()
 
 if len(sys.argv) == 1:
@@ -68,7 +73,7 @@ if len(sys.argv) == 1:
 
 kwargs = vars(args)
 
-submodules = ['asic', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'root', 'spaceres', 'timeres']
+submodules = ['asic', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'root', 'spaceres','tct', 'timeres']
 
 submodule = kwargs['subparser_name']
 if submodule not in submodules:

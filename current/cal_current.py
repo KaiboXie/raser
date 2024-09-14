@@ -6,11 +6,15 @@ Description:  Simulate e-h pairs drifting and calculate induced current
 @version    : 2.0
 '''
 import random
-import numpy as np
 import math
+import os
+
+import numpy as np
 import ROOT
+
 from .model import Material
 from .model import Vector
+from util.output import create_path
 
 t_bin = 50e-12
 t_end = 10e-9
@@ -839,26 +843,3 @@ class StripCarrierListFromG4P:
         self.tracks_step = my_g4p.energy_steps[j]
         self.tracks_t_energy_deposition = my_g4p.edep_devices[j] #为什么不使用？
         self.ionized_pairs = [step*1e6/self.energy_loss for step in self.tracks_step]
-
-# TODO: change this to a method of CalCurrent
-def save_current(my_d,my_l,my_current,my_f,key):
-    if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
-        path = os.path.join('output', 'pintct', my_d.det_name, )
-    elif "lgad3D" in my_d.det_model:
-        path = os.path.join('output', 'lgadtct', my_d.det_name, )
-    create_path(path) 
-    L = eval("my_l.{}".format(key))
-    #L is defined by different keys
-    time = array('d', [999.])
-    current = array('d', [999.])
-    fout = ROOT.TFile(os.path.join(path, "sim-TCT-current") + str(L) + ".root", "RECREATE")
-    t_out = ROOT.TTree("tree", "signal")
-    t_out.Branch("time", time, "time/D")
-    for i in range(my_f.read_ele_num):
-        t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
-        for j in range(my_current.n_bin):
-            current[0]=my_current.sum_cu[i].GetBinContent(j)
-            time[0]=j*my_current.t_bin
-            t_out.Fill()
-        t_out.Write()
-        fout.Close()

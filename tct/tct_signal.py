@@ -1,73 +1,133 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 
-import os
 import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import raser
-from .save_TTree import save_signal_TTree
-
-# TODO: Need to be rewritten!
-
+import os
+import array
 import time
-from util.output import output
+import subprocess
+import json
+import time
+
+import ROOT
+
+from field import build_device as bdv
+from field import devsim_field as devfield
+from current import cal_current as ccrt
+from elec import ele_readout as rdout
+from elec import ngspice_set_input as ngsip
+from elec import ngspice as ng
+from .source import TCTTracks
+from .save_TTree import save_signal_TTree
+from util.output import output, create_path
 from gen_signal.draw_save import draw_plots
 
-args = sys.argv[1:]
-start = time.time()
-dset = raser.Setting(args)
-if "parameter_alter=True" in args:
-    # need to put the changed value at the end of the parameter list
-    key,_,value=args[-1].rpartition('=')
-    value=float(value)
-    if key in dset.laser_paras:
-        dset.laser_paras.update({key:value})
-        key_string = str(dset.laser_paras[key])+key
-    elif key in dset.paras:
-        dset.paras.update({key:value})
-        key_string = str(dset.paras[key])+key
-else:
-    key_string = ""
-my_d = raser.R3dDetector(dset)
+def main(kwargs):
+    """
+    Description:
+        The main program of Raser induced current simulation      
+    Parameters:
+    ---------
+    dset : class
+        Parameters of simulation
+    Function or class:
+        Detector -- Define the basic parameters and mesh structure of the detector
+        DevsimCal -- Get the electric field and weighting potential 
+        Particles -- Electron and hole paris distibution
+        CalCurrent -- Drift of e-h pais and induced current
+        Amplifier -- Readout electronics simulation
+        draw_plots -- Draw electric field, drift path and energy deposition        
+    Modify:
+    ---------
+        2021/09/02
+    """
+    start = time.time()
 
-if('devsim' in args):
-    print("using devsim to build the field")
-    my_f = raser.DevsimCal(my_d, dset.det_name, dset.detector, dset.fenics)
-else:
-    print("using fenics to build the field")
-    my_f = raser.FenicsCal(my_d,dset.fenics)
-
-my_l = raser.TCTTracks(my_d, dset.laser)
-my_current = raser.CalCurrentLaser(my_d, my_f, my_l)
-ele_current = raser.Amplifier(my_current, dset.amplifier)
-if "ngspice" in args:
-    my_current.save_current(dset,my_d,my_l,my_f,"fx_rel")
-    input_p=ngsip.set_input(dset,my_current,my_l,my_d,"fx_rel")
-    input_c=','.join(input_p)
-    with open('paras/circuitT1.cir', 'r') as f:
-        lines = f.readlines()
-        lines[113] = 'I1 2 0 PWL('+str(input_c)+') \n'
-        lines[140] = 'tran 0.1p ' + str((input_p[len(input_p) - 2])) + '\n'
-        lines[141] = 'wrdata output/t1.raw v(out)\n'
-        f.close()
-    with open('output/T1_tmp.cir', 'w') as f:
-        f.writelines(lines)
-        f.close()
-if "scan=True" in args: #assume parameter alter
-    save_signal_TTree(dset,my_d,key_string,ele_current,my_f)
-    if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
-        path = "output/" + "pintct/" + dset.det_name + "/"
-    elif "lgad3D" in my_d.det_model:
-        path = "output/" + "lgadtct/" + dset.det_name + "/"
+    det_name = kwargs['det_name']
+    my_d = bdv.Detector(det_name)
+    
+    if kwargs['voltage'] != None:
+        voltage = float(kwargs['voltage'])
     else:
+        voltage = float(my_d.voltage)
+
+    if kwargs['laser'] != None:
+        laser = kwargs['laser']
+        laser_json = "./setting/laser/" + laser + ".json"
+        with open(laser_json) as f:
+            laser_dic = json.load(f)
+    else:
+        # TCT must be with laser
         raise NameError
-else:
-    draw_plots(my_d,ele_current,my_f,None,my_current,my_l)
 
-if "draw_carrier" in label:
-    now = time.strftime("%Y_%m%d_%H%M")
-    path = output(__path__, now)
-    my_l.draw_nocarrier3D(path,my_l)
-    my_l.draw_nocarrier2D(path,my_l)
+    if kwargs['amplifier'] != None:
+        amplifier = kwargs['amplifier']
+    else:
+        amplifier = my_d.amplifier
 
-print("total time used:%s"%(time.time()-start))
+    if "strip" in det_name:
+        my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
+    else: 
+        my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z)
+
+    my_l = TCTTracks(my_d, laser_dic)
+
+    if "strip" in det_name:
+        pass
+    else: 
+        my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
+
+    if 'ngspice' in amplifier:
+        save_current(my_d, my_current,my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
+        input_p=ngsip.set_input(my_current, my_d, key=None)
+        input_c=','.join(input_p)
+        ng.ngspice_t0(input_c, input_p)
+        subprocess.run(['ngspice -b -r t0.raw output/T0_tmp.cir'], shell=True)
+        ng.plot_waveform()
+    else:
+        ele_current = rdout.Amplifier(my_current, amplifier)
+    
+    if kwargs['scan'] != None: #assume parameter alter
+        key = my_l.fz_rel
+        save_signal_TTree(my_d,key,ele_current,my_f)
+        if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
+            path = "output/" + "pintct/" + my_d.det_name + "/"
+        elif "lgad3D" in my_d.det_model:
+            path = "output/" + "lgadtct/" + my_d.det_name + "/"
+        else:
+            raise NameError
+    else:
+        path = output(__file__, my_d.det_name, my_l.model)
+        draw_plots(my_d,ele_current,my_f,None,my_current,my_l,path)
+    print("total time used:%s"%(time.time()-start))
+
+#TODO: move this to calcurrent
+def save_current(my_d,my_current,my_f,key):
+    if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
+        path = os.path.join('output', 'pintct', my_d.det_name, )
+    elif "lgad3D" in my_d.det_model:
+        path = os.path.join('output', 'lgadtct', my_d.det_name, )
+    create_path(path) 
+    L = eval("my_l.{}".format(key))
+    #L is defined by different keys
+    time = array('d', [999.])
+    current = array('d', [999.])
+    fout = ROOT.TFile(os.path.join(path, "sim-TCT-current") + str(L) + ".root", "RECREATE")
+    t_out = ROOT.TTree("tree", "signal")
+    t_out.Branch("time", time, "time/D")
+    for i in range(my_f.read_ele_num):
+        t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
+        for j in range(my_current.n_bin):
+            current[0]=my_current.sum_cu[i].GetBinContent(j)
+            time[0]=j*my_current.t_bin
+            t_out.Fill()
+        t_out.Write()
+        fout.Close()
+
+if __name__ == '__main__':
+    args = sys.argv[1:]
+    kwargs = {}
+    for arg in args:
+        key, value = arg.split('=')
+        kwargs[key] = value
+    main(kwargs)

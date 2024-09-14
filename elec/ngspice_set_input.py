@@ -1,7 +1,7 @@
 import os
 import ROOT
 from array import array
-
+# TODO: Need to be TOTALLY rewritten
 def set_input(my_current,my_l,my_d,key):
     if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
         path = os.path.join('output', 'pintct', my_d.det_name, )
