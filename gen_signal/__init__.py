@@ -97,7 +97,7 @@ def main(kwargs):
         my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
 
     if 'ngspice' in amplifier:
-        save_current(my_d, my_current,my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
+        save_current(my_d, my_current, my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
         input_p=ngsip.set_input(my_current, my_d, key=None)
         input_c=','.join(input_p)
         ng.ngspice_t0(input_c, input_p)
@@ -154,8 +154,7 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
     detection_efficiency =  effective_number/(end_n-start_n) 
     print("detection_efficiency=%s"%detection_efficiency)
 
-
-
+# TODO: change this to a method of CalCurrent
 def save_current(my_d,my_current,my_f,key):
     if key!=None:
         if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:

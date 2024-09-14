@@ -15,7 +15,7 @@ import time
 
 from util.output import output
 
-def draw_plots(my_d,ele_current,my_f,my_g4p,my_current,my_l=None):
+def draw_plots(my_d,ele_current,my_f,my_g4p,my_current,my_l=None,laser_path=None):
     """
     @description:
         Draw electric field ,drift path and energy deposition
@@ -27,7 +27,10 @@ def draw_plots(my_d,ele_current,my_f,my_g4p,my_current,my_l=None):
         2021/08/31
     """
     now = time.strftime("%Y_%m%d_%H%M%S")
-    path = output(__file__, my_d.det_name, now)
+    if laser_path != None:
+        path = laser_path
+    else:
+        path = output(__file__, my_d.det_name, now)
 
     if "plugin" in my_d.det_model:
         draw_ele_field(my_d,my_f,"xy",my_d.det_model,my_d.l_z*0.5,path)
