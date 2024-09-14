@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
-
+# TODO: Need to be TOTALLY rewritten
 import time
 import os
 from array import array

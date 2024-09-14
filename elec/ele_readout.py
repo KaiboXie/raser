@@ -74,7 +74,7 @@ class Amplifier:
         ---------
             2021/09/09
         """
-        self.CDet      = amplifier_parameters['CDet']
+        self.CDet = amplifier_parameters['CDet']
 
         if amplifier_parameters['ele_name'] == 'CSA':
             """ CSA parameter initialization"""

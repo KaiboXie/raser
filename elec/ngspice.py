@@ -8,3 +8,4 @@ def ngspice(input_c, input_p):
     with open('./output/T1_tmp.cir', 'w') as f:
         f.writelines(lines)
         f.close()
+# TODO: Need to be TOTALLY rewritten
