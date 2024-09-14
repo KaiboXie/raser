@@ -1,5 +1,5 @@
 import os
-from util.output import output
+from util.output import create_path
 from array import array
 import ROOT
 

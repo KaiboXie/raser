@@ -6,11 +6,15 @@ Description:  Simulate e-h pairs drifting and calculate induced current
 @version    : 2.0
 '''
 import random
-import numpy as np
 import math
+import os
+
+import numpy as np
 import ROOT
+
 from .model import Material
 from .model import Vector
+from util.output import create_path
 
 t_bin = 50e-12
 t_end = 10e-9

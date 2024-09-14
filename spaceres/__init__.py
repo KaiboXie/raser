@@ -11,6 +11,7 @@ from . import telescope as tlcp
 from particle.g4simulation import Particles
 from particle.geometry import R3dDetector
 from current.cal_current import CalCurrentPixel
+from util.output import create_path
 
 def main(kwargs):
     label = kwargs['label']
