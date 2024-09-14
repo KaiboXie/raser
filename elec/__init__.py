@@ -1,10 +1,8 @@
-from . import *
+
 def main(kwargs):
     label = kwargs['label']
 
-    if label == 'foo':
-        foo.main()
-    elif label == 'ngspice_t1':
+    if label == 'ngspice_t1':
         import subprocess
         subprocess.run(['ngspice -b output/T1_tmp.cir'], shell=True)
     elif label == 'drs4_get_analog':
