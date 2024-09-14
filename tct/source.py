@@ -23,6 +23,7 @@ class TCTTracks():
     """
     def __init__(self, my_d, laser):
         #technique used
+        self.model = laser["laser_model"]
         self.tech = laser["tech"]
         self.direction = laser["direction"]
         #material parameters to certain wavelength of the beam

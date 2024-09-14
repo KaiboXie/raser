@@ -97,7 +97,7 @@ def main(kwargs):
         else:
             raise NameError
     else:
-        path = output(__file__, my_d.det_name, my_l.tech)
+        path = output(__file__, my_d.det_name, my_l.model)
         draw_plots(my_d,ele_current,my_f,None,my_current,my_l,path)
     print("total time used:%s"%(time.time()-start))
 
