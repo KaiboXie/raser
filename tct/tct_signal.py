@@ -115,7 +115,7 @@ def save_current(my_d,my_current,my_f,key):
     fout = ROOT.TFile(os.path.join(path, "sim-TCT-current") + str(L) + ".root", "RECREATE")
     t_out = ROOT.TTree("tree", "signal")
     t_out.Branch("time", time, "time/D")
-    for i in range(my_f.read_ele_num):
+    for i in range(my_current.read_ele_num):
         t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
         for j in range(my_current.n_bin):
             current[0]=my_current.sum_cu[i].GetBinContent(j)

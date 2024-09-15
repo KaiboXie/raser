@@ -37,7 +37,7 @@ def draw_plots(my_d,ele_current,my_f,my_g4p,my_current,my_l=None,laser_path=None
     else:
         draw_ele_field_1D(my_d,my_f,path)
         draw_ele_field(my_d,my_f,"xz",my_d.det_model,my_d.l_y*0.5,path)
-    for i in range(my_f.read_ele_num):
+    for i in range(my_current.read_ele_num):
         draw_current(my_d, my_current,ele_current.ele,i,ele_current.ele_name,path) # Draw current
     #energy_deposition(my_g4p)   # Draw Geant4 depostion distribution
     if my_l != None:
@@ -679,7 +679,7 @@ def get1_beam_number(my_g4p):
 def cce(my_d,my_f,my_current, path):
     charge=array('d')
     x=array('d')
-    for i in range(my_f.read_ele_num):
+    for i in range(my_current.read_ele_num):
         x.append(i+1)
         sum_charge=0
         for j in range(my_current.n_bin):
