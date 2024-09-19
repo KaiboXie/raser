@@ -1,10 +1,13 @@
 # -*- encoding: utf-8 -*-
+
 '''
-Description:  Simulate e-h pairs drifting and calculate induced current
+Description:  
+    Simulate e-h pairs drifting and calculate induced current
 @Date       : 2021/09/02 14:01:46
 @Author     : Yuhang Tan, Chenxi Fu
 @version    : 2.0
 '''
+
 import random
 import math
 import os
