@@ -1,10 +1,13 @@
 # -*- encoding: utf-8 -*-
+
 '''
-Description:  Simulate e-h pairs drifting and calculate induced current
+Description:  
+    Simulate e-h pairs drifting and calculate induced current
 @Date       : 2021/09/02 14:01:46
 @Author     : Yuhang Tan, Chenxi Fu
 @version    : 2.0
 '''
+
 import random
 import math
 import os
@@ -254,8 +257,11 @@ class CalCurrent:
         2022/10/28
     """
     def __init__(self, my_d, my_f, ionized_pairs, track_position):
+
+        self.read_ele_num = my_f.read_ele_num
         self.electrons = []
         self.holes = []
+
         for i in range(len(track_position)):
             electron = Carrier(track_position[i][0],\
                                track_position[i][1],\
@@ -263,14 +269,14 @@ class CalCurrent:
                                track_position[i][3],\
                                -1*ionized_pairs[i],\
                                my_d.material,\
-                               my_f.read_ele_num)
+                               self.read_ele_num)
             hole = Carrier(track_position[i][0],\
                            track_position[i][1],\
                            track_position[i][2],
                            track_position[i][3],\
                            ionized_pairs[i],\
                            my_d.material,\
-                           my_f.read_ele_num)
+                           self.read_ele_num)
             if not electron.not_in_sensor(my_d):
                 self.electrons.append(electron)
                 self.holes.append(hole)
@@ -282,18 +288,18 @@ class CalCurrent:
         self.t_start = t_start
         self.n_bin = int((self.t_end-self.t_start)/self.t_bin)
 
-        self.current_define(my_f.read_ele_num)
-        for i in range(my_f.read_ele_num):
+        self.current_define(self.read_ele_num)
+        for i in range(self.read_ele_num):
             self.sum_cu[i].Reset()
             self.positive_cu[i].Reset()
             self.negative_cu[i].Reset()
-        self.get_current(my_d,my_f.read_ele_num)
+        self.get_current(my_d,self.read_ele_num)
         if "lgad3D" in my_d.det_model:
             self.gain_current = CalCurrentGain(my_d, my_f, self)
-            for i in range(my_f.read_ele_num):
+            for i in range(self.read_ele_num):
                 self.gain_positive_cu[i].Reset()
                 self.gain_negative_cu[i].Reset()
-            self.get_current_gain(my_f.read_ele_num)
+            self.get_current_gain(self.read_ele_num)
 
     def drifting_loop(self, my_d, my_f):
         for electron in self.electrons:
@@ -390,6 +396,7 @@ class CalCurrent:
 class CalCurrentGain(CalCurrent):
     '''Calculation of gain carriers and gain current, simplified version'''
     def __init__(self, my_d, my_f, my_current):
+        self.read_ele_num = my_current.read_ele_num
         self.electrons = [] # gain carriers
         self.holes = []
         cal_coefficient = Material(my_d.material).cal_coefficient
@@ -404,7 +411,7 @@ class CalCurrentGain(CalCurrent):
                                               hole.path[-1][3],\
                                               -1*hole.charge*gain_rate,\
                                               my_d.material,\
-                                              my_f.read_ele_num))
+                                              self.read_ele_num))
                 
                 self.holes.append(Carrier(hole.path[-1][0],\
                                           hole.path[-1][1],\
@@ -412,7 +419,7 @@ class CalCurrentGain(CalCurrent):
                                           hole.path[-1][3],\
                                           hole.charge*gain_rate,\
                                           my_d.material,\
-                                          my_f.read_ele_num))
+                                          self.read_ele_num))
 
         else : # n layer at d=0, electrons multiplicated into holes
             for electron in my_current.electrons:
@@ -422,7 +429,7 @@ class CalCurrentGain(CalCurrent):
                                           electron.path[-1][3],\
                                           -1*electron.charge*gain_rate,\
                                           my_d.material,\
-                                          my_f.read_ele_num))
+                                          self.read_ele_num))
 
                 self.electrons.append(Carrier(electron.path[-1][0],\
                                                 electron.path[-1][1],\
@@ -430,7 +437,7 @@ class CalCurrentGain(CalCurrent):
                                                 electron.path[-1][3],\
                                                 electron.charge*gain_rate,\
                                                 my_d.material,\
-                                                my_f.read_ele_num))
+                                                self.read_ele_num))
 
         self.drifting_loop(my_d, my_f)
 
@@ -439,11 +446,11 @@ class CalCurrentGain(CalCurrent):
         self.t_start = t_start
         self.n_bin = int((self.t_end-self.t_start)/self.t_bin)
 
-        self.current_define(my_f.read_ele_num)
-        for i in range(my_f.read_ele_num):
+        self.current_define(self.read_ele_num)
+        for i in range(self.read_ele_num):
             self.positive_cu[i].Reset()
             self.negative_cu[i].Reset()
-        self.get_current(my_d,my_f.read_ele_num)
+        self.get_current(my_d,self.read_ele_num)
 
     def gain_rate(self, my_d, my_f, cal_coefficient):
 
@@ -553,13 +560,11 @@ class CalCurrentGain(CalCurrent):
 class CalCurrentG4P(CalCurrent):
     def __init__(self, my_d, my_f, my_g4p, batch):
         G4P_carrier_list = CarrierListFromG4P(my_d.material, my_g4p, batch)
-        self.read_ele_num = my_f.read_ele_num
         super().__init__(my_d, my_f, G4P_carrier_list.ionized_pairs, G4P_carrier_list.track_position)
 
 class CalCurrentStrip(CalCurrent):
     def __init__(self, my_d, my_f, my_g4p, batch):
         G4P_carrier_list = StripCarrierListFromG4P(my_d.material, my_g4p, batch)
-        self.read_ele_num = my_f.read_ele_num
         super().__init__(my_d, my_f, G4P_carrier_list.ionized_pairs, G4P_carrier_list.track_position)
 
 
@@ -657,7 +662,6 @@ class CalCurrentPixel:
 class CalCurrentLaser(CalCurrent):
     def __init__(self, my_d, my_f, my_l):
         super().__init__(my_d, my_f, my_l.ionized_pairs, my_l.track_position)
-        self.read_ele_num = my_f.read_ele_num
         
         for i in range(self.read_ele_num):
             

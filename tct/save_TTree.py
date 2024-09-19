@@ -9,10 +9,10 @@ def save_signal_TTree(my_d,key,ele_current,my_f):
     elif "lgad3D" in my_d.det_model:
         path = os.path.join("output", "lgadtct", my_d.det_name, "data",)
     create_path(path) 
-    for j in range(my_f.read_ele_num):
+    for j in range(ele_current.read_ele_num):
         volt = array('d', [999.])
         time = array('d', [999.])
-        if my_f.read_ele_num==1:
+        if ele_current.read_ele_num==1:
             fout = ROOT.TFile(os.path.join(path, "sim-TCT") + str(key) + ".root", "RECREATE")
         else:
             fout = ROOT.TFile(os.path.join(path, "sim-TCT") + str(key)+"No_"+str(j)+".root", "RECREATE")
