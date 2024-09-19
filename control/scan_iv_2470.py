@@ -1,5 +1,5 @@
 #import Kei2400CControl as kei2400
-import keithley2470ccontrol_hyj as kei2470
+import raser.control.kei_2470c_bias_control as kei2470
 # import visa
 import pyvisa as visa
 import time
