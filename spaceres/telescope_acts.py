@@ -45,7 +45,7 @@ if "__main__" == __name__:
     outputDir = Path.cwd() / "output/telescope_simulation"
     if not outputDir.exists():
         outputDir.mkdir()
-    inputDir = Path.cwd() / "setting"
+    inputDir = Path.cwd() / "setting/acts"
     
     rnd = acts.examples.RandomNumbers(seed=42)
 

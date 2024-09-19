@@ -6,11 +6,11 @@ import ROOT
 import time
 import subprocess
 
-from . import telescope as tlcp
+from . import telescope_signal as tlcp
 #from . import test
 from particle.g4simulation import Particles
-from particle.geometry import R3dDetector
-from current.cal_current import CalCurrentPixel
+from field.build_device import Detector
+from current.cal_current_diffuse import CalCurrentPixel
 from util.output import create_path
 
 def main(kwargs):
@@ -19,16 +19,13 @@ def main(kwargs):
         print("taichu_v1:   ","first version of telescope simulation")
         print("taichu_v2:   ","second version of telescope simulation")
     elif label.startswith("taichu_v1"):
-        #paths = ['det_name=Taichu3', 'parfile=readjson/detector.json', 'geant4_model=pixel_detector', 'geant4_parfile=readjson/absorber.json', 'pixel_detector']
-        dset = Setting() #read label.json instead of inputting path
-        my_d = R3dDetector(dset) #remain the same
+        my_d = Detector("TAICHU3") #remain the same
         my_f = 0
-        my_g4p = Particles(my_d, dset) #remove my_f
+        my_g4p = Particles(my_d, my_d.absorber) #remove my_f
         my_charge = CalCurrentPixel(my_d,my_f,my_g4p)
-        if label.endswith("draw_charge"):
-            draw_charge(my_charge)
+        draw_charge(my_charge)
         my_telescope = tlcp.telescope(my_d,my_charge) 
-        #tlcp.main(my_d)  
+        tlcp.main(my_d)  
     elif label.startswith("taichu_v2"):
         #virtual object
         class MyObject:
@@ -71,13 +68,13 @@ def main(kwargs):
         canvas.Draw()
         Name = "Res vs size"
         now = time.strftime("%Y_%m%d_%H%M")
-        path = os.path.join("output/fig", str(now),'' )
+        path = os.path.join("output/spaceres/taichu_v2", str(now),'' )
         """ If the path does not exit, create the path"""
         if not os.access(path, os.F_OK):
             os.makedirs(path) 
         canvas.SaveAs(path+Name+".png")
     elif label.startswith("acts_v1"):
-        python_script = "raser/spaceres/telescope_simulation.py"  
+        python_script = "raser/spaceres/telescope_acts.py"  
 
         result = subprocess.run(["python3", python_script], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         

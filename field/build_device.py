@@ -66,7 +66,7 @@ class Detector:
             # TODO: change this into model
             self.read_ele_num = self.device_dict['read_ele_num']
             
-        if "pixeldetector" in self.det_model:
+        if "pixel" in self.det_model:
             self.p_x = self.device_dict['px']
             self.p_y = self.device_dict['py']
             self.p_z = self.device_dict['pz']
