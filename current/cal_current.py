@@ -16,7 +16,7 @@ import numpy as np
 import ROOT
 
 from .model import Material
-from .model import Vector
+from util.math import Vector
 from util.output import create_path
 
 t_bin = 50e-12
