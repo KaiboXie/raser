@@ -67,10 +67,7 @@ def main(kwargs):
     else:
         amplifier = my_d.amplifier
 
-    if "strip" in det_name:
-        my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
-    else: 
-        my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z)
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
 
     if kwargs['scan'] != None:
         geant4_json = "./setting/absorber/" + absorber + ".json"

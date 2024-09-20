@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 
-import devsim
-from . import model_create
-
-from util.output import output
 import json
 import os
 
+import devsim
 import matplotlib.pyplot
+import numpy as np
+
+from . import model_create
+from util.output import output
+from util.math import *
 
 class Detector:
     """
@@ -65,6 +67,8 @@ class Detector:
         if "strip" in self.det_name or "Strip" in self.det_name: 
             # TODO: change this into model
             self.read_ele_num = self.device_dict['read_ele_num']
+        else:
+            self.read_ele_num = 1
             
         if "pixel" in self.det_model:
             self.p_x = self.device_dict['px']
@@ -148,13 +152,13 @@ class Detector:
         elif self.control_dict["ac-weightfield"] == False:
             pass
         if 'Acceptors_ir' in self.device_dict['doping']:
-          model_create.CreateNodeModel(self.device, self.region, "Acceptors",    self.device_dict['doping']['Acceptors']+"+"+self.device_dict['doping']['Acceptors_ir'])
+            model_create.CreateNodeModel(self.device, self.region, "Acceptors",    self.device_dict['doping']['Acceptors']+"+"+self.device_dict['doping']['Acceptors_ir'])
         else:
-          model_create.CreateNodeModel(self.device, self.region, "Acceptors", self.device_dict['doping']['Acceptors'])
+            model_create.CreateNodeModel(self.device, self.region, "Acceptors", self.device_dict['doping']['Acceptors'])
         if 'Donors_ir' in self.device_dict['doping']:
-          model_create.CreateNodeModel(self.device, self.region, "Donors",    self.device_dict['doping']['Donors']+"+"+self.device_dict['doping']['Donors_ir'])
+            model_create.CreateNodeModel(self.device, self.region, "Donors",    self.device_dict['doping']['Donors']+"+"+self.device_dict['doping']['Donors_ir'])
         else:
-          model_create.CreateNodeModel(self.device, self.region, "Donors",    self.device_dict['doping']['Donors'])
+            model_create.CreateNodeModel(self.device, self.region, "Donors",    self.device_dict['doping']['Donors'])
         model_create.CreateNodeModel(self.device, self.region, "NetDoping", "Donors-Acceptors")
         devsim.edge_from_node_model(device=self.device, region=self.region, node_model="Acceptors")
         devsim.edge_from_node_model(device=self.device, region=self.region, node_model="NetDoping")

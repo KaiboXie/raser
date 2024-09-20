@@ -74,9 +74,7 @@ class Carrier:
         e_field = my_f.get_e_field(self.x,self.y,self.z)
         intensity = Vector(e_field[0],e_field[1],e_field[2]).get_length()
         mobility = Material(my_d.material)
-        #mu = mobility.cal_mobility(my_d.temperature, my_d.doping_function(self.z+delta_z), self.charge, average_intensity)
-        # TODO: add mobility function of doping (my_f.get_doping(self.z+delta_z)?)
-        mu = mobility.cal_mobility(my_d.temperature, 1e12, self.charge, intensity)
+        mu = mobility.cal_mobility(my_d.temperature, my_f.get_doping(self.x, self.y, self.z), self.charge, intensity)
         velocity_vector = [e_field[0]*mu, e_field[1]*mu, e_field[2]*mu] # cm/s
 
         if(intensity > min_intensity):

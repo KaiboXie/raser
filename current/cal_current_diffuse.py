@@ -70,9 +70,7 @@ class Carrier:
 
         kboltz=8.617385e-5 #eV/K
         mobility = Material(my_d.material)
-        #mu = mobility.cal_mobility(my_d.temperature, my_d.doping_function(self.z), self.charge, intensity)
-        # TODO: add mobility function of doping
-        mu = mobility.cal_mobility(my_d.temperature, 1e12, self.charge, intensity)
+        mu = mobility.cal_mobility(my_d.temperature, my_f.get_doping(self.x, self.y, self.z), self.charge, intensity)
         diffusion = (2.0*kboltz*mu*my_d.temperature*delta_t)**0.5
         #diffusion = 0.0
         dif_x=random.gauss(0.0,diffusion)*1e4
