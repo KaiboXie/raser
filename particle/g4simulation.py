@@ -29,7 +29,7 @@ class Particles:
     #use in pixel_detector
     _randx = None
     _randy = None
-    def __init__(self, my_d, absorber, g4_seed):
+    def __init__(self, my_d, absorber, g4_seed = random.randint(0, 1e7)):
         """
         Description:
             Geant4 main process

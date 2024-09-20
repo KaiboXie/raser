@@ -1,5 +1,5 @@
 import pymotor,stage,raser.motor.vitual_device as vitual_device
-import raser.motor.mdo_3034_control as MD
+import raser.control.mdo_3034_scope_control as MD
 import time
 from datetime import datetime
 import numpy as np

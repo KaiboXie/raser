@@ -293,7 +293,11 @@ def milestone_save_1D(device, region, v, path):
     metadata['voltage'] = v
     metadata['dimension'] = 1
 
-    for name in ['Potential', 'TrappingRate_p', 'TrappingRate_n']: # scalar field on mesh point (instead of on edge)
+    names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
+    if v == 0:
+        names.append('NetDoping')
+
+    for name in names: # scalar field on mesh point (instead of on edge)
         with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:
             data = {}
             data['values'] = eval(name) # refer to the object with given name
@@ -327,7 +331,11 @@ def milestone_save_2D(device, region, v, path):
     metadata['voltage'] = v
     metadata['dimension'] = 2
 
-    for name in ['Potential', 'TrappingRate_p', 'TrappingRate_n']: # scalar field on mesh point (instead of on edge)
+    names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
+    if v == 0:
+        names.append('NetDoping')
+
+    for name in names: # scalar field on mesh point (instead of on edge)
         with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:
             data = {}
             data['values'] = eval(name) # refer to the object with given name
@@ -336,7 +344,6 @@ def milestone_save_2D(device, region, v, path):
             data['points'] = transposed_list
             data['metadata'] = metadata
             pickle.dump(data, file)
-
 
 
 def milestone_save_wf_2D(device, region, v, path,contact):
@@ -353,7 +360,6 @@ def milestone_save_wf_2D(device, region, v, path,contact):
 
     draw2D(x,y,Potential,"Potential",v, path)
     draw2D(x_mid,y_mid,ElectricField,"ElectricField",v, path)
-
 
     dd = os.path.join(path, str(v),str(contact)+'V.dd')
     devsim.write_devices(file=dd, type="tecplot")
@@ -382,7 +388,11 @@ def milestone_save_3D(device, region, v, path):
     metadata['voltage'] = v
     metadata['dimension'] = 3
 
-    for name in ['Potential']: # scalar field on mesh point (instead of on edge)
+    names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
+    if v == 0:
+        names.append('NetDoping')
+
+    for name in names: # scalar field on mesh point (instead of on edge)
         with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:
             data = {}
             data['values'] = eval(name) # refer to the object with given name

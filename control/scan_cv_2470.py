@@ -1,5 +1,5 @@
-import keye4980acontrol  
-import keithley2470ccontrol_hyj as kei2470 
+import raser.control.key_e4980a_bias_control as keye4980a
+import raser.control.kei_2470c_bias_control as kei2470 
 import csv
 import numpy as np 
 import platform  
@@ -23,7 +23,7 @@ if platform.python_version().startswith('2'):
    sys.exit()
 
 
-lcr=keye4980acontrol.keysighte4980a("USB0::0x2A8D::0x2F01::MY46516486::INSTR") 
+lcr=keye4980a.keysight_e4980a("USB0::0x2A8D::0x2F01::MY46516486::INSTR") 
 
 lcr.set_frequency("1kHz")  
 lcr.set_voltage_level(0.1) 
