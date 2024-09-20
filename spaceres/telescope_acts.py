@@ -4,6 +4,9 @@ from pathlib import Path
 
 import acts
 import acts.examples
+
+from util.io_decorator import io_decorator as iod
+
 from acts.examples.simulation import (
     addParticleGun,
     addDigitization,
@@ -30,9 +33,11 @@ from acts.examples.reconstruction import (
     TrackSelectorConfig,
 )
 
-u = acts.UnitConstants
+# get run result
+@iod
+def main():
+    u = acts.UnitConstants
 
-if "__main__" == __name__:
     detector, trackingGeometry, decorators = acts.examples.TelescopeDetector.create(
         positions=[20, 60, 100 ,140, 180, 220],
         stereos = [0, 0, 0, 0, 0, 0],
@@ -42,7 +47,7 @@ if "__main__" == __name__:
 
     field = acts.ConstantBField(acts.Vector3(0, 0, 1 * u.T))
 
-    outputDir = Path.cwd() / "output/telescope_simulation"
+    outputDir = Path.cwd() / "output/spaceres/telescope_acts"
     if not outputDir.exists():
         outputDir.mkdir()
     inputDir = Path.cwd() / "setting/acts"
@@ -149,3 +154,6 @@ if "__main__" == __name__:
     )
     '''
     s.run()
+
+if "__main__" == __name__:
+    main()

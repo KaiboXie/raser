@@ -584,45 +584,50 @@ class B2ActionInitialization(G4VUserActionInitialization):
         self.SetUserAction(B2EventAction())
         self.SetUserAction(B2SteppingAction())
 
-# Detect interactive mode (if no arguments) and define UI session
-ui = None
-if len(sys.argv) == 1:
-    ui = G4UIExecutive(len(sys.argv), sys.argv)
 
-# Optionally: choose a different Random engine...
-# G4Random.setTheEngine(MTwistEngine())
+def main(batchMac = None):
+    # Detect interactive mode (if no arguments) and define UI session
+    ui = None
+    if batchMac == None:
+        ui = G4UIExecutive(1, [__file__])
 
-# Construct the default run manager
-runManager = G4RunManagerFactory.CreateRunManager(G4RunManagerType.Serial)
+    # Optionally: choose a different Random engine...
+    # G4Random.setTheEngine(MTwistEngine())
 
-# Set mandatory initialization classes
-runManager.SetUserInitialization(B2aDetectorConstruction())
+    # Construct the default run manager
+    runManager = G4RunManagerFactory.CreateRunManager(G4RunManagerType.Serial)
 
-physicsList = FTFP_BERT()
-physicsList.RegisterPhysics(G4StepLimiterPhysics())
-runManager.SetUserInitialization(physicsList)
+    # Set mandatory initialization classes
+    runManager.SetUserInitialization(B2aDetectorConstruction())
 
-# Set user action classes
-runManager.SetUserInitialization(B2ActionInitialization())
+    physicsList = FTFP_BERT()
+    physicsList.RegisterPhysics(G4StepLimiterPhysics())
+    runManager.SetUserInitialization(physicsList)
 
-# Initialize visualization
-visManager = G4VisExecutive()
-# G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
-# visManager = G4VisExecutive("Quiet");
-visManager.Initialize()
+    # Set user action classes
+    runManager.SetUserInitialization(B2ActionInitialization())
 
-# Get the pointer to the User Interface manager
-UImanager = G4UImanager.GetUIpointer()
+    # Initialize visualization
+    visManager = G4VisExecutive()
+    # G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
+    # visManager = G4VisExecutive("Quiet");
+    visManager.Initialize()
 
-# Process macro or start UI session
-if ui == None:
-    # batch mode
-    command = "/control/execute ./cfg/ "
-    fileName = sys.argv[1]
-    UImanager.ApplyCommand(command+fileName)
-else:
-    # interactive mode
-    UImanager.ApplyCommand("/control/execute ./param_file/g4macro/init_vistelescope.mac")
-    if ui.IsGUI():
-        UImanager.ApplyCommand("/control/execute ./param_file/g4macro/gui.mac")
-    ui.SessionStart()
+    # Get the pointer to the User Interface manager
+    UImanager = G4UImanager.GetUIpointer()
+
+    # Process macro or start UI session
+    if ui == None:
+        # batch mode
+        command = "/control/execute ./param_file/g4macro/"
+        fileName = batchMac
+        UImanager.ApplyCommand(command+fileName)
+    else:
+        # interactive mode
+        UImanager.ApplyCommand("/control/execute ./param_file/g4macro/init_vistelescope.mac")
+        if ui.IsGUI():
+            UImanager.ApplyCommand("/control/execute ./param_file/g4macro/gui.mac")
+        ui.SessionStart()
+
+if __name__ == "__main__":
+    main(sys.argv[1])

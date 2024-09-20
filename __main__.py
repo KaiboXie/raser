@@ -43,6 +43,7 @@ parser_fpga.add_argument('label', help='LABEL to identify FPGA design')
 
 parser_gen_signal = subparsers.add_parser('gen_signal', help='generate signal')
 parser_gen_signal.add_argument('det_name', help='name of the detector')
+parser_gen_signal.add_argument('-l','--label', help='LABEL to identify signal generation method', default='signal')
 parser_gen_signal.add_argument('-vol', '--voltage', type=str, help='bias voltage')
 parser_gen_signal.add_argument('-abs', '--absorber', type=str, help='model of particle energy absorber')
 parser_gen_signal.add_argument('-amp', '--amplifier', type=str, help='amplifier')
