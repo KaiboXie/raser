@@ -76,11 +76,11 @@ if number>=1:
             lines[140] = 'tran 0.1p ' + str((input_c[len(input_c) - 2])) + '\n'
             lines[141] = 'wrdata output/'+str(L)+'t1.txt v(out)\n'
             f.close()
-        with open('/scratchfs/atlas/xingchenli/raser/output/T1_tmp.cir', 'w') as f:
+        with open('/scratchfs/atlas/xingchenli/raser/output/elec/T1_tmp.cir', 'w') as f:
             f.writelines(lines)
             f.close()
 
-        os.system("ngspice -b -r t1.txt output/T1_tmp.cir")
+        os.system("ngspice -b -r t1.txt output/elec/T1_tmp.cir")
 
         t1=np.loadtxt('/scratchfs/atlas/xingchenli/raser/output/'+str(L)+'t1.txt',dtype=float)
         volt=[]
@@ -148,11 +148,11 @@ else:
             lines[140] = 'tran 0.1p ' + str((input_c[len(input_c) - 2])) + '\n'
             lines[141] = 'wrdata output/'+str(L)+'t1.txt v(out)\n'
             f.close()
-        with open('/scratchfs/atlas/xingchenli/raser/output/T1_tmp.cir', 'w') as f:
+        with open('/scratchfs/atlas/xingchenli/raser/output/elec/T1_tmp.cir', 'w') as f:
             f.writelines(lines)
             f.close()
 
-        os.system("ngspice -b -r t1.txt output/T1_tmp.cir")
+        os.system("ngspice -b -r t1.txt output/elec/T1_tmp.cir")
 
         t1=np.loadtxt('/scratchfs/atlas/xingchenli/raser/output/'+str(L)+'t1.txt',dtype=float)
         volt=[]

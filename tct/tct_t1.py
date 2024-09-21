@@ -70,7 +70,7 @@ with open('param_file/circuit/T1.cir', 'r') as f:
     lines[140] = 'tran 0.1p ' + str((T_ele[len(T_ele) - 1])) + 'n\n'
     lines[142] = 'wrdata output/t1.raw v(out)\n'
     f.close()
-with open('output/T1_tmp.cir', 'w') as f:
+with open('output/elec/T1_tmp.cir', 'w') as f:
     f.writelines(lines)
     f.close()
 
