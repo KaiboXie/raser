@@ -11,13 +11,13 @@ from mpl_toolkits.mplot3d import Axes3D
 
 def main(simname):
     if '3d' in simname:
-        with open('./output/{}/x_500.0.pkl'.format(simname), 'rb') as file:
+        with open('./output/field/{}/x_500.0.pkl'.format(simname), 'rb') as file:
             x = pickle.load(file)
-        with open('./output/{}/y_500.0.pkl'.format(simname), 'rb') as file:
+        with open('./output/field/{}/y_500.0.pkl'.format(simname), 'rb') as file:
             y = pickle.load(file)
-        with open('./output/{}/z_500.0.pkl'.format(simname), 'rb') as file:
+        with open('./output/field/{}/z_500.0.pkl'.format(simname), 'rb') as file:
             z = pickle.load(file)
-        with open('./output/{}/potential_500.0.pkl'.format(simname), 'rb') as file:
+        with open('./output/field/{}/potential_500.0.pkl'.format(simname), 'rb') as file:
             potential = pickle.load(file)
 
         # 定义插值网格
@@ -45,7 +45,7 @@ def main(simname):
         ax_potential_xz.set_xlabel('x')
         ax_potential_xz.set_ylabel('z')
         ax_potential_xz.set_title('Potential XZ Plane')
-        plt.savefig('./output/{}/Potential_XZ_Plane.png'.format(simname))
+        plt.savefig('./output/field/{}/Potential_XZ_Plane.png'.format(simname))
 
         # 绘制电势的yz平面截面图
         fig_potential_yz = plt.figure()
@@ -54,7 +54,7 @@ def main(simname):
         ax_potential_yz.set_xlabel('y')
         ax_potential_yz.set_ylabel('z')
         ax_potential_yz.set_title('Potential YZ Plane')
-        plt.savefig('./output/{}/Potential_YZ_Plane.png'.format(simname))
+        plt.savefig('./output/field/{}/Potential_YZ_Plane.png'.format(simname))
         # 绘制电势的xy平面截面图
         fig_xy_planes = plt.figure(figsize=(10, 10))
         for i in range(0, nPoints, 5):
@@ -72,7 +72,7 @@ def main(simname):
         ax_total_field_xy.set_xlabel('x')
         ax_total_field_xy.set_ylabel('y')
         ax_total_field_xy.set_title('Total Field XY Plane')
-        plt.savefig('./output/{}/Total_Field_XY_Plane.png'.format(simname))
+        plt.savefig('./output/field/{}/Total_Field_XY_Plane.png'.format(simname))
 
         #Plot total field YZ plane
         fig_total_field_yz = plt.figure()
@@ -81,7 +81,7 @@ def main(simname):
         ax_total_field_yz.set_xlabel('y')
         ax_total_field_yz.set_ylabel('z')
         ax_total_field_yz.set_title('Total Field YZ Plane')
-        plt.savefig('./output/{}/Total_Field_YZ_Plane.png'.format(simname))
+        plt.savefig('./output/field/{}/Total_Field_YZ_Plane.png'.format(simname))
 
         #Plot 20 dianchang XY planes
         fig_xy = plt.figure(figsize=(15, 15))
@@ -94,17 +94,17 @@ def main(simname):
             ax_xy.set_ylabel('y')
             ax_xy.set_title('XY Plane {}'.format(i+1))
         plt.tight_layout()
-        plt.savefig('./output/{}/Total_Field_XY_Planes.png'.format(simname))
+        plt.savefig('./output/field/{}/Total_Field_XY_Planes.png'.format(simname))
 
 
 
     else:
         # 从pickle文件中加载x、y和电势数据
-        with open('./output/{}/x_500.0.pkl'.format(simname), 'rb') as file:
+        with open('./output/field/{}/x_500.0.pkl'.format(simname), 'rb') as file:
             x = pickle.load(file)
-        with open('./output/{}/y_500.0.pkl'.format(simname), 'rb') as file:
+        with open('./output/field/{}/y_500.0.pkl'.format(simname), 'rb') as file:
             y = pickle.load(file)
-        with open('./output/{}/potential_500.0.pkl'.format(simname), 'rb') as file:
+        with open('./output/field/{}/potential_500.0.pkl'.format(simname), 'rb') as file:
             potential = pickle.load(file)
 
         # 定义插值网格
@@ -150,9 +150,9 @@ def main(simname):
                 hTotalField.SetBinContent(i+1, j+1, total_field[i, j])
 
         # 保存总场强为ROOT对象
-        output_file = ROOT.TFile('./output/{}/Total_Field_2D.root'.format(simname), 'recreate')
+        output_file = ROOT.TFile('./output/field/{}/Total_Field_2D.root'.format(simname), 'recreate')
         hTotalField.Write()
         output_file.Close()
             
 if __name__ == "__main__":
-    main(simname)               
+    main("2dfield_4HSiC")               

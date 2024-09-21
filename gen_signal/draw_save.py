@@ -548,8 +548,8 @@ def energy_deposition(my_g4v):
     print("MPV:%s"%g1.GetParameter(1))
     h1.Draw()
     now = time.strftime("%Y_%m%d_%H%M")
-    c1.SaveAs("output/fig/dep_SiC"+"_"+now+"_energy.pdf")
-    c1.SaveAs("output/fig/dep_SiC"+"_"+now+"_energy.root")
+    c1.SaveAs("output/particle/dep_SiC"+"_"+now+"_energy.pdf")
+    c1.SaveAs("output/particle/dep_SiC"+"_"+now+"_energy.root")
 
 def create_path(path):
     """ If the path does not exit, create the path"""

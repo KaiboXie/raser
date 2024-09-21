@@ -205,7 +205,7 @@ class Material:
         plt.title("Mobility Model")
         plt.grid(True,ls = '--',which="both")
         fig.show()
-        fig.savefig("./output/model/"+self.mat_name+"Mobility"+self.mobility_model+".png")
+        fig.savefig("./output/current/model/"+self.mat_name+"Mobility"+self.mobility_model+".png")
 
     def cal_coefficient(self, electric_field, charges, temperature):
         """ Define Avalanche Model """
