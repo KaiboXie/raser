@@ -22,6 +22,9 @@ subparsers = parser.add_subparsers(help='sub-command help', dest="subparser_name
 parser_asic = subparsers.add_parser('asic', help='ASIC design')
 parser_asic.add_argument('label', help='LABEL to identify ASIC design')
 
+parser_cce = subparsers.add_parser('cce', help='Charge Collection Efficiency')
+parser_cce.add_argument('label', help='LABEL to identify CCE experiment')
+
 parser_draw = subparsers.add_parser('current', help='calculate drift current')
 parser_draw.add_argument('label', help='LABEL to identify root files')
 
@@ -68,7 +71,7 @@ if len(sys.argv) == 1:
 
 kwargs = vars(args)
 
-submodules = ['asic', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'spaceres', 'tct', 'timeres']
+submodules = ['asic', 'cce', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'spaceres', 'tct', 'timeres']
 
 submodule = kwargs['subparser_name']
 if submodule not in submodules:

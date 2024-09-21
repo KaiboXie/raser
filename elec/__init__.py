@@ -11,8 +11,5 @@ def main(kwargs):
     elif label == 'drs4_get_fig':
         from . import drs4_get_fig
         drs4_get_fig.main()
-    elif label == 'HPK-Si-LGAD-CCE':
-        from . import cce_alpha
-        cce_alpha.main()        
     else:
         raise NameError(label)
