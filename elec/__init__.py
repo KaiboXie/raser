@@ -4,7 +4,7 @@ def main(kwargs):
 
     if label == 'ngspice_t1':
         import subprocess
-        subprocess.run(['ngspice -b output/T1_tmp.cir'], shell=True)
+        subprocess.run(['ngspice -b output/elec/T1_tmp.cir'], shell=True)
     elif label == 'drs4_get_analog':
         import subprocess
         subprocess.run(['ngspice -b param_file/circuit/drs4_analog.cir'], shell=True)
