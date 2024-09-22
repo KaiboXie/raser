@@ -16,6 +16,7 @@ from scipy.interpolate import interp1d as p1d
 from scipy.interpolate import interp2d as p2d
 from scipy.interpolate import griddata
 from scipy.interpolate import LinearNDInterpolator as LNDI
+import ROOT
 
 x_bin = 1000
 y_bin = 1000
@@ -95,3 +96,15 @@ def get_common_interpolate_3d(data):
         point = [x, y, z]
         return lndi(point)
     return f
+
+def signal_convolution(signal_original: ROOT.TH1F, pulse_responce_function, signal_convolved: ROOT.TH1F):
+    so = signal_original
+    pr = pulse_responce_function
+    sc = signal_convolved
+    t_bin = so.GetBinWidth(0) # for uniform bin
+    n_bin = so.GetNbinsX()
+    for i in range(n_bin):
+        so_i = so.GetBinContent(i)
+        for j in range(-i,n_bin-i): 
+            pr_j = pr(j*t_bin)
+            sc.Fill((i+j)*t_bin - 1e-14, so_i*pr_j*t_bin) # 1e-14 resolves float error

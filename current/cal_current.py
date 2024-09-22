@@ -16,7 +16,7 @@ import numpy as np
 import ROOT
 
 from .model import Material
-from util.math import Vector
+from util.math import Vector, signal_convolution
 from util.output import create_path
 
 t_bin = 50e-12
@@ -513,11 +513,11 @@ class CalCurrentLaser(CalCurrent):
             convolved_gain_negative_cu.Reset()
             convolved_sum_cu.Reset()
 
-            self.signalConvolution(self.positive_cu[i],my_l.timePulse,convolved_positive_cu)
-            self.signalConvolution(self.negative_cu[i],my_l.timePulse,convolved_negative_cu)
-            self.signalConvolution(self.gain_positive_cu[i],my_l.timePulse,convolved_gain_positive_cu)
-            self.signalConvolution(self.gain_negative_cu[i],my_l.timePulse,convolved_gain_negative_cu)
-            self.signalConvolution(self.sum_cu[i],my_l.timePulse,convolved_sum_cu)
+            signal_convolution(self.positive_cu[i],my_l.timePulse,convolved_positive_cu)
+            signal_convolution(self.negative_cu[i],my_l.timePulse,convolved_negative_cu)
+            signal_convolution(self.gain_positive_cu[i],my_l.timePulse,convolved_gain_positive_cu)
+            signal_convolution(self.gain_negative_cu[i],my_l.timePulse,convolved_gain_negative_cu)
+            signal_convolution(self.sum_cu[i],my_l.timePulse,convolved_sum_cu)
 
             self.positive_cu[i] = convolved_positive_cu
             self.negative_cu[i] = convolved_negative_cu
@@ -525,13 +525,6 @@ class CalCurrentLaser(CalCurrent):
             self.gain_negative_cu[i] = convolved_gain_negative_cu
             self.sum_cu[i] = convolved_sum_cu
 
-    def signalConvolution(self,cu,timePulse,convolved_cu):
-        for i in range(self.n_bin):
-            pulse_responce = cu.GetBinContent(i)
-            for j in range(-i,self.n_bin-i): 
-                time_pulse = timePulse(j*self.t_bin)
-                convolved_cu.Fill((i+j)*self.t_bin - 1e-14, pulse_responce*time_pulse*self.t_bin)
-                #resolve float error
 
 class CarrierListFromG4P:
     def __init__(self, material, my_g4p, batch):
