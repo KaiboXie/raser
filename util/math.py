@@ -107,4 +107,4 @@ def signal_convolution(signal_original: ROOT.TH1F, pulse_responce_function, sign
         so_i = so.GetBinContent(i)
         for j in range(-i,n_bin-i): 
             pr_j = pr(j*t_bin)
-            sc.Fill((i+j)*t_bin - 1e-14, so_i*pr_j*t_bin) # resolve float error
+            sc.Fill((i+j)*t_bin - 1e-14, so_i*pr_j*t_bin) # 1e-14 resolves float error
