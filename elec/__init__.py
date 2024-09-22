@@ -12,4 +12,5 @@ def main(kwargs):
         from . import drs4_get_fig
         drs4_get_fig.main()
     else:
-        raise NameError(label)
+        from . import readout
+        readout.main(label)

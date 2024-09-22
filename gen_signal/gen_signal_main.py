@@ -17,7 +17,7 @@ from field import build_device as bdv
 from particle import g4simulation as g4s
 from field import devsim_field as devfield
 from current import cal_current as ccrt
-from elec import ele_readout as rdout
+from elec import readout as rdo
 from elec import ngspice_set_input as ngsip
 from elec import ngspice as ng
 
@@ -101,7 +101,7 @@ def main(kwargs):
         subprocess.run(['ngspice -b -r t0.raw output/T0_tmp.cir'], shell=True)
         ng.plot_waveform()
     else:
-        ele_current = rdout.Amplifier(my_current.sum_cu, amplifier)
+        ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
         draw_save.draw_plots(my_d,ele_current,my_f,my_g4p,my_current)
     
     del my_f
@@ -145,7 +145,7 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
         if len(my_g4p.p_steps[event-start_n]) > 5:
             effective_number += 1
             my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, event-start_n)
-            ele_current = rdout.Amplifier(my_current.sum_cu, amplifier)
+            ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
             draw_save.save_signal_time_resolution(my_d,event,ele_current,my_g4p,start_n,my_f)
             del ele_current
     detection_efficiency =  effective_number/(end_n-start_n) 

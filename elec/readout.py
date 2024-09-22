@@ -15,6 +15,7 @@ import json
 import ROOT
 
 from util.math import signal_convolution
+from util.output import output
 
 time_step = 50e-12
 
@@ -53,13 +54,13 @@ class Amplifier:
         2024/09/14
     """
     def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, time_step = time_step):
-        self.ele = []
+        self.amplified_current = []
 
         ele_json = "./setting/electronics/" + amplifier_name + ".json"
         with open(ele_json) as f:
             self.amplifier_parameters = json.load(f)
 
-        self.ele_name = self.amplifier_parameters['ele_name']
+        self.amplified_current_name = self.amplifier_parameters['ele_name']
         self.read_ele_num = len(currents)
 
         self.amplifier_define()
@@ -166,14 +167,36 @@ class Amplifier:
             n_bin = cu.GetNbinsX()
             t_bin = cu.GetBinWidth(0)
             time_duration = n_bin * t_bin
-            self.ele.append(ROOT.TH1F("electronics %s"%(self.ele_name)+str(i+1), "electronics %s"%(self.ele_name),
+            self.amplified_current.append(ROOT.TH1F("electronics %s"%(self.amplified_current_name)+str(i+1), "electronics %s"%(self.amplified_current_name),
                                 int(time_duration/time_step), 0, time_duration))
-            self.ele[i].Reset()
-            signal_convolution(cu, self.pulse_responce, self.ele[i])
+            self.amplified_current[i].Reset()
+            signal_convolution(cu, self.pulse_responce, self.amplified_current[i])
     
     def set_scope_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
             cu = currents[i]
             input_Q_tot = cu.Integral()
-            output_Q_max = self.ele[i].GetMaximum()
-            self.ele[i].Scale(self.scale(output_Q_max, input_Q_tot))
+            output_Q_max = self.amplified_current[i].GetMaximum()
+            self.amplified_current[i].Scale(self.scale(output_Q_max, input_Q_tot))
+
+def main(label):
+    my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 200, 0, 10e-9)
+    # input signal: square pulse
+    for i in range(21, 41):
+        my_th1f.SetBinContent(i, 1e-5)
+    ele = Amplifier([my_th1f], label)
+
+    c=ROOT.TCanvas("c","canvas1",1000,1000)
+    my_th1f.Draw("HIST")
+
+    origin_max = my_th1f.GetMaximum()
+    amp_max = ele.amplified_current[0].GetMaximum()
+    ratio = origin_max/amp_max
+    ele.amplified_current[0].Scale(ratio)
+    ele.amplified_current[0].Draw("SAME HIST")
+    path = output(__file__, label)
+    c.SaveAs(path+'/'+label+'_test.pdf')
+
+if __name__ == '__main__':
+    import sys
+    main(sys.argv[1])
