@@ -181,11 +181,12 @@ class Amplifier:
 
 def main(label):
     '''main function for readout.py to test the output of the given amplifier'''
-    
+
     my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 200, 0, 10e-9)
     # input signal: square pulse
     for i in range(21, 41):
         my_th1f.SetBinContent(i, 1e-5)
+        
     ele = Amplifier([my_th1f], label)
 
     c=ROOT.TCanvas("c","canvas1",1000,1000)
