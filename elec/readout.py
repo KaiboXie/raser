@@ -186,7 +186,7 @@ def main(label):
     # input signal: square pulse
     for i in range(21, 41):
         my_th1f.SetBinContent(i, 1e-5)
-        
+
     ele = Amplifier([my_th1f], label)
 
     c=ROOT.TCanvas("c","canvas1",1000,1000)
@@ -197,6 +197,7 @@ def main(label):
     ratio = origin_max/amp_max
     ele.amplified_current[0].Scale(ratio)
     ele.amplified_current[0].Draw("SAME HIST")
+    
     path = output(__file__, label)
     c.SaveAs(path+'/'+label+'_test.pdf')
 
