@@ -67,7 +67,7 @@ class Amplifier:
     def amplifier_define(self):
         """
         Description:
-            The parameters of CSA and BB amplifier.
+            The parameters, pulse responce function and scope scaling of the amplifier.
             Details introduction can be got in setting module.
         @Modify:
         ---------
