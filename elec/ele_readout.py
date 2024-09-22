@@ -126,9 +126,9 @@ class Amplifier:
                 if t < 0: # step function
                     return 0
                 
-                BBW       = self.amplifier_parameters['BBW']
-                BB_imp    = self.amplifier_parameters['BB_imp']
-                OscBW     = self.amplifier_parameters['OscBW']   
+                BB_bandwidth = self.amplifier_parameters['BB_bandwidth']
+                BB_imp       = self.amplifier_parameters['BB_imp']
+                OscBW        = self.amplifier_parameters['OscBW']   
                 
                 if mode == "scope":
                     tau_C50 = 1.0e-12 * 50. * CDet          #Oscil. RC
@@ -139,7 +139,7 @@ class Amplifier:
 
                 elif mode == "RC":
                     tau_BB_RC = 1.0e-12 * BB_imp * CDet     #BB RC
-                    tau_BB_BW = 0.35 / (1.0e9*BBW) / 2.2    #BB Tau
+                    tau_BB_BW = 0.35 / (1.0e9*BB_bandwidth) / 2.2    #BB Tau
                     tau_BBA = math.sqrt(pow(tau_BB_RC,2)+pow(tau_BB_BW,2))
 
                     return 1/tau_BBA * math.exp(-t/tau_BBA)
