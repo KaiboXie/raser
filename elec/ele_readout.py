@@ -104,7 +104,7 @@ class Amplifier:
                 Qfrac = 1.0/(1.0+self.CDet*1e-12/Ci)
 
                 if output_Q_max == 0.0:
-                    scale = 0.0
+                    return 0.0
             
                 if mode == 0:
                     scale = trans_imp * 1e15 * input_Q_tot * Qfrac / output_Q_max     
