@@ -43,8 +43,11 @@ class Amplifier:
     amplifier_define
         Define parameters and the responce function of amplifier
 
-    amplifier_simulation
-        Convolute the induced current with the responce function of amplifier, then scale
+    fill_amplifier_output
+        Get the induced current after amplifier
+
+    set_scope_output
+        Get the scope output after amplifier
 
     Last Modified
     ---------
