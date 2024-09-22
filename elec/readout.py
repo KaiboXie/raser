@@ -53,7 +53,7 @@ class Amplifier:
     ---------
         2024/09/14
     """
-    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, time_step = time_step):
+    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None, time_step = time_step):
         self.amplified_current = []
 
         ele_json = "./setting/electronics/" + amplifier_name + ".json"
@@ -63,11 +63,11 @@ class Amplifier:
         self.amplified_current_name = self.amplifier_parameters['ele_name']
         self.read_ele_num = len(currents)
 
-        self.amplifier_define()
+        self.amplifier_define(CDet)
         self.fill_amplifier_output(currents, time_step)
         self.set_scope_output(currents)
 
-    def amplifier_define(self):
+    def amplifier_define(self, CDet):
         """
         Description:
             The parameters, pulse responce function and scope scaling of the amplifier.
@@ -76,7 +76,8 @@ class Amplifier:
         ---------
             2021/09/09
         """
-        CDet = self.amplifier_parameters['CDet']
+        if CDet is None:
+            CDet = self.amplifier_parameters['CDet']
 
         if self.amplifier_parameters['ele_name'] == 'CSA':
             """ CSA parameter initialization"""
@@ -197,7 +198,7 @@ def main(label):
     ratio = origin_max/amp_max
     ele.amplified_current[0].Scale(ratio)
     ele.amplified_current[0].Draw("SAME HIST")
-    
+
     path = output(__file__, label)
     c.SaveAs(path+'/'+label+'_test.pdf')
 
