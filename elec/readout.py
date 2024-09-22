@@ -24,18 +24,21 @@ class Amplifier:
 
     Parameters
     ---------
-    my_current : CalCurrent
-        The object of CalCurrent, with induced current and time information
+    currents : list[ROOT.TH1F]
+        The ROOT.TH1F objects of induced current with time information
 
     amplifier_name : str
-        The name of amplifier
+        The name of the amplifier
+
+    CDet : None | float
+        The capacitance of the detector
 
     time_step : float
         The readout time step (bin width)
 
     Attributes
     ---------
-    ele : list
+    amplified_current : list[ROOT.TH1F]
         The list of induced current after amplifier
         
     Methods
