@@ -180,6 +180,8 @@ class Amplifier:
             self.amplified_current[i].Scale(self.scale(output_Q_max, input_Q_tot))
 
 def main(label):
+    '''main function for readout.py to test the output of the given amplifier'''
+    
     my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 200, 0, 10e-9)
     # input signal: square pulse
     for i in range(21, 41):
