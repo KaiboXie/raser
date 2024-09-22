@@ -85,7 +85,7 @@ def main(kwargs):
         subprocess.run(['ngspice -b -r t0.raw output/T0_tmp.cir'], shell=True)
         ng.plot_waveform()
     else:
-        ele_current = rdout.Amplifier(my_current, amplifier)
+        ele_current = rdout.Amplifier(my_current.sum_cu, amplifier)
     
     if kwargs['scan'] != None: #assume parameter alter
         key = my_l.fz_rel

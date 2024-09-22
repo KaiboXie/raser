@@ -14,7 +14,6 @@ import json
 
 import ROOT
 
-from current.cal_current import CalCurrent
 from util.math import signal_convolution
 
 time_step = 50e-12
@@ -53,7 +52,7 @@ class Amplifier:
     ---------
         2024/09/14
     """
-    def __init__(self, my_current: CalCurrent, amplifier_name: str, time_step = time_step):
+    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, time_step = time_step):
         self.ele = []
 
         ele_json = "./setting/electronics/" + amplifier_name + ".json"
@@ -61,11 +60,11 @@ class Amplifier:
             self.amplifier_parameters = json.load(f)
 
         self.ele_name = self.amplifier_parameters['ele_name']
-        self.read_ele_num = my_current.read_ele_num
+        self.read_ele_num = len(currents)
 
         self.amplifier_define()
-        self.fill_amplifier_output(my_current, time_step)
-        self.set_scope_output(my_current)
+        self.fill_amplifier_output(currents, time_step)
+        self.set_scope_output(currents)
 
     def amplifier_define(self):
         """
@@ -161,20 +160,20 @@ class Amplifier:
             self.pulse_responce = pulse_responce_BB
             self.scale = scale_BB
 
-    def fill_amplifier_output(self, my_current, time_step):
+    def fill_amplifier_output(self, currents: list[ROOT.TH1F], time_step):
         for i in range(self.read_ele_num):
-            sum_cu = my_current.sum_cu[i]
-            n_bin = sum_cu.GetNbinsX()
-            t_bin = sum_cu.GetBinWidth(0)
+            cu = currents[i]
+            n_bin = cu.GetNbinsX()
+            t_bin = cu.GetBinWidth(0)
             time_duration = n_bin * t_bin
             self.ele.append(ROOT.TH1F("electronics %s"%(self.ele_name)+str(i+1), "electronics %s"%(self.ele_name),
                                 int(time_duration/time_step), 0, time_duration))
             self.ele[i].Reset()
-            signal_convolution(sum_cu, self.pulse_responce, self.ele[i])
+            signal_convolution(cu, self.pulse_responce, self.ele[i])
     
-    def set_scope_output(self, my_current):
+    def set_scope_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
-            sum_cu = my_current.sum_cu[i]
-            input_Q_tot = sum_cu.Integral()
+            cu = currents[i]
+            input_Q_tot = cu.Integral()
             output_Q_max = self.ele[i].GetMaximum()
             self.ele[i].Scale(self.scale(output_Q_max, input_Q_tot))
