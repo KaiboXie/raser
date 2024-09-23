@@ -56,7 +56,7 @@ def InitialSolution(device, region, circuit_contacts=None, set_contact_type=None
         devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
         #if circuit_contacts and i in circuit_contacts:
         if str(circuit_contacts) in i :
-            CreateSiliconPotentialOnlyContact(device, region, i, True)
+            CreateSiliconPotentialOnlyContact(device, region, i, contact_type,True)
             if paras["ac-weightfield"]==True:
                 try:
                     CreateOxideContact(device=device, region="SiO2", contact=i)
@@ -76,7 +76,7 @@ def InitialSolution(device, region, circuit_contacts=None, set_contact_type=None
                     pass 
 
 
-def DriftDiffusionInitialSolution(device, region, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None, set_contact_type=None, paras=None):
+def DriftDiffusionInitialSolution(device, region, paras, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None, set_contact_type=None):
     if paras["Cylindrical_coordinate"]==True:
         switch_Cylindrical_coordinate(device,region)
     else:

@@ -24,21 +24,21 @@ paras = {
     "relative_error_Initial" : 1e-10, 
     "maximum_iterations_Initial" : 1000,
 
-    "absolute_error_DriftDiffusion" : 1e5, 
-    "relative_error_DriftDiffusion" : 1e-5, 
+    "absolute_error_DriftDiffusion" : 1e20, 
+    "relative_error_DriftDiffusion" : 1e-3, 
     "maximum_iterations_DriftDiffusion" : 1000,
 
-    "absolute_error_VoltageSteps" : 1e10, 
-    "relative_error_VoltageSteps" : 1e-5, 
+    "absolute_error_VoltageSteps" : 1e20, 
+    "relative_error_VoltageSteps" : 1e-3, 
     "maximum_iterations_VoltageSteps" : 1000,
 
     "milestone_mode" : True,
-    "milestone_step" : 100,
+    "milestone_step" : 50,
 
     "voltage_step" : 1,
     "acreal" : 1.0, 
     "acimag" : 0.0,
-    "frequency" : 1.0,
+    "frequency" : 10.0,
     
     "Cylindrical_coordinate": False,
     "ac-weightfield" : False,
@@ -130,7 +130,7 @@ def main(kwargs):
             initial.InitialSolution(device, region, circuit_contacts=circuit_contacts,paras=paras)
             devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
     else:
-        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts,paras=paras)
+        initial.InitialSolution(device, region, circuit_contacts=circuit_contacts,set_contact_type=None,paras=paras)
         devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
     
     
@@ -148,7 +148,7 @@ def main(kwargs):
     if paras["ac-weightfield"] == True:
         pass
     else:
-        initial.DriftDiffusionInitialSolution(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, circuit_contacts=circuit_contacts)
+        initial.DriftDiffusionInitialSolution(device, region, paras,irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, set_contact_type=None,circuit_contacts=circuit_contacts)
         
         devsim.solve(type="dc", absolute_error=paras['absolute_error_DriftDiffusion'], relative_error=paras['relative_error_DriftDiffusion'], maximum_iterations=paras['maximum_iterations_DriftDiffusion'])
     devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons")
@@ -203,6 +203,7 @@ def main(kwargs):
                 print(type(circuit_contacts))
                 print("+++++++++++++++++++++\n begin simulate Weight field\n +++++++++++++++++++++")
                 print(contact)
+                devsim.set_parameter(name="debug_level", value="info")
                 devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=v)
                 devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
                 paras["milestone_step"] == 1
