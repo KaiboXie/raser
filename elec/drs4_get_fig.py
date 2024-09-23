@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-
+# TODO: Need to be TOTALLY rewritten
 import ROOT
 import numpy
 
 def read_file(file_path,file_name):
-    with open(file_path + '/' + file_name) as f:
+    with open(file_path + file_name) as f:
         lines = f.readlines()
         time,volt = [],[]
 
@@ -18,7 +18,7 @@ def read_file(file_path,file_name):
     return time,volt
 
 def main():
-    file_path = 'fig/'
+    file_path = 'output/elec/'
     file_name = 'drs4_analog.raw'
     com_name=file_name.split('.')[0]
     fig_name=file_path + com_name + '.pdf'

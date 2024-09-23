@@ -3,7 +3,7 @@
 import ROOT
 import sys
 import numpy
-
+# TODO: Need to be TOTALLY rewritten
 def read_file(file_path,file_name):
     with open(file_path + '/' + file_name) as f:
         lines = f.readlines()
@@ -19,7 +19,7 @@ def read_file(file_path,file_name):
     return time,volt
 
 def main():
-    file_path = 'output/fig/'
+    file_path = 'output/elec/ngspice_fig'
     file_name = sys.argv[1]
     com_name=file_name.split('.')[0]
     fig_name=file_path + com_name + '.pdf'

@@ -1,8 +1,8 @@
-from . import foo
 def main(kwargs):
     label = kwargs['label']
 
-    if label == 'foo':
-        foo.main()
+    if label == 'signal':
+        from . import tct_signal
+        tct_signal.main(kwargs)
     else:
-        raise NameError(label)
+        raise NameError

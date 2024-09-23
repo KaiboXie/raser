@@ -7,6 +7,7 @@
 
 import pymtl3 as mtl
 from .regincr import RegIncr
+from util.output import create_path
 
 class RegIncr2stage( mtl.Component ):
 # Constructor
@@ -29,12 +30,6 @@ class RegIncr2stage( mtl.Component ):
       s.reg_incr_1.line_trace(),
       s.out
     )
-
-def create_path(path):
-  import os
-  """ If the path does not exit, create the path"""
-  if not os.access(path, os.F_OK):
-    os.makedirs(path, exist_ok=True) 
   
 def main():
   input_values = [ 0x01, 0x13, 0x25, 0x37, 0xff ]

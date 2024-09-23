@@ -64,13 +64,13 @@ t_start = t1
 t_rise = t2 - t1
 t_fall = t3 - t2
 
-with open('paras/circuitT1.cir', 'r') as f:
+with open('param_file/circuit/T1.cir', 'r') as f:
     lines = f.readlines()
     lines[113] = 'I1 2 0 pulse(0 ' + str(c_max) + 'u ' + str(t_start) + 'n ' + str(t_rise) + 'n ' + str(t_fall) + 'n 0.00000001n ' + str((T_ele[len(T_ele) - 1])) + 'n 0)\n'
     lines[140] = 'tran 0.1p ' + str((T_ele[len(T_ele) - 1])) + 'n\n'
     lines[142] = 'wrdata output/t1.raw v(out)\n'
     f.close()
-with open('output/T1_tmp.cir', 'w') as f:
+with open('output/elec/T1_tmp.cir', 'w') as f:
     f.writelines(lines)
     f.close()
 

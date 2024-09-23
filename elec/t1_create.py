@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
-
+# TODO: Need to be TOTALLY rewritten
 import ROOT
 import os
 import numpy as np
@@ -70,17 +70,17 @@ if number>=1:
             input_c.append(str(0))
 
         input_p=','.join(input_c)
-        with open('/scratchfs/atlas/xingchenli/raser/paras/circuitT1.cir', 'r') as f:
+        with open('/scratchfs/atlas/xingchenli/raser/param_file/circuit/T1.cir', 'r') as f:
             lines = f.readlines()
             lines[113] = 'I1 2 0 PWL('+str(input_p)+') \n'
             lines[140] = 'tran 0.1p ' + str((input_c[len(input_c) - 2])) + '\n'
             lines[141] = 'wrdata output/'+str(L)+'t1.txt v(out)\n'
             f.close()
-        with open('/scratchfs/atlas/xingchenli/raser/output/T1_tmp.cir', 'w') as f:
+        with open('/scratchfs/atlas/xingchenli/raser/output/elec/T1_tmp.cir', 'w') as f:
             f.writelines(lines)
             f.close()
 
-        os.system("ngspice -b -r t1.txt output/T1_tmp.cir")
+        os.system("ngspice -b -r t1.txt output/elec/T1_tmp.cir")
 
         t1=np.loadtxt('/scratchfs/atlas/xingchenli/raser/output/'+str(L)+'t1.txt',dtype=float)
         volt=[]
@@ -142,17 +142,17 @@ else:
             input_c.append(str(0))
 
         input_p=','.join(input_c)
-        with open('/scratchfs/atlas/xingchenli/raser/paras/circuitT1.cir', 'r') as f:
+        with open('/scratchfs/atlas/xingchenli/raser/param_file/circuit/T1.cir', 'r') as f:
             lines = f.readlines()
             lines[113] = 'I1 2 0 PWL('+str(input_p)+') \n'
             lines[140] = 'tran 0.1p ' + str((input_c[len(input_c) - 2])) + '\n'
             lines[141] = 'wrdata output/'+str(L)+'t1.txt v(out)\n'
             f.close()
-        with open('/scratchfs/atlas/xingchenli/raser/output/T1_tmp.cir', 'w') as f:
+        with open('/scratchfs/atlas/xingchenli/raser/output/elec/T1_tmp.cir', 'w') as f:
             f.writelines(lines)
             f.close()
 
-        os.system("ngspice -b -r t1.txt output/T1_tmp.cir")
+        os.system("ngspice -b -r t1.txt output/elec/T1_tmp.cir")
 
         t1=np.loadtxt('/scratchfs/atlas/xingchenli/raser/output/'+str(L)+'t1.txt',dtype=float)
         volt=[]

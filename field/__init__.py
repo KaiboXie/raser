@@ -1,8 +1,5 @@
 import logging
-import devsim
-from . import gen_devsim_db
-from . import devsim_solve
-from . import test4hsic
+
 def main(kwargs):
     label = kwargs['label']
     verbose = kwargs['verbose'] 
@@ -16,10 +13,14 @@ def main(kwargs):
     logging.debug('This is DEBUG messaage')
 
     if label == 'gen_devsim_db':
+        from . import gen_devsim_db
         gen_devsim_db.main()
     elif label == "3d_plugin_field":
+        from . import test4hsic
         test4hsic.main("2dfield_4HSiC")
     elif label == "3d_ringcontact_Elefield":
+        from . import test4hsic
         test4hsic.main("3d_ringcontact")
     else:
+        from . import devsim_solve
         devsim_solve.main(kwargs)
