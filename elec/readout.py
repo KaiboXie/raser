@@ -160,16 +160,16 @@ class Amplifier:
             self.pulse_responce_list = [pulse_responce_BB]
             self.scale = scale_BB
 
-        elif self.amplifier_parameters['ele_name'] == 'ABCStar':
-            """ ABCStar parameter initialization"""
+        elif self.amplifier_parameters['ele_name'] == 'ABCStar_fe':
+            """ ABCStar_fe parameter initialization"""
 
-            def pulse_responce_ABCStar_input(t):
+            def pulse_responce_ABCStar_fe_input(t):
                 if t < 0:
                     return 0
                 input_res = self.amplifier_parameters['input_res']
                 return 1/(1e-12*CDet) * math.exp(-t/(1e-12*CDet*input_res))
             
-            def pulse_responce_ABCStar_RCfeedback(t):
+            def pulse_responce_ABCStar_fe_RCfeedback(t):
                 if t < 0:
                     return 0
                 input_res = self.amplifier_parameters['input_res']
@@ -179,12 +179,12 @@ class Amplifier:
                 tau_f = 1e-12 * Cf * Rf
                 return 1/tau_amp * math.exp(-t/tau_f)
             
-            def scale_ABCStar(output_Q_max, input_Q_tot):
-                """ ABCStar scale function"""
+            def scale_ABCStar_fe(output_Q_max, input_Q_tot):
+                """ ABCStar_fe scale function"""
                 return 1000.0 # V to mV
             
-            self.pulse_responce_list = [pulse_responce_ABCStar_input, pulse_responce_ABCStar_RCfeedback]
-            self.scale = scale_ABCStar
+            self.pulse_responce_list = [pulse_responce_ABCStar_fe_input, pulse_responce_ABCStar_fe_RCfeedback]
+            self.scale = scale_ABCStar_fe
 
 
     def fill_amplifier_output(self, currents: list[ROOT.TH1F]):
