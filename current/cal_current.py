@@ -513,11 +513,11 @@ class CalCurrentLaser(CalCurrent):
             convolved_gain_negative_cu.Reset()
             convolved_sum_cu.Reset()
 
-            signal_convolution(self.positive_cu[i],my_l.timePulse,convolved_positive_cu)
-            signal_convolution(self.negative_cu[i],my_l.timePulse,convolved_negative_cu)
-            signal_convolution(self.gain_positive_cu[i],my_l.timePulse,convolved_gain_positive_cu)
-            signal_convolution(self.gain_negative_cu[i],my_l.timePulse,convolved_gain_negative_cu)
-            signal_convolution(self.sum_cu[i],my_l.timePulse,convolved_sum_cu)
+            signal_convolution(self.positive_cu[i],convolved_positive_cu,[my_l.timePulse])
+            signal_convolution(self.negative_cu[i],convolved_negative_cu,[my_l.timePulse])
+            signal_convolution(self.gain_positive_cu[i],convolved_gain_positive_cu,[my_l.timePulse])
+            signal_convolution(self.gain_negative_cu[i],convolved_gain_negative_cu,[my_l.timePulse])
+            signal_convolution(self.sum_cu[i],convolved_sum_cu,[my_l.timePulse])
 
             self.positive_cu[i] = convolved_positive_cu
             self.negative_cu[i] = convolved_negative_cu

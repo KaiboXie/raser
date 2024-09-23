@@ -17,8 +17,6 @@ import ROOT
 from util.math import signal_convolution
 from util.output import output
 
-time_step = 50e-12
-
 class Amplifier:
     """Get current after amplifier with convolution, for each reading electrode
 
@@ -32,9 +30,6 @@ class Amplifier:
 
     CDet : None | float
         The capacitance of the detector
-
-    time_step : float
-        The readout time step (bin width)
 
     Attributes
     ---------
@@ -56,7 +51,7 @@ class Amplifier:
     ---------
         2024/09/14
     """
-    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None, time_step = time_step):
+    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None):
         self.amplified_current = []
 
         ele_json = "./setting/electronics/" + amplifier_name + ".json"
@@ -67,7 +62,7 @@ class Amplifier:
         self.read_ele_num = len(currents)
 
         self.amplifier_define(CDet)
-        self.fill_amplifier_output(currents, time_step)
+        self.fill_amplifier_output(currents)
         self.set_scope_output(currents)
 
     def amplifier_define(self, CDet):
@@ -118,7 +113,7 @@ class Amplifier:
 
                 return scale
 
-            self.pulse_responce = pulse_responce_CSA
+            self.pulse_responce_list = [pulse_responce_CSA]
             self.scale = scale_CSA
 
         elif self.amplifier_parameters['ele_name'] == 'BB':
@@ -143,7 +138,7 @@ class Amplifier:
 
                 elif mode == "RC":
                     tau_BB_RC = 1.0e-12 * BB_imp * CDet     #BB RC
-                    tau_BB_BW = 0.35 / (1.0e9*BB_bandwidth) / 2.2    #BB Tau
+                    tau_BB_BW = 0.35 / (1.0e9*BB_bandwidth) / 2.2    #BB Tau, Rf*Cf?
                     tau_BBA = math.sqrt(pow(tau_BB_RC,2)+pow(tau_BB_BW,2))
 
                     return 1/tau_BBA * math.exp(-t/tau_BBA)
@@ -159,22 +154,46 @@ class Amplifier:
                     return R_in
 
                 elif mode == "RC":
-                    BBGain = self.amplifier_parameters['BBGain']
-                    return BBGain * 1e3
+                    BB_Gain = self.amplifier_parameters['BB_Gain'] # kOhm ?
+                    return BB_Gain * 1e3
                 
-            self.pulse_responce = pulse_responce_BB
+            self.pulse_responce_list = [pulse_responce_BB]
             self.scale = scale_BB
 
-    def fill_amplifier_output(self, currents: list[ROOT.TH1F], time_step):
+        elif self.amplifier_parameters['ele_name'] == 'ABCStar':
+            """ ABCStar parameter initialization"""
+
+            def pulse_responce_ABCStar_input(t):
+                if t < 0:
+                    return 0
+                input_res = self.amplifier_parameters['input_res']
+                return 1/(1e-12*CDet) * math.exp(-t/(1e-12*CDet*input_res))
+            
+            def pulse_responce_ABCStar_RCfeedback(t):
+                if t < 0:
+                    return 0
+                input_res = self.amplifier_parameters['input_res']
+                Cf = self.amplifier_parameters['Cf']
+                Rf = self.amplifier_parameters['Rf']
+                tau_amp = 1e-12 * Cf * input_res
+                tau_f = 1e-12 * Cf * Rf
+                return 1/tau_amp * math.exp(-t/tau_f)
+            
+            def scale_ABCStar(output_Q_max, input_Q_tot):
+                """ ABCStar scale function"""
+                return 1000.0 # V to mV
+            
+            self.pulse_responce_list = [pulse_responce_ABCStar_input, pulse_responce_ABCStar_RCfeedback]
+            self.scale = scale_ABCStar
+
+
+    def fill_amplifier_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
             cu = currents[i]
-            n_bin = cu.GetNbinsX()
-            t_bin = cu.GetBinWidth(0)
-            time_duration = n_bin * t_bin
             self.amplified_current.append(ROOT.TH1F("electronics %s"%(self.amplified_current_name)+str(i+1), "electronics %s"%(self.amplified_current_name),
-                                int(time_duration/time_step), 0, time_duration))
+                                cu.GetNbinsX(),cu.GetXaxis().GetXmin(),cu.GetXaxis().GetXmax()))
             self.amplified_current[i].Reset()
-            signal_convolution(cu, self.pulse_responce, self.amplified_current[i])
+            signal_convolution(cu, self.amplified_current[i], self.pulse_responce_list)
     
     def set_scope_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
@@ -186,10 +205,10 @@ class Amplifier:
 def main(label):
     '''main function for readout.py to test the output of the given amplifier'''
 
-    my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 200, 0, 10e-9)
+    my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 600, 0, 30e-9)
     # input signal: square pulse
     for i in range(21, 41):
-        my_th1f.SetBinContent(i, 1e-5)
+        my_th1f.SetBinContent(i, 2e-6) # A
 
     ele = Amplifier([my_th1f], label)
 
@@ -198,6 +217,8 @@ def main(label):
 
     origin_max = my_th1f.GetMaximum()
     amp_max = ele.amplified_current[0].GetMaximum()
+    print("amp_max =",amp_max,'mV')
+
     ratio = origin_max/amp_max
     ele.amplified_current[0].Scale(ratio)
     ele.amplified_current[0].Draw("SAME HIST")

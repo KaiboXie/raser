@@ -10,6 +10,7 @@ Description:
 '''
 
 import math
+from typing import Callable
 
 import numpy as np
 from scipy.interpolate import interp1d as p1d
@@ -97,14 +98,24 @@ def get_common_interpolate_3d(data):
         return lndi(point)
     return f
 
-def signal_convolution(signal_original: ROOT.TH1F, pulse_responce_function, signal_convolved: ROOT.TH1F):
+def signal_convolution(signal_original: ROOT.TH1F, signal_convolved: ROOT.TH1F, pulse_responce_function_list: list[Callable[[float],float]]):
     so = signal_original
-    pr = pulse_responce_function
     sc = signal_convolved
+    st = ROOT.TH1F("signal_temp","signal_temp",so.GetNbinsX(),so.GetXaxis().GetXmin(),so.GetXaxis().GetXmax())
+    st.Reset()
+    st.Add(so)
+
     t_bin = so.GetBinWidth(0) # for uniform bin
     n_bin = so.GetNbinsX()
-    for i in range(n_bin):
-        so_i = so.GetBinContent(i)
-        for j in range(-i,n_bin-i): 
-            pr_j = pr(j*t_bin)
-            sc.Fill((i+j)*t_bin + 1e-14, so_i*pr_j*t_bin) # 1e-14 resolves float error
+    for pr in pulse_responce_function_list:
+        for i in range(n_bin):
+            st_i = st.GetBinContent(i)
+            for j in range(-i,n_bin-i): 
+                pr_j = pr(j*t_bin)
+                sc.Fill((i+j)*t_bin + 1e-14, st_i*pr_j*t_bin) # 1e-14 resolves float error
+        st.Reset()
+        st.Add(sc)
+        sc.Reset()
+
+    sc.Add(st)
+
