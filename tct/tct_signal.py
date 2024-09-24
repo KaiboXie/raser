@@ -14,7 +14,7 @@ import ROOT
 from field import build_device as bdv
 from field import devsim_field as devfield
 from current import cal_current as ccrt
-from elec import ele_readout as rdout
+from elec import readout as rdo
 from elec import ngspice_set_input as ngsip
 from elec import ngspice as ng
 from .source import TCTTracks
@@ -85,7 +85,7 @@ def main(kwargs):
         subprocess.run(['ngspice -b -r t0.raw output/T0_tmp.cir'], shell=True)
         ng.plot_waveform()
     else:
-        ele_current = rdout.Amplifier(my_current, amplifier)
+        ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
     
     if kwargs['scan'] != None: #assume parameter alter
         key = my_l.fz_rel

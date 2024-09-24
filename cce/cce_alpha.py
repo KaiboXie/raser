@@ -1,6 +1,6 @@
 import ROOT
 import os
-# TODO: Need to be TOTALLY rewritten
+
 def read_file(file_path, wave_name):
     with open(file_path + '/' + wave_name, 'r') as f:
         lines = f.readlines()
