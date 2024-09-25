@@ -15,7 +15,7 @@ import time
 
 from util.output import output
 
-def draw_plots(my_d,ele_current,my_f,my_g4p,my_current,my_l=None):
+def draw_plots(my_d,ele_current,my_f,my_g4p,my_current,my_l=None,laser_path=None):
     """
     @description:
         Draw electric field ,drift path and energy deposition
@@ -27,15 +27,18 @@ def draw_plots(my_d,ele_current,my_f,my_g4p,my_current,my_l=None):
         2021/08/31
     """
     now = time.strftime("%Y_%m%d_%H%M%S")
-    path = output(__file__, my_d.det_name, now)
+    if laser_path != None:
+        path = laser_path
+    else:
+        path = output(__file__, my_d.det_name, now)
 
     if "plugin" in my_d.det_model:
         draw_ele_field(my_d,my_f,"xy",my_d.det_model,my_d.l_z*0.5,path)
     else:
         draw_ele_field_1D(my_d,my_f,path)
         draw_ele_field(my_d,my_f,"xz",my_d.det_model,my_d.l_y*0.5,path)
-    for i in range(my_f.read_ele_num):
-        draw_current(my_d, my_current,ele_current.ele,i,ele_current.ele_name,path) # Draw current
+    for i in range(my_current.read_ele_num):
+        draw_current(my_d, my_current,ele_current.amplified_current,i,ele_current.amplified_current_name,path) # Draw current
     #energy_deposition(my_g4p)   # Draw Geant4 depostion distribution
     if my_l != None:
         my_l.draw_nocarrier3D(path)
@@ -70,9 +73,9 @@ def save_signal_csv(ele_current,my_g4p,number,start_n,k,output_path="none"):
     output_file = output_path + "/t_" +str(number)+charge+e_dep+"events.csv"
     f1 = open(output_file,"w")
     f1.write("time[ns], Amplitude [mV] \n")
-    for i in range(ele_current.ele[k].GetNbinsX()):
+    for i in range(ele_current.amplified_current[k].GetNbinsX()):
         f1.write("%s,%s \n"%(i*ele_current.time_unit,
-                                ele_current.ele[k][i]))
+                                ele_current.amplified_current[k][i]))
     f1.close()
 
     print("output_file:%s"%output_file)
@@ -545,8 +548,8 @@ def energy_deposition(my_g4v):
     print("MPV:%s"%g1.GetParameter(1))
     h1.Draw()
     now = time.strftime("%Y_%m%d_%H%M")
-    c1.SaveAs("output/fig/dep_SiC"+"_"+now+"_energy.pdf")
-    c1.SaveAs("output/fig/dep_SiC"+"_"+now+"_energy.root")
+    c1.SaveAs("output/particle/dep_SiC"+"_"+now+"_energy.pdf")
+    c1.SaveAs("output/particle/dep_SiC"+"_"+now+"_energy.root")
 
 def create_path(path):
     """ If the path does not exit, create the path"""
@@ -676,7 +679,7 @@ def get1_beam_number(my_g4p):
 def cce(my_d,my_f,my_current, path):
     charge=array('d')
     x=array('d')
-    for i in range(my_f.read_ele_num):
+    for i in range(my_current.read_ele_num):
         x.append(i+1)
         sum_charge=0
         for j in range(my_current.n_bin):

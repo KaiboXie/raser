@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-
-import ROOT
-import sys
-import numpy
 # TODO: Need to be TOTALLY rewritten
+import ROOT
+import numpy
+
 def read_file(file_path,file_name):
-    with open(file_path + '/' + file_name) as f:
+    with open(file_path + file_name) as f:
         lines = f.readlines()
         time,volt = [],[]
 
         for line in lines:
             time.append(float(line.split()[0])*1e9)
-            volt.append(float(line.split()[1])*1e3)
+            volt.append(float(line.split()[1]))
 
     time = numpy.array(time,dtype='float64')
     volt = numpy.array(volt,dtype='float64')
@@ -19,8 +18,9 @@ def read_file(file_path,file_name):
     return time,volt
 
 def main():
-    file_path = 'output/elec/ngspice_fig'
-    file_name = sys.argv[1]
+    file_path = 'output/elec/'
+    #file_name = 'drs4_analog.raw'
+    file_name = 'ABCStar_fe.raw'
     com_name=file_name.split('.')[0]
     fig_name=file_path + com_name + '.pdf'
     time,volt = [],[]
@@ -37,16 +37,17 @@ def main():
     f1.SetLineWidth(2)
 
     f1.GetXaxis().SetTitle('Time [ns]')
-    f1.GetXaxis().SetLimits(0,20)
+    # f1.GetXaxis().SetLimits(0,5)
+    f1.GetXaxis().SetLimits(0,30)
     f1.GetXaxis().CenterTitle()
     f1.GetXaxis().SetTitleSize(0.05)
     f1.GetXaxis().SetTitleOffset(0.8)
 
-    f1.GetYaxis().SetTitle('Voltage [mV]')
-    f1.GetYaxis().SetLimits(0,-5)
+    f1.GetYaxis().SetTitle('Voltage [V]')
+    f1.GetYaxis().SetLimits(0,-1)
     f1.GetYaxis().CenterTitle()
     f1.GetYaxis().SetTitleSize(0.05)
-    f1.GetYaxis().SetTitleOffset(0.7)
+    f1.GetYaxis().SetTitleOffset(0.93)
 
     c.cd()
     f1.Draw('AL')
