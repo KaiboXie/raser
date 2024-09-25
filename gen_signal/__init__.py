@@ -163,6 +163,7 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
     detection_efficiency =  effective_number/(end_n-start_n) 
     print("detection_efficiency=%s"%detection_efficiency)
 
+
 def save_current(my_d,my_current,my_f,key):
     if key!=None:
         if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:

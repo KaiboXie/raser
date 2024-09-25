@@ -373,6 +373,7 @@ class MyDetectorConstruction(g4b.G4VUserDetectorConstruction):
         
         self.logical['world'].SetVisAttributes(g4b.G4VisAttributes.GetInvisible())
 
+    
     def create_elemental(self,object): 
         name = object['name']
         print(name)
