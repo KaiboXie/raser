@@ -195,7 +195,6 @@ def save_current(my_d,my_current,my_f,key):
             t_out.Fill()
     t_out.Write()
     fout.Close()
-
     ### For CEPC Fast Luminosity Measurement    
     file = ROOT.TFile(os.path.join(path, "sim-current") + ".root", "READ")
     tree = file.Get("tree")

@@ -2,6 +2,7 @@ import shutil
 import os
 
 def set_pwl_input(pwl_file, cir_file, output_folder):
+    
     string_list=[]
     shutil.copy(cir_file, output_folder)
     cir_file_basename=os.path.basename(cir_file)

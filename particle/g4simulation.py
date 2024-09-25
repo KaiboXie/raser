@@ -348,6 +348,7 @@ class MyDetectorConstruction(g4b.G4VUserDetectorConstruction):
        
         self.maxStep = maxStep*g4b.um
         self.fStepLimit = g4b.G4UserLimits(self.maxStep)
+        
         if (self.geant4_model == 'cflm'):
             self.logical["detector"].SetUserLimits(self.fStepLimit)
         else:
