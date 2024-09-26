@@ -78,7 +78,7 @@ def main(kwargs):
         my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
 
     if 'ngspice' in amplifier:
-        save_current(my_d, my_current,my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
+        save_current(my_d, my_current, key=None)
         input_p=ngsip.set_input(my_current, my_d, key=None)
         input_c=','.join(input_p)
         ng.ngspice_t0(input_c, input_p)
@@ -102,7 +102,7 @@ def main(kwargs):
     print("total time used:%s"%(time.time()-start))
 
 #TODO: move this to calcurrent
-def save_current(my_d,my_current,my_f,key):
+def save_current(my_d,my_current,key):
     if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
         path = os.path.join('output', 'pintct', my_d.det_name, )
     elif "lgad3D" in my_d.det_model:
