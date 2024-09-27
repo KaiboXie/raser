@@ -49,36 +49,27 @@ def draw_plots(my_d,ele_current,my_f,my_g4p,my_current,my_l=None,laser_path=None
         cce(my_d, my_f, my_current, path)
 
 
-
-
-def save_signal_time_resolution(my_d,batch_number,ele_current,my_g4p,start_n,my_f):
-
-    " Save data to the file"
+def save_signal_time_resolution(my_d,batch_number,sum_cu,ele_current,my_g4p,start_n):
+    """ Save induced current after amplification"""
 
     output_path = output(__file__, my_d.det_name, 'batch')
+    for k in range(ele_current.read_ele_num):
+        charge = sum_cu[k].Integral()
+        charge_str = "_charge=%.2f_"%(charge*1e15)  #fc
+        e_dep = "dep=%.5f_"%(my_g4p.edep_devices[batch_number-start_n]) #mv
+        output_file = output_path + "/t_" +str(batch_number)+charge_str+e_dep+"events.csv"
 
-    if "strip" in my_d.det_model: # under construction
-        for k in range(ele_current.read_ele_num):
-            save_signal_csv(ele_current,my_g4p,batch_number,start_n,k,output_path)
+        f1 = open(output_file,"w")
+        f1.write("time[ns], Amplitude [mV] \n")
+        for i in range(ele_current.amplified_current[k].GetNbinsX()):
+            f1.write("%s,%s \n"%(i*ele_current.amplified_current[k].GetBinWidth(0),
+                                    ele_current.amplified_current[k][i]))
+        f1.close()
 
-    else:
-        save_signal_csv(ele_current,my_g4p,batch_number,start_n,0,output_path)
+        print("output_file:%s"%output_file)
 
     del ele_current
 
-def save_signal_csv(ele_current,my_g4p,number,start_n,k,output_path="none"):
-    """ Save induced current after amplification"""
-    charge = "_charge=%.2f_"%(ele_current.qtot[k]*1e15)  #fc
-    e_dep = "dep=%.5f_"%(my_g4p.edep_devices[number-start_n]) #mv
-    output_file = output_path + "/t_" +str(number)+charge+e_dep+"events.csv"
-    f1 = open(output_file,"w")
-    f1.write("time[ns], Amplitude [mV] \n")
-    for i in range(ele_current.amplified_current[k].GetNbinsX()):
-        f1.write("%s,%s \n"%(i*ele_current.time_unit,
-                                ele_current.amplified_current[k][i]))
-    f1.close()
-
-    print("output_file:%s"%output_file)
 
 def draw_ele_field(my_d,my_f,plane,sensor_model,depth,path):
     """
