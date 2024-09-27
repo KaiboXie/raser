@@ -2,7 +2,10 @@
 # -*- encoding: utf-8 -*-
 
 import devsim 
+import subprocess
+import shlex
 from .build_device import Detector
+from . import control_step
 from . import model_create
 from . import physics_drift_diffusion
 from . import initial
@@ -38,21 +41,41 @@ paras = {
     "voltage_step" : 1,
     "acreal" : 1.0, 
     "acimag" : 0.0,
-    "frequency" : 10.0,
+    "frequency" : 1000.0,
     
     "Cylindrical_coordinate": False,
+
+
     "ac-weightfield" : False,
+
+
+    "Voltage-step-model" : False,
+    "step":1,
+
+    "Mixed-model" : False,
 }
 
 def main(kwargs):
     simname = kwargs['label']
     is_cv = kwargs['cv']
     is_wf = kwargs["wf"]
+    is_step = kwargs["step"]
+    is_Mixed = kwargs["mixed"]
 
     if is_wf:
         paras.update({"ac-weightfield": True})
     else:
         paras.update({"ac-weightfield": False})
+    
+    if is_step:
+        paras.update({"Voltage-step-model": True})
+    else:
+        paras.update({"Voltage-step-model": False})
+    # Mix model is applied for weightingfield simulation of large work 
+    if is_Mixed:
+        paras.update({"Mixed-model": True})
+    else:
+        paras.update({"Mixed-model": False})
 
     devsim.open_db(filename="./output/field/SICARDB.db", permission="readonly")
 
@@ -79,6 +102,7 @@ def main(kwargs):
     devsim.add_db_entry(material="Silicon",   parameter="n_i",    value=N_i,   unit="/cm^3",     description="Intrinsic Electron Concentration")
     devsim.add_db_entry(material="SiliconCarbide",   parameter="n_i",    value=N_i,   unit="/cm^3",     description="Intrinsic Electron Concentration")
     devsim.add_db_entry(material="gas",   parameter="n_i",    value="1e-9",   unit="/cm^3",     description="Intrinsic Electron Concentration")
+    devsim.add_db_entry(material="gas",   parameter="Permittivity",    value="1",   unit="1",     description="Permittivity")
     devsim.add_db_entry(material="Silicon",   parameter="n1",     value=N_i,   unit="/cm^3",     description="n1")
     devsim.add_db_entry(material="Silicon",   parameter="p1",     value=N_i,   unit="/cm^3",     description="p1")
 
@@ -145,7 +169,7 @@ def main(kwargs):
         impact_label=MyDetector.device_dict['avalanche_model']
     else:
         impact_label=None
-    if paras["ac-weightfield"] == True:
+    if (paras["ac-weightfield"] == True) or (paras["Mixed-model"] == True):
         pass
     else:
         initial.DriftDiffusionInitialSolution(device, region, paras,irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label, set_contact_type=None,circuit_contacts=circuit_contacts)
@@ -185,7 +209,8 @@ def main(kwargs):
         header_cv = ["Voltage","Capacitance"]
         writer_cv = csv.writer(f_cv)
         writer_cv.writerow(header_cv)
-
+    if is_step or is_Mixed == True:
+        v_goal = MyDetector.device_dict['bias']['voltage']
     v_max = MyDetector.device_dict['bias']['voltage']
     area_factor = MyDetector.device_dict['area_factor']
     frequency = paras['frequency']
@@ -197,23 +222,56 @@ def main(kwargs):
         voltage_step = -1 * paras['voltage_step']
     while abs(v) <= abs(v_max):
         voltage.append(v)
-        if paras["ac-weightfield"]==True:
+        if (paras["ac-weightfield"]==True) or (paras["Mixed-model"]==True):
             v=1
             for contact in circuit_contacts:
-                print(type(circuit_contacts))
                 print("+++++++++++++++++++++\n begin simulate Weight field\n +++++++++++++++++++++")
                 print(contact)
                 devsim.set_parameter(name="debug_level", value="info")
-                devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=v)
-                devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
-                paras["milestone_step"] == 1
-                paras.update({"milestone_step":paras["milestone_step"]})
-                path = output(__file__, device,contact)
-                milestone_save_wf_2D(device, region, v, path,contact)
-                devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=0)
+                if (paras["ac-weightfield"]==True and paras["Mixed-model"]==False):
+                    devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=v)
+                    devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
+                    paras["milestone_step"] == 1
+                    paras.update({"milestone_step":paras["milestone_step"]})
+                    path = output(__file__, device,contact)
+                    milestone_save_wf_2D(device, region, v, path,contact)
+                    devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=0)
+                if paras["Mixed-model"]==True:
+                    print("This is design for large work in shell\n=============================\n test for refine mesh")
+                    while v <=1:
+                        # if v != 0:
+                        #     control_step.set_values(device, region)
+                        # else:
+                        #     pass
+                        command_list = ["devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=v)",
+                                        "devsim.solve(type='dc', absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])",
+                                        "paras['milestone_step'] == 1",
+                                        "control_step.save_values(device,region)",
+                                        "paras.update({'milestone_step':paras['milestone_step']})",
+                                        "path = output(__file__, device,contact)"
+                                        "try_save(device, region, v, path,contact)"
+                                        ]
+                        for command in command_list:
+                            print(command)
+                            process = subprocess.Popen(shlex.split(command),stdout=subprocess.PIPE)
+                        while True:
+                            output_info = process.stdout.readline().decode().strip() # type: ignore
+                            if output_info:
+                                print(output_info)
+                            else:
+                                break
+                        process.wait()   
+                        # devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(contact), value=v)
+                        # devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
+                        # paras["milestone_step"] == 1
+                        # paras.update({"milestone_step":paras["milestone_step"]})
+                        # path = output(__file__, device,contact)
+                        
+            print("+++++++++++++++++++++\n Simulation of  Weight field is over !>.<!\n +++++++++++++++++++++")
             exit()
         elif paras["ac-weightfield"] ==False:
             pass
+        
         devsim.set_parameter(device=device, name=physics_drift_diffusion.GetContactBiasName(circuit_contacts), value=v)
         devsim.solve(type="dc", absolute_error=paras['absolute_error_VoltageSteps'], relative_error=paras['relative_error_VoltageSteps'], maximum_iterations=paras['maximum_iterations_VoltageSteps'])
         physics_drift_diffusion.PrintCurrents(device, circuit_contacts)
@@ -241,7 +299,10 @@ def main(kwargs):
             if MyDetector.dimension == 1:
                 milestone_save_1D(device, region, v, path)
             elif MyDetector.dimension == 2:
-                milestone_save_2D(device, region, v, path)
+                if MyDetector.device_dict.get("mesh", {}).get("gmsh_mesh", {}):
+                    milestone_save_2D(device, region, v, path)
+                else:
+                    milestone_save_2D(device, region, v, path)
             elif MyDetector.dimension == 3:
                 milestone_save_3D(device, region, v, path)
             else:
@@ -340,8 +401,8 @@ def milestone_save_2D(device, region, v, path):
     metadata['dimension'] = 2
 
     names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
-    if v == 0:
-        names.append('NetDoping')
+    # if v == 0:
+    #     names.append('NetDoping')
 
     for name in names: # scalar field on mesh point (instead of on edge)
         with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:
@@ -409,6 +470,37 @@ def milestone_save_3D(device, region, v, path):
             data['points'] = transposed_list
             data['metadata'] = metadata
             pickle.dump(data, file)
+
+
+
+def milestone_save_wf_3D(device, region, v, path,contact):
+    x=devsim.get_node_model_values(device=device,region=region,name="x")
+    y=devsim.get_node_model_values(device=device,region=region,name="y")
+    z=devsim.get_node_model_values(device=device,region=region,name="z")
+    Potential=devsim.get_node_model_values(device=device,region=region,name="Potential")
+
+    metadata = {}
+    metadata['voltage'] = v
+    metadata['dimension'] = 3
+
+    names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
+    if v == 0:
+        names.append('NetDoping')
+
+    for name in ['Potential']: # scalar field on mesh point (instead of on edge)
+        with open(os.path.join(path, "{}_{}_{}V.pkl".format(name,v,contact)),'wb') as file:
+            data = {}
+            data['values'] = eval(name) # refer to the object with given name
+            merged_list = [x, y]
+            transposed_list = list(map(list, zip(*merged_list)))
+            data['points'] = transposed_list
+            data['metadata'] = metadata
+            pickle.dump(data, file)
+def try_save(device, region, v, path,contact):
+    try:
+        milestone_save_wf_2D(device, region, v, path,contact)
+    except:
+        milestone_save_wf_3D(device, region, v, path,contact)
 
 if __name__ == "__main__":
     args = sys.argv[1:]

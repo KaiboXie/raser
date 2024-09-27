@@ -25,7 +25,7 @@ def switch_Cylindrical_coordinate(device,region):
     devsim.set_parameter(name="element_node1_volume_model",value="ElementCylindricalNodeVolume@en1")
 
 
-def InitialSolution(device, region, circuit_contacts=None, set_contact_type=None, paras=None):
+def InitialSolution(device, region,paras, circuit_contacts, set_contact_type=None):
     if paras["Cylindrical_coordinate"]==True:
         switch_Cylindrical_coordinate(device,region)
     else:
@@ -38,43 +38,42 @@ def InitialSolution(device, region, circuit_contacts=None, set_contact_type=None
     devsim.edge_from_node_model(device=device,region=region,node_model="InitialElectron")
     devsim.edge_from_node_model(device=device,region=region,node_model="InitialHole")
     CreateSiliconPotentialOnly(device, region)
-    if paras["ac-weightfield"]==True:
+    if paras["weightfield"]==True:
         try:
             CreateOxidePotentialOnly(device=device, region="SiO2", update_type="default")
             for interface in devsim.get_interface_list(device=device):
                 CreateSiliconOxideInterface(device=device, interface=interface)
         except:
-            print("Waring info:++++++++++++++++++++++++++++++++++++++++++/nWarning: There is no SiO2 layer in your detector\n++++++++++++++++++++++++++++++++++++++")
+            print("================RASER info===============\nThere is no SiO2 layer in your detector\n===========warning============")
             pass 
+    else:
+        pass
     # Set up the contacts applying a bias
     for i in devsim.get_contact_list(device=device):
         if set_contact_type and i in set_contact_type:
             contact_type = set_contact_type[i]
         else:
             contact_type = {"type" : "Ohmic"}
-
-        devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
-        #if circuit_contacts and i in circuit_contacts:
+        devsim.set_parameter(device=device, name=GetContactBiasName(i), value=0)
         if str(circuit_contacts) in i :
             CreateSiliconPotentialOnlyContact(device, region, i, contact_type,True)
-            if paras["ac-weightfield"]==True:
+            if paras["weightfield"]==True:
                 try:
                     CreateOxideContact(device=device, region="SiO2", contact=i)
                 except:
-                    print("Waring info:++++++++++++++++++++++++++++++++++++++++++/nWarning: There is no SiO2 layer in your detector\n++++++++++++++++++++++++++++++++++++++")
+                    print("===============RASER info===============\nThere is no SiO2 layer in your detector\n===========warning============")
                     pass 
         else:
             ###print "FIX THIS"
             ### it is more correct for the bias to be 0, and it looks like there is side effects
             devsim.set_parameter(device=device, name=GetContactBiasName(i), value="0.0")
             CreateSiliconPotentialOnlyContact(device, region, i, contact_type)
-            if paras["ac-weightfield"]==True:
+            if paras["weightfield"]==True:
                 try:
                     CreateOxideContact(device=device, region="SiO2", contact=i)
                 except:
                     print("Waring info:++++++++++++++++++++++++++++++++++++++++++/nWarning: There is no SiO2 layer in your detector\n++++++++++++++++++++++++++++++++++++++")
                     pass 
-
 
 def DriftDiffusionInitialSolution(device, region, paras, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None, set_contact_type=None):
     if paras["Cylindrical_coordinate"]==True:

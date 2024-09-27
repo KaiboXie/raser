@@ -37,6 +37,11 @@ parser_field.add_argument('-v', '--verbose', help='VERBOSE level',
                           action='count', default=0)
 parser_field.add_argument('-cv', help='CV simulation', action="store_true")
 parser_field.add_argument("-wf", help="WeightField Simulation", action="store_true")
+parser_field.add_argument("-step", help="Voltage step-by-step simulation", action="store_true")
+parser_field.add_argument("-loop", help="Voltage step-by-step simulation", action="store_true")
+parser_field.add_argument("-v_current", help="Current voltage for step-by-step simulation", type=float)
+parser_field.add_argument("-noise", help="Detector Noise simulation", action="store_true")
+
 
 parser_fpga = subparsers.add_parser('fpga', help='FPGA design')
 parser_fpga.add_argument('label', help='LABEL to identify FPGA design')
@@ -62,6 +67,7 @@ parser_tct.add_argument('laser', help='name of the laser')
 parser_tct.add_argument('-vol', '--voltage', type=str, help='bias voltage')
 parser_tct.add_argument('-amp', '--amplifier', type=str, help='amplifier')
 parser_tct.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
+
 
 args = parser.parse_args()
 
@@ -103,8 +109,8 @@ elif kwargs['shell'] == False: # not in shell
                     + BINDPATH + " " \
                     + IMGFILE + " " \
                     + "python3 raser"
-        subprocess.run([raser_shell+' '+command], shell=True, executable='/bin/bash')
 
+        subprocess.run([raser_shell+' '+command], shell=True, executable='/bin/bash')
 else: # in shell
     submodule = importlib.import_module(submodule)
     submodule.main(kwargs)

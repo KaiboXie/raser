@@ -27,7 +27,7 @@ class Detector:
     ---------
         2023/12/03
     """ 
-    def __init__(self, device_name, devsim_solve_paras=None):
+    def __init__(self, device_name, devsim_solve_paras):
         self.det_name = device_name
         self.device = device_name
         self.region = device_name
@@ -81,7 +81,10 @@ class Detector:
         if self.dimension == 1:
             self.create1DMesh()
         elif self.dimension == 2:
-            self.create2DMesh()
+            if self.device_dict.get("mesh", {}).get("gmsh_mesh", {}):
+                self.createGmshMesh()
+            else:
+                self.create2DMesh()
         elif self.dimension == 3:
             self.createGmshMesh()
         else:
@@ -115,7 +118,7 @@ class Detector:
         mesh = self.device_dict["mesh"]["2D_mesh"]
         for mesh_line in mesh["mesh_line"]:
             devsim.add_2d_mesh_line(mesh=mesh_name, **mesh_line)
-        if self.control_dict["ac-weightfield"] == True:
+        if (self.control_dict["weightfield"] == True) :
             mesh["region"]["material"] = "gas"
         else:
             pass
@@ -139,7 +142,7 @@ class Detector:
         mesh_name = self.device
         mesh = self.device_dict["mesh"]["gmsh_mesh"]
         devsim.create_gmsh_mesh (mesh=mesh_name, file=mesh['file'])
-        if self.control_dict["ac-weightfield"] == True:
+        if (self.control_dict["weightfield"] == True) :
             mesh["region"][0]['material']="gas"
         else:
             pass

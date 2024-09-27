@@ -21,6 +21,7 @@ def main(kwargs):
     elif label == "3d_ringcontact_Elefield":
         from . import test4hsic
         test4hsic.main("3d_ringcontact")
+    
     else:
-        from . import devsim_solve
-        devsim_solve.main(kwargs)
+        from . import solver_section
+        solver_section.main(kwargs)
