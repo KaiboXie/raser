@@ -15,9 +15,6 @@ def main(kwargs):
     if label == 'cflm':
         from . import cflm
         cflm.main()
-    if label == 'RootPlot_1D':
-        from . import RootPlot_1D 
-        RootPlot_1D.RootPlot_1D()
     if label == 'GetSignal':
         from . import get_signal
         get_signal.get_signal()
