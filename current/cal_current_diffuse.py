@@ -64,13 +64,14 @@ class Carrier:
         self.charge = charge       
 
     def diffuse_single_step(self,my_d):
-        delta_t=t_bin
+        delta_t = t_bin
         #e_field = my_f.get_e_field(self.x,self.y,self.z)
         intensity = 0
 
-        kboltz=8.617385e-5 #eV/K
+        kboltz = 8.617385e-5 #eV/K
         mobility = Material(my_d.material)
-        mu = mobility.cal_mobility(my_d.temperature, 0, self.charge, intensity)
+        Neff = float(my_d.doping['Donors']) - float(my_d.doping['Acceptors']) # assuming able to convert
+        mu = mobility.cal_mobility(my_d.temperature, Neff, self.charge, intensity)
         diffusion = (2.0*kboltz*mu*my_d.temperature*delta_t)**0.5
         #diffusion = 0.0
         dif_x=random.gauss(0.0,diffusion)*1e4
