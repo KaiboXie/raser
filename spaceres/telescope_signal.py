@@ -6,13 +6,20 @@ Description:
 @Author     : yiminghu
 @version    : 1.0
 '''
-import ROOT
+
 import time
 import os
+
+import ROOT
 import acts
 import numpy as np
 
-class telescope:
+from particle.g4simulation import Particles
+from field.build_device import Detector
+from current.cal_current_diffuse import CalCurrentPixel
+from util.output import create_path
+
+class Telescope:
     def __init__(self,my_d,my_c):
         """
         Description:
@@ -128,7 +135,7 @@ class telescope:
         
         Name = "fit"+str(DUT)
         now = time.strftime("%Y_%m%d_%H%M")
-        path = os.path.join("fig", str(now),'' )
+        path = os.path.join("output/spaceres/taichu_v1", str(now),'' )
         #print(path)
         
         """ If the path does not exit, create the path"""
@@ -220,7 +227,7 @@ class telescope:
         label.Draw()
         
         now = time.strftime("%Y_%m%d_%H%M")
-        path = os.path.join("fig", str(now),'' )
+        path = os.path.join("output/spaceres/taichu_v1", str(now),'' )
         #print(path)
         
         """ If the path does not exit, create the path"""
@@ -376,7 +383,7 @@ class island:
 
 
 #interface to generate simple examples for  debugging
-class Test:
+class PixelHitTest:
     def __init__(self,my_d):
         self.event = []
         
@@ -444,11 +451,89 @@ class Test:
         #print(t_list)
         return t_list
     
-def main(my_d):
-    my_c = Test(my_d)
-    tel = telescope(my_d,my_c)
-    return tel.Resolution_Tol[2][0]
-    
+def draw_charge(my_charge):
+    path = os.path.join("output", "pixel",)
+    create_path(path) 
+    c=ROOT.TCanvas("c","canvas1",1000,1000)
+    c.cd()
+    c.Update()
+    c.SetLeftMargin(0.12)
+    # c.SetTopMargin(0.12)
+    c.SetRightMargin(0.12)
+    c.SetBottomMargin(0.14)
+    ROOT.gStyle.SetOptStat(ROOT.kFALSE)
+    ROOT.gStyle.SetOptStat(0)
+
+    my_charge.sum_charge.GetXaxis().SetNdivisions(510)
+    my_charge.sum_charge.GetYaxis().SetNdivisions(505)
+    my_charge.sum_charge.GetXaxis().SetTitle("X")
+    my_charge.sum_charge.GetYaxis().SetTitle("Y")
+
+    my_charge.sum_charge.Draw("lego")
+    c.Update()
+    c.SaveAs(path+"/Pixel_charge.pdf")
+    c.SaveAs(path+"/Pixel_charge.root")
+
+def main():
+    my_d = Detector("TAICHU3") #remain the same
+    my_f = 0
+    my_g4p = Particles(my_d, my_d.absorber) #remove my_f
+    my_hit_charge = CalCurrentPixel(my_d,my_f,my_g4p)
+    draw_charge(my_hit_charge)
+    my_telescope_charge = Telescope(my_d,my_hit_charge) 
+    my_hit_test = PixelHitTest(my_d)
+    my_telescope_test = Telescope(my_d,my_hit_test)
+
+def taichu_v2(label=""):
+    #virtual object
+    class MyObject:
+        pass
+    #output 
+    res = []
+    psize = []
+    N = 25
+    MaxSize = 25.
+    for i in range(N):
+        t_my_d = MyObject()
+        t_my_d.seedcharge = 100
+        t_my_d.p_x = MaxSize*(i+1)/N
+        t_my_d.p_y = MaxSize*(i+1)/N
+        t_my_d.p_z = 200.
+        t_my_d.lt_z = [20000.,60000.,100000.,140000.,180000.,220000.]
+        psize.append(t_my_d.p_x)
+        my_hit_test = PixelHitTest(t_my_d)
+        my_telescope_test = Telescope(t_my_d,my_hit_test)
+        res.append(my_telescope_test.Resolution_Tol[2][0])
+
+    graph = ROOT.TGraph()
+    for i in range(len(psize)):
+        graph.SetPoint(i,psize[i],res[i])
+
+    canvas = ROOT.TCanvas("canvas", "TGraph", 800, 600)
+    graph.SetMarkerStyle(ROOT.kFullCircle)
+    graph.GetYaxis().SetTitle("Resolution [um]")
+    graph.GetYaxis().CenterTitle()  
+    graph.GetXaxis().SetTitle("Pixel Size [um]")
+    graph.GetXaxis().CenterTitle()  
+
+    legend = ROOT.TLegend(0.27,0.67,0.62,0.80)
+    legend.SetTextSize(0.04)
+    legend.AddEntry(graph,label)
+
+    canvas.SetGrid() 
+
+    graph.Draw("APL")
+    legend.Draw()
+
+    canvas.Draw()
+    Name = "Res vs size"
+    now = time.strftime("%Y_%m%d_%H%M")
+    path = os.path.join("output/spaceres/taichu_v2", str(now),'' )
+    """ If the path does not exit, create the path"""
+    if not os.access(path, os.F_OK):
+        os.makedirs(path) 
+    canvas.SaveAs(path+Name+".png")
+
 if __name__ == '__main__':
     start = time.time()
     main()

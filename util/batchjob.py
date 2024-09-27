@@ -13,6 +13,8 @@ import subprocess
 import grp
 import pwd
 
+from util.output import create_path
+
 def main(destination_subfolder, command, args):
     test = vars(args)['test'] 
     stat_info = os.stat("./")
@@ -39,11 +41,6 @@ def submit_job(jobfile_name,destination_subfolder,group, test=False):
     command = "hep_sub -o ./output/{}/jobs -e ./output/{}/jobs {} -g {}".format(
         destination_subfolder,destination_subfolder,jobfile_name,group)
     run_cmd(command, test)
-
-def create_path(path):
-    """ If the path does not exit, create the path"""
-    if not os.access(path, os.F_OK):
-        os.makedirs(path, exist_ok=True) 
 
 def run_cmd(command, test=False):
     if test:

@@ -10,16 +10,10 @@
 import pickle
 import ROOT
 import numpy as np
-from scipy.interpolate import interp1d as p1d
-from scipy.interpolate import interp2d as p2d
-from scipy.interpolate import griddata
-from scipy.interpolate import LinearNDInterpolator as LNDI
+
+from util.math import *
 
 diff_res = 1e-5 # difference resolution in cm
-
-x_bin = 1000
-y_bin = 1000
-z_bin = 1000
 
 class DevsimField:
     def __init__(self, device_name, dimension, voltage, read_ele_num, l_z):
@@ -29,14 +23,38 @@ class DevsimField:
         self.read_ele_num = int(read_ele_num) 
         self.l_z = l_z # used for planar weighting field TODO: auto weighting field
 
+        DopingFile = "./output/field/{}/NetDoping_0.0V.pkl".format(self.name)
         PotentialFile = "./output/field/{}/Potential_{}V.pkl".format(self.name, self.voltage)
         TrappingRate_pFile = "./output/field/{}/TrappingRate_p_{}V.pkl".format(self.name, self.voltage)
         TrappingRate_nFile = "./output/field/{}/TrappingRate_n_{}V.pkl".format(self.name, self.voltage)
 
-        self.set_potential(PotentialFile) #self.potential, self.x_efield, self.y_efield, self.z_efield
+        self.set_doping(DopingFile) #self.Doping
+        self.set_potential(PotentialFile) #self.Potential, self.x_efield, self.y_efield, self.z_efield
         self.set_trap_p(TrappingRate_pFile) # self.TrappingRate_p
         self.set_trap_n(TrappingRate_nFile) # self.TrappingRate_n
         self.set_w_p() #self.weighting_potential[]
+
+    def set_doping(self, DopingFile):
+        try:
+            with open(DopingFile,'rb') as file:
+                DopingNotUniform=pickle.load(file)
+                print("Doping file loaded for {}".format(self.name))
+                if DopingNotUniform['metadata']['dimension'] < self.dimension:
+                    print("Doping dimension not match")
+                    return
+        except FileNotFoundError:
+            print("Doping file not found, please run field simulation first")
+            print("or manually set the doping file")
+            return
+        
+        if DopingNotUniform['metadata']['dimension'] == 1:
+            DopingUniform = get_common_interpolate_1d(DopingNotUniform)
+        elif DopingNotUniform['metadata']['dimension'] == 2:
+            DopingUniform = get_common_interpolate_2d(DopingNotUniform)
+        elif DopingNotUniform['metadata']['dimension'] == 3:
+            DopingUniform = get_common_interpolate_3d(DopingNotUniform)
+
+        self.Doping = DopingUniform
 
     def set_potential(self, PotentialFile):
         try:
@@ -54,9 +72,9 @@ class DevsimField:
         if PotentialNotUniform['metadata']['dimension'] == 1:
             PotentialUniform = get_common_interpolate_1d(PotentialNotUniform)
         elif PotentialNotUniform['metadata']['dimension'] == 2:
-            PotentialUniform =get_common_interpolate_2d(PotentialNotUniform)
+            PotentialUniform = get_common_interpolate_2d(PotentialNotUniform)
         elif PotentialNotUniform['metadata']['dimension'] == 3:
-            PotentialUniform =get_common_interpolate_3d(PotentialNotUniform)
+            PotentialUniform = get_common_interpolate_3d(PotentialNotUniform)
 
         self.Potential = PotentialUniform
 
@@ -88,9 +106,9 @@ class DevsimField:
         if TrappingRate_pNotUniform['metadata']['dimension'] == 1:
             TrappingRate_pUniform = get_common_interpolate_1d(TrappingRate_pNotUniform)
         elif TrappingRate_pNotUniform['metadata']['dimension'] == 2:
-            TrappingRate_pUniform =get_common_interpolate_2d(TrappingRate_pNotUniform)
+            TrappingRate_pUniform = get_common_interpolate_2d(TrappingRate_pNotUniform)
         elif TrappingRate_pNotUniform['metadata']['dimension'] == 3:
-            TrappingRate_pUniform =get_common_interpolate_3d(TrappingRate_pNotUniform)
+            TrappingRate_pUniform = get_common_interpolate_3d(TrappingRate_pNotUniform)
 
         self.TrappingRate_p = TrappingRate_pUniform
     
@@ -110,14 +128,27 @@ class DevsimField:
         if TrappingRate_nNotUniform['metadata']['dimension'] == 1:
             TrappingRate_nUniform = get_common_interpolate_1d(TrappingRate_nNotUniform)
         elif TrappingRate_nNotUniform['metadata']['dimension'] == 2:
-            TrappingRate_nUniform =get_common_interpolate_2d(TrappingRate_nNotUniform)
+            TrappingRate_nUniform = get_common_interpolate_2d(TrappingRate_nNotUniform)
         elif TrappingRate_nNotUniform['metadata']['dimension'] == 3:
-            TrappingRate_nUniform =get_common_interpolate_3d(TrappingRate_nNotUniform)
+            TrappingRate_nUniform = get_common_interpolate_3d(TrappingRate_nNotUniform)
 
         self.TrappingRate_n = TrappingRate_nUniform
         
     # DEVSIM dimension order: x, y, z
     # RASER dimension order: z, x, y
+
+    def get_doping(self, x, y, z):
+        '''
+            input: position in um
+            output: doping in cm^-3
+        '''
+        x, y, z = x/1e4, y/1e4, z/1e4 # um to cm
+        if self.dimension == 1:
+            return self.Doping(z)
+        elif self.dimension == 2:
+            return self.Doping(z, x)
+        elif self.dimension == 3:
+            return self.Doping(z, x, y)
     
     def get_potential(self, x, y, z):
         '''
@@ -243,45 +274,6 @@ class DevsimField:
         elif self.dimension == 3:
             return self.TrappingRate_p(z, x, y)
 
-def get_common_interpolate_1d(data):
-    values = data['values']
-    points = data['points']
-    f = p1d(points, values)
-    return f
-
-def get_common_interpolate_2d(data):
-    values = data['values']
-    points_x = []
-    points_y = []
-    for point in data['points']:
-        points_x.append(point[0])
-        points_y.append(point[1])
-    new_x = np.linspace(min(points_x), max(points_x), x_bin)
-    new_y = np.linspace(min(points_y), max(points_y), y_bin)
-    new_points = np.array(np.meshgrid(new_x, new_y)).T.reshape(-1, 2)
-    new_values = griddata((points_x, points_y), values, new_points, method='linear')
-    f = p2d(new_x, new_y, new_values)
-    return f
-
-def get_common_interpolate_3d(data):
-    values = data['values']
-    points_x = []
-    points_y = []
-    points_z = []
-    for point in data['points']:
-        points_x.append(point[0])
-        points_y.append(point[1])
-        points_z.append(point[2])
-    new_x = np.linspace(min(points_x), max(points_x), x_bin)
-    new_y = np.linspace(min(points_y), max(points_y), y_bin)
-    new_z = np.linspace(min(points_z), max(points_z), z_bin)
-    new_points = np.array(np.meshgrid(new_x, new_y, new_z)).T.reshape(-1, 3)
-    new_values = griddata((points_x, points_y, points_z), values, new_points, method='linear')
-    lndi = LNDI(new_points, new_values)
-    def f(x, y, z):
-        point = [x, y, z]
-        return lndi(point)
-    return f
 
 def linear_w_p(z, l_z):
     if z >= l_z:

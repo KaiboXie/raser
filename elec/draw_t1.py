@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
-
+# TODO: Need to be TOTALLY rewritten
 import time
 import os
 from array import array
@@ -87,9 +87,9 @@ def T1():
     legend.Draw("")
 
     now = time.strftime("%Y_%m%d_%H%M%S")
-    path = os.path.join("output/fig", str(now))
+    path = os.path.join("output/elec/t1", str(now))
     os.makedirs(path)
-    c.SaveAs(os.path.join('output/fig', str(now), 't1.pdf'))
+    c.SaveAs(os.path.join('output/elec/t1', str(now), 't1.pdf'))
 
 if __name__ == '__main__':
     T1()

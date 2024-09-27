@@ -22,10 +22,10 @@ subparsers = parser.add_subparsers(help='sub-command help', dest="subparser_name
 parser_asic = subparsers.add_parser('asic', help='ASIC design')
 parser_asic.add_argument('label', help='LABEL to identify ASIC design')
 
-parser_draw = subparsers.add_parser('current', help='calculate drift current')
-parser_draw.add_argument('label', help='LABEL to identify root files')
+parser_cce = subparsers.add_parser('cce', help='Charge Collection Efficiency')
+parser_cce.add_argument('label', help='LABEL to identify CCE experiment')
 
-parser_draw = subparsers.add_parser('draw', help='draw figures')
+parser_draw = subparsers.add_parser('current', help='calculate drift current')
 parser_draw.add_argument('label', help='LABEL to identify root files')
 
 parser_gsignal = subparsers.add_parser('elec', help='electronic readout')
@@ -43,22 +43,25 @@ parser_fpga.add_argument('label', help='LABEL to identify FPGA design')
 
 parser_gen_signal = subparsers.add_parser('gen_signal', help='generate signal')
 parser_gen_signal.add_argument('det_name', help='name of the detector')
+parser_gen_signal.add_argument('-l','--label', help='LABEL to identify signal generation method', default='signal')
 parser_gen_signal.add_argument('-vol', '--voltage', type=str, help='bias voltage')
 parser_gen_signal.add_argument('-abs', '--absorber', type=str, help='model of particle energy absorber')
 parser_gen_signal.add_argument('-amp', '--amplifier', type=str, help='amplifier')
 parser_gen_signal.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
-
-parser_gsignal = subparsers.add_parser('particle', help='calculate particle')
-parser_gsignal.add_argument('label', help='LABEL to identify spaceres files')
-
-parser_root = subparsers.add_parser('root', help='root files conversion')
-parser_root.add_argument('label', help='LABEL to identify root files')
 
 parser_spaceres = subparsers.add_parser('spaceres', help='space resolution calculation')
 parser_spaceres.add_argument('label', help='LABEL to identify spaceres files')
 
 parser_spaceres = subparsers.add_parser('timeres', help='time resolution calculation')
 parser_spaceres.add_argument('det_name', help='name of the detector')
+
+parser_tct = subparsers.add_parser('tct', help='TCT simulation')
+parser_tct.add_argument('label', help='LABEL to identify TCT options')
+parser_tct.add_argument('det_name', help='name of the detector')
+parser_tct.add_argument('laser', help='name of the laser')
+parser_tct.add_argument('-vol', '--voltage', type=str, help='bias voltage')
+parser_tct.add_argument('-amp', '--amplifier', type=str, help='amplifier')
+parser_tct.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
 
 args = parser.parse_args()
 
@@ -68,7 +71,7 @@ if len(sys.argv) == 1:
 
 kwargs = vars(args)
 
-submodules = ['asic', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'root', 'spaceres', 'timeres']
+submodules = ['asic', 'cce', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'spaceres', 'tct', 'timeres']
 
 submodule = kwargs['subparser_name']
 if submodule not in submodules:
@@ -84,7 +87,7 @@ if kwargs['batch'] == True:
 
 elif kwargs['shell'] == False: # not in shell
     try:
-        for package in ['ROOT', 'geant4_pybind', 'devsim']:
+        for package in ['ROOT', 'geant4_pybind', 'devsim', 'numpy', 'scipy']:
             # package dependency check
             import package
         submodule = importlib.import_module(submodule)
