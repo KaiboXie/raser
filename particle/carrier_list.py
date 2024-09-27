@@ -1,3 +1,4 @@
+import ROOT
 class CarrierListFromG4P:
     def __init__(self, material, my_g4p, batch):
         """
