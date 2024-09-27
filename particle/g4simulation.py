@@ -379,55 +379,24 @@ class MyDetectorConstruction(g4b.G4VUserDetectorConstruction):
     
     def create_elemental(self,object): 
         name = object['name']
-        print(name)
-        if name == 'pipe':
-            material_type = self.nist.FindOrBuildMaterial(object['material'],
-                                                        False)
-
-            self.rotation = g4b.G4RotationMatrix()
-            self.rotation.rotateX(3*math.pi/2)
-           
-            translation = g4b.G4ThreeVector(object['position_x']*g4b.um, object['position_y']*g4b.um, object['position_z']*g4b.um)
-            visual = g4b.G4VisAttributes(g4b.G4Color(object['colour'][0],object['colour'][1],object['colour'][2]))
-            mother = self.physical['world']
-
-            Rmin = object['Rmin']*g4b.um
-            Rmax = object['Rmax']*g4b.um
-            Pipe_Z = object['Pipe_Z']*g4b.um
-            PipeSphi = object['PipeSphi']*g4b.deg
-            PipeDphi = object['PipeDphi']*g4b.deg
-
-            self.solid[name] = g4b.G4Tubs("Pipe",                                        
-                                           Rmin, Rmax, Pipe_Z/2,PipeSphi,PipeDphi)
-            
-            self.logical[name] = g4b.G4LogicalVolume(self.solid[name], 
-                                                    material_type, 
-                                                    name)
-            self.physical[name] = g4b.G4PVPlacement(self.rotation,translation,                                                
-                                                    name,self.logical[name],
-                                                    mother, False, 
-                                                    0,self.checkOverlaps)
-            self.logical[name].SetVisAttributes(visual)  
-
-        else:    
-            material_type = self.nist.FindOrBuildMaterial(object['material'],
-                                                        False)
-            translation = g4b.G4ThreeVector(object['position_x']*g4b.um, object['position_y']*g4b.um, object['position_z']*g4b.um)
-            visual = g4b.G4VisAttributes(g4b.G4Color(object['colour'][0],object['colour'][1],object['colour'][2]))
-            mother = self.physical['world']
-            sidex = object['side_x']*g4b.um
-            sidey = object['side_y']*g4b.um
-            sidez = object['side_z']*g4b.um
-            self.solid[name] = g4b.G4Box(name, sidex/2., sidey/2., sidez/2.)
-            
-            self.logical[name] = g4b.G4LogicalVolume(self.solid[name], 
-                                                    material_type, 
-                                                    name)
-            self.physical[name] = g4b.G4PVPlacement(None,translation,                                                
-                                                    name,self.logical[name],
-                                                    mother, False, 
-                                                    0,self.checkOverlaps)
-            self.logical[name].SetVisAttributes(visual)     
+        material_type = self.nist.FindOrBuildMaterial(object['material'],
+                                                    False)
+        translation = g4b.G4ThreeVector(object['position_x']*g4b.um, object['position_y']*g4b.um, object['position_z']*g4b.um)
+        visual = g4b.G4VisAttributes(g4b.G4Color(object['colour'][0],object['colour'][1],object['colour'][2]))
+        mother = self.physical['world']
+        sidex = object['side_x']*g4b.um
+        sidey = object['side_y']*g4b.um
+        sidez = object['side_z']*g4b.um
+        self.solid[name] = g4b.G4Box(name, sidex/2., sidey/2., sidez/2.)
+        
+        self.logical[name] = g4b.G4LogicalVolume(self.solid[name], 
+                                                material_type, 
+                                                name)
+        self.physical[name] = g4b.G4PVPlacement(None,translation,                                                
+                                                name,self.logical[name],
+                                                mother, False, 
+                                                0,self.checkOverlaps)
+        self.logical[name].SetVisAttributes(visual)     
 
     def create_binary_compounds(self,object):
         name = object['name']
