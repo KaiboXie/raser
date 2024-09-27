@@ -12,14 +12,15 @@ Description:
 @version    : 2.0
 '''
 
-import geant4_pybind as g4b
 import sys
-import numpy as np
 import random
-
+import math
 import json
 
-import math
+import numpy as np
+import geant4_pybind as g4b
+
+verbose = 0
 
 # Geant4 main process
 class Particles:
@@ -585,7 +586,7 @@ class MyEventAction(g4b.G4UserEventAction):
         if(Particles._model == "pixel_detector"):
             save_pixel_detector_events(self.volume_name,self.localposition)
 
-        print("Detector: total energy:", g4b.G4BestUnit(self.edep_device, "Energy"), end="")
+        #print("Detector: total energy:", g4b.G4BestUnit(self.edep_device, "Energy"), end="")
 
     def RecordDevice(self, edep,point_in,point_out):
         self.edep_device += edep
