@@ -14,7 +14,7 @@ import subprocess
 import ROOT
 
 from field import build_device as bdv
-from particle import g4simulation as g4s
+from particle import g4_time_resolution as g4t
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec import readout as rdo
@@ -71,7 +71,7 @@ def main(kwargs):
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
     
     g4_seed = random.randint(0,1e7)
-    my_g4p = g4s.Particles(my_d, absorber, g4_seed)
+    my_g4p = g4t.Particles(my_d, absorber, g4_seed)
 
     if "strip" in det_name:
         my_current = ccrt.CalCurrentStrip(my_d, my_f, my_g4p, 0)

@@ -14,7 +14,7 @@ import ROOT
 import acts
 import numpy as np
 
-from particle.g4simulation import Particles
+from particle.g4_pixel import PixelParticles
 from field.build_device import Detector
 from current.cal_current_diffuse import CalCurrentPixel
 from util.output import create_path
@@ -476,7 +476,7 @@ def draw_charge(my_charge):
 
 def main():
     my_d = Detector("TAICHU3") #remain the same
-    my_g4p = Particles(my_d, my_d.absorber) #remove my_f
+    my_g4p = PixelParticles(my_d, my_d.absorber) #remove my_f
     my_hit_charge = CalCurrentPixel(my_d,my_g4p)
     draw_charge(my_hit_charge)
     my_telescope_charge = Telescope(my_d,my_hit_charge) 

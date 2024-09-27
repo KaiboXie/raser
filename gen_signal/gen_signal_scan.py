@@ -14,7 +14,7 @@ import subprocess
 import ROOT
 
 from field import build_device as bdv
-from particle import g4simulation as g4s
+from particle import g4_time_resolution as g4t
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec import readout as rdo
@@ -99,7 +99,7 @@ def job_main(kwargs):
     instance_number = job_number
 
     g4_seed = instance_number * total_events
-    my_g4p = g4s.Particles(my_d, absorber, g4_seed)
+    my_g4p = g4t.Particles(my_d, absorber, g4_seed)
     batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_number)
     del my_g4p
 
