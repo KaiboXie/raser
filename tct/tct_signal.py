@@ -14,7 +14,7 @@ import ROOT
 from field import build_device as bdv
 from field import devsim_field as devfield
 from current import cal_current as ccrt
-from elec import ele_readout as rdout
+from elec import readout as rdo
 from elec import ngspice_set_input as ngsip
 from elec import ngspice as ng
 from .source import TCTTracks
@@ -78,14 +78,14 @@ def main(kwargs):
         my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
 
     if 'ngspice' in amplifier:
-        save_current(my_d, my_current,my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
+        save_current(my_d, my_current, key=None)
         input_p=ngsip.set_input(my_current, my_d, key=None)
         input_c=','.join(input_p)
         ng.ngspice_t0(input_c, input_p)
         subprocess.run(['ngspice -b -r t0.raw output/T0_tmp.cir'], shell=True)
         ng.plot_waveform()
     else:
-        ele_current = rdout.Amplifier(my_current, amplifier)
+        ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
     
     if kwargs['scan'] != None: #assume parameter alter
         key = my_l.fz_rel
@@ -102,7 +102,7 @@ def main(kwargs):
     print("total time used:%s"%(time.time()-start))
 
 #TODO: move this to calcurrent
-def save_current(my_d,my_current,my_f,key):
+def save_current(my_d,my_current,key):
     if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
         path = os.path.join('output', 'pintct', my_d.det_name, )
     elif "lgad3D" in my_d.det_model:
