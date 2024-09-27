@@ -476,9 +476,8 @@ def draw_charge(my_charge):
 
 def main():
     my_d = Detector("TAICHU3") #remain the same
-    my_f = 0
     my_g4p = Particles(my_d, my_d.absorber) #remove my_f
-    my_hit_charge = CalCurrentPixel(my_d,my_f,my_g4p)
+    my_hit_charge = CalCurrentPixel(my_d,my_g4p)
     draw_charge(my_hit_charge)
     my_telescope_charge = Telescope(my_d,my_hit_charge) 
     my_hit_test = PixelHitTest(my_d)
