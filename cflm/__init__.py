@@ -1,11 +1,4 @@
 import logging
-<<<<<<< Updated upstream
-=======
-from . import cflm
-from . import get_signal
-from . import cflm_Volt_Curr
-from . import energy_deposition
->>>>>>> Stashed changes
 
 def main(kwargs):
     label = kwargs['label']
@@ -20,12 +13,8 @@ def main(kwargs):
     logging.debug('This is DEBUG messaage')
 
     if label == 'cflm':
-<<<<<<< Updated upstream
         from . import cflm
         cflm.main()
-=======
-       cflm.main()
->>>>>>> Stashed changes
     if label == 'GetSignal':
         from . import get_signal
         get_signal.get_signal()
