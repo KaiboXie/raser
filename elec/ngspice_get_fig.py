@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
-import ROOT
 import sys
+import os
+
 import numpy
+import ROOT
+
+from util.output import output
+
 # TODO: Need to be TOTALLY rewritten
 def read_file(file_path,file_name):
     with open(file_path + '/' + file_name) as f:
@@ -18,15 +23,14 @@ def read_file(file_path,file_name):
 
     return time,volt
 
-def main():
-    file_path = 'output/elec/ngspice_fig'
-    file_name = sys.argv[1]
-    com_name=file_name.split('.')[0]
-    fig_name=file_path + com_name + '.pdf'
+def main(elec_name):
+    file_path = output(__file__)
+    fig_name = os.path.join(file_path, elec_name+'.pdf')
     time,volt = [],[]
 
-    time,volt = read_file(file_path,file_name)
+    time,volt = read_file(file_path, elec_name+'.raw')
     length = len(time)
+    t_min, t_max = time[0], time[-1]
 
     ROOT.gROOT.SetBatch()    
     c = ROOT.TCanvas('c','c',700,600)
@@ -37,13 +41,12 @@ def main():
     f1.SetLineWidth(2)
 
     f1.GetXaxis().SetTitle('Time [ns]')
-    f1.GetXaxis().SetLimits(0,20)
+    f1.GetXaxis().SetLimits(t_min, t_max)
     f1.GetXaxis().CenterTitle()
     f1.GetXaxis().SetTitleSize(0.05)
     f1.GetXaxis().SetTitleOffset(0.8)
 
     f1.GetYaxis().SetTitle('Voltage [mV]')
-    f1.GetYaxis().SetLimits(0,-5)
     f1.GetYaxis().CenterTitle()
     f1.GetYaxis().SetTitleSize(0.05)
     f1.GetYaxis().SetTitleOffset(0.7)
@@ -51,7 +54,6 @@ def main():
     c.cd()
     f1.Draw('AL')
     c.SaveAs(fig_name)
-    print("figure  has been saved in " , fig_name)
 
 if __name__ == '__main__':
     main()

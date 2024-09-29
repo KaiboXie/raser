@@ -28,7 +28,7 @@ my_l = raser.TCTTracks(my_d, dset.laser)
 my_current = raser.CalCurrentLaser(my_d, my_f, my_l)
 ele_current = raser.Amplifier(my_current.sum_cu, dset.amplifier)
 save_TTree.save_signal_TTree(dset,my_d,my_l.fx_rel,ele_current,my_f)
-my_current.save_current(dset,my_d,my_l,my_f,"fx_rel")
+my_current.save_current(dset,my_d,my_l,"fx_rel")
 
 current_SiC = array("d")
 T_SiC = array("d")
