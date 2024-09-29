@@ -37,7 +37,7 @@ def read_file_current(file_path,file_name):
 def getVolCur():
     file_path = './raser/cflm/output'
     
-    geant4_json = "./raser/cflm/cflm.json"
+    geant4_json = "./setting/absorber/cflm.json"
     with open(geant4_json) as f:
          g4_dic = json.load(f)
 

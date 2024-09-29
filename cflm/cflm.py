@@ -19,7 +19,7 @@ class cflmG4Particles:
         global s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps
         s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps = [],[],[],[]
 
-        geant4_json = "./raser/cflm/cflm.json"
+        geant4_json = "./setting/absorber/cflm.json"
         with open(geant4_json) as f:
              g4_dic = json.load(f)
 
@@ -391,7 +391,7 @@ def main():
     global s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps
     s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps = [],[],[],[]
 
-    geant4_json = "./raser/cflm/cflm.json"
+    geant4_json = "./setting/absorber/cflm.json"
     with open(geant4_json) as f:
         g4_dic = json.load(f)
 
