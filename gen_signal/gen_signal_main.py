@@ -14,14 +14,15 @@ import subprocess
 import ROOT
 
 from field import build_device as bdv
-from particle import g4simulation as g4s
+from particle import g4_time_resolution as g4t
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec import readout as rdo
 from elec import ngspice_set_input as ngsip
 from elec import ngspice as ng
+from elec.set_pwl_input import set_pwl_input as pwlin
 
-from . import draw_save
+from .draw_save import energy_deposition, draw_drift_path, draw_current, cce
 from util.output import output
 
 import json
@@ -41,8 +42,7 @@ def main(kwargs):
         DevsimCal -- Get the electric field and weighting potential 
         Particles -- Electron and hole paris distibution
         CalCurrent -- Drift of e-h pais and induced current
-        Amplifier -- Readout electronics simulation
-        draw_plots -- Draw electric field, drift path and energy deposition        
+        Amplifier -- Readout electronics simulation  
     Modify:
     ---------
         2021/09/02
@@ -68,25 +68,9 @@ def main(kwargs):
         amplifier = my_d.amplifier
 
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
-
-    if kwargs['scan'] != None:
-        geant4_json = "./setting/absorber/" + absorber + ".json"
-        with open(geant4_json) as f:
-            g4_dic = json.load(f)
-
-        total_events = int(g4_dic['total_events'])
-        for i in range(kwargs['scan']):
-            # TODO: change this into multithread
-            instance_number = i
-            g4_seed = instance_number * total_events
-            my_g4p = g4s.Particles(my_d, absorber, g4_seed)
-            batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_number)
-            del my_g4p
-        return
     
-    else:  
-        g4_seed = random.randint(0,1e7)
-        my_g4p = g4s.Particles(my_d, absorber, g4_seed)
+    g4_seed = random.randint(0,1e7)
+    my_g4p = g4t.Particles(my_d, absorber, g4_seed)
 
     if "strip" in det_name:
         my_current = ccrt.CalCurrentStrip(my_d, my_f, my_g4p, 0)
@@ -94,65 +78,38 @@ def main(kwargs):
         my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
 
     if 'ngspice' in amplifier:
-        save_current(my_d, my_current, my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
+        save_current(my_d, my_current,my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
+        '''
         input_p=ngsip.set_input(my_current, my_d, key=None)
         input_c=','.join(input_p)
         ng.ngspice_t0(input_c, input_p)
         subprocess.run(['ngspice -b -r t0.raw output/T0_tmp.cir'], shell=True)
-        ng.plot_waveform()
+        ng.plot_waveform()    
+        '''
+        ### For CEPC Fast Luminosity Measurement
+        pwlin('output/PIN/NJU-PIN/pwl_current.txt', 'paras/circuit/ucsc.cir', 'output/elec/cflm/')
+        subprocess.run(['ngspice -b -r cflm_single_ele.raw output/elec/cflm/ucsc_tmp.cir'], shell=True)
+        ####
     else:
         ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
-        draw_save.draw_plots(my_d,ele_current,my_f,my_g4p,my_current)
+        now = time.strftime("%Y_%m%d_%H%M%S")
+        path = output(__file__, my_d.det_name, now)
+
+        #energy_deposition(my_g4p)   # Draw Geant4 depostion distribution
+        draw_drift_path(my_d,my_f,my_current,path)
+
+        for i in range(my_current.read_ele_num):
+            draw_current(my_d, my_current,ele_current.amplified_current,i,ele_current.amplified_current_name,path) # Draw current
+        if 'strip' in my_d.det_name:
+            cce(my_d, my_f, my_current, path)
     
     del my_f
     end = time.time()
     print("total_time:%s"%(end-start))
 
 
-
-def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_number):
-    """
-    Description:
-        Batch run some events to get time resolution
-    Parameters:
-    ---------
-    start_n : int
-        Start number of the event
-    end_n : int
-        end number of the event 
-    detection_efficiency: float
-        The ration of hit particles/total_particles           
-    @Returns:
-    ---------
-        None
-    @Modify:
-    ---------
-        2021/09/07
-    """
-    path = output(__file__, my_d.det_name, 'batch')
-    if "plugin" in my_d.det_model:
-        draw_save.draw_ele_field(my_d,my_f,"xy",my_d.det_model,my_d.l_z*0.5,path)
-    else:
-        draw_save.draw_ele_field_1D(my_d,my_f,path)
-        draw_save.draw_ele_field(my_d,my_f,"xz",my_d.det_model,my_d.l_y*0.5,path)
-
-    start_n = instance_number * total_events
-    end_n = (instance_number + 1) * total_events
-
-    effective_number = 0
-    for event in range(start_n,end_n):
-        print("run events number:%s"%(event))
-        if len(my_g4p.p_steps[event-start_n]) > 5:
-            effective_number += 1
-            my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, event-start_n)
-            ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
-            draw_save.save_signal_time_resolution(my_d,event,ele_current,my_g4p,start_n,my_f)
-            del ele_current
-    detection_efficiency =  effective_number/(end_n-start_n) 
-    print("detection_efficiency=%s"%detection_efficiency)
-
 # TODO: change this to a method of CalCurrent
-def save_current(my_d,my_current,my_f,key):
+def save_current(my_d,my_current,key):
     if key!=None:
         if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
             path = os.path.join('output', 'pintct', my_d.det_name, )
@@ -185,11 +142,21 @@ def save_current(my_d,my_current,my_f,key):
         t_out.Write()
         fout.Close()
 
+    ### For CEPC Fast Luminosity Measurement    
+    file = ROOT.TFile(os.path.join(path, "sim-current") + ".root", "READ")
+    tree = file.Get("tree")
 
+    pwl_file = open(os.path.join(path,"pwl_current.txt"), "w")
 
-
-
-
+    for i in range(tree.GetEntries()):
+       tree.GetEntry(i)
+       time_pwl = tree.time
+       current_pwl = tree.current0
+       pwl_file.write(str(time_pwl) + " " + str(current_pwl) + "\n")
+    
+    pwl_file.close()
+    file.Close()
+    ###
 
 if __name__ == '__main__':
     args = sys.argv[1:]

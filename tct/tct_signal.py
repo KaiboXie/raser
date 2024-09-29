@@ -20,7 +20,7 @@ from elec import ngspice as ng
 from .source import TCTTracks
 from .save_TTree import save_signal_TTree
 from util.output import output, create_path
-from gen_signal.draw_save import draw_plots
+from gen_signal.draw_save import draw_drift_path, draw_current
 
 def main(kwargs):
     """
@@ -36,7 +36,6 @@ def main(kwargs):
         Particles -- Electron and hole paris distibution
         CalCurrent -- Drift of e-h pais and induced current
         Amplifier -- Readout electronics simulation
-        draw_plots -- Draw electric field, drift path and energy deposition        
     Modify:
     ---------
         2021/09/02
@@ -98,7 +97,14 @@ def main(kwargs):
             raise NameError
     else:
         path = output(__file__, my_d.det_name, my_l.model)
-        draw_plots(my_d,ele_current,my_f,None,my_current,my_l,path)
+        draw_drift_path(my_d,my_f,my_current,path)
+        draw_current(my_d, my_current, ele_current.amplified_current, read_ele_num=my_current.read_ele_num, model=my_l.model, path=path)
+        for i in range(my_current.read_ele_num):
+            draw_current(my_d, my_current,ele_current.amplified_current,i,ele_current.amplified_current_name,path) # Draw current
+
+        my_l.draw_nocarrier3D(path)
+        my_l.draw_nocarrier2D(path)
+
     print("total time used:%s"%(time.time()-start))
 
 #TODO: move this to calcurrent

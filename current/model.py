@@ -120,7 +120,7 @@ class Material:
             
             if self.mobility_model == "Reggiani":
                 """Reggiani 1999"""
-                if Neff > 0:
+                if Neff >= 0:
                     N_D = Neff
                     N_A = 0
                 if Neff < 0:

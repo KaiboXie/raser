@@ -1,9 +1,11 @@
 import logging
+<<<<<<< Updated upstream
+=======
 from . import cflm
-from . import RootPlot_1D
 from . import get_signal
 from . import cflm_Volt_Curr
 from . import energy_deposition
+>>>>>>> Stashed changes
 
 def main(kwargs):
     label = kwargs['label']
@@ -18,12 +20,18 @@ def main(kwargs):
     logging.debug('This is DEBUG messaage')
 
     if label == 'cflm':
+<<<<<<< Updated upstream
+        from . import cflm
+        cflm.main()
+=======
        cflm.main()
-    if label == 'RootPlot_1D':
-       RootPlot_1D.RootPlot_1D()
+>>>>>>> Stashed changes
     if label == 'GetSignal':
-       get_signal.get_signal()
+        from . import get_signal
+        get_signal.get_signal()
     if label == 'GetVolCur':
-       cflm_Volt_Curr.getVolCur()
+        from . import cflm_Volt_Curr
+        cflm_Volt_Curr.getVolCur()
     if label == 'GetEdep':
-       energy_deposition.getedep()
+        from . import energy_deposition
+        energy_deposition.getedep()
