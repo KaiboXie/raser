@@ -63,14 +63,15 @@ class Carrier:
 
         self.charge = charge       
 
-    def diffuse_single_step(self,my_d,my_f):
-        delta_t=t_bin
+    def diffuse_single_step(self,my_d):
+        delta_t = t_bin
         #e_field = my_f.get_e_field(self.x,self.y,self.z)
         intensity = 0
 
-        kboltz=8.617385e-5 #eV/K
+        kboltz = 8.617385e-5 #eV/K
         mobility = Material(my_d.material)
-        mu = mobility.cal_mobility(my_d.temperature, my_f.get_doping(self.x, self.y, self.z), self.charge, intensity)
+        Neff = float(my_d.doping['Donors']) - float(my_d.doping['Acceptors']) # assuming able to convert
+        mu = mobility.cal_mobility(my_d.temperature, Neff, self.charge, intensity)
         diffusion = (2.0*kboltz*mu*my_d.temperature*delta_t)**0.5
         #diffusion = 0.0
         dif_x=random.gauss(0.0,diffusion)*1e4
@@ -102,7 +103,7 @@ class Carrier:
         #record
         self.path.append([self.x,self.y,self.z,self.t])
 
-    def diffuse_end(self,my_f):
+    def diffuse_end(self):
         if (self.z<=0):
         #    self.end_condition = "out of bound"
             self.diffuse_end_condition = "collect"
@@ -127,7 +128,7 @@ class Carrier:
         return self.diffuse_end_condition
         '''
 
-    def pixel_position(self,my_f,my_d):
+    def pixel_position(self,my_d):
         if self.diffuse_end_condition == "collect":
             self.row = self.x // self.pixel
             self.column = self.y // self.pixel
@@ -140,7 +141,7 @@ class Carrier:
 
 class CalCurrentPixel:
     """Calculation of diffusion electrons in pixel detector"""
-    def __init__(self, my_d, my_f, my_g4p):
+    def __init__(self, my_d, my_g4p):
         batch = len(my_g4p.localposition)
         layer = len(my_d.lt_z)
         G4P_carrier_list = PixelCarrierListFromG4P(my_d, my_g4p)                 
@@ -167,7 +168,7 @@ class CalCurrentPixel:
                                        1)
                     if not electron.diffuse_not_in_sensor(my_d):
                         self.electrons.append(electron)
-                self.diffuse_loop(my_d,my_f)
+                self.diffuse_loop(my_d)
 
                 Xbins=int(my_d.l_x // electron.pixel)
                 Ybins=int(my_d.l_y // electron.pixel)
@@ -198,12 +199,12 @@ class CalCurrentPixel:
         #print(self.sum_signal)
         #print(self.event)
 
-    def diffuse_loop(self, my_d, my_f):
+    def diffuse_loop(self, my_d):
         for electron in self.electrons:
             while not electron.diffuse_not_in_sensor(my_d):
-                electron.diffuse_single_step(my_d, my_f)
-                electron.diffuse_end(my_f)
-            x,y,charge_quantity = electron.pixel_position(my_f,my_d)
+                electron.diffuse_single_step(my_d)
+                electron.diffuse_end()
+            x,y,charge_quantity = electron.pixel_position(my_d)
             if (x != -1)&(y != -1): 
                 self.row.append(x)
                 self.column.append(y)

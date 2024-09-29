@@ -319,7 +319,7 @@ def main():
     visManager.Initialize()
 
     UImanager = g4b.G4UImanager.GetUIpointer()
-    UImanager.ApplyCommand("/control/execute paras/g4macro/init_vis.mac")
+    UImanager.ApplyCommand("/control/execute param_file/g4macro/init_vis.mac")
     UImanager.ApplyCommand('/run/initialize')
     UImanager.ApplyCommand('/tracking/verbose 2')
     UImanager.ApplyCommand('/run/beamOn 100000')

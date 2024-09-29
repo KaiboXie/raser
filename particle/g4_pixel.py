@@ -12,17 +12,18 @@ Description:
 @version    : 2.0
 '''
 
-import geant4_pybind as g4b
 import sys
-import numpy as np
 import random
-
+import math
 import json
 
-import math
+import numpy as np
+import geant4_pybind as g4b
+
+verbose = 0
 
 # Geant4 main process
-class Particles:
+class PixelParticles:
     #model name for other class to use
     _model = None
     #other pars may use in other class define here
@@ -51,17 +52,16 @@ class Particles:
 
         self.geant4_model = g4_dic['geant4_model']
         detector_material=my_d.device_dict['material']
-        if(self.geant4_model=='pixel_detector'):
-            my_g4d = PixelDetectorConstruction(g4_dic,g4_dic['maxstep'])
-            Particles._model = self.geant4_model
-            Particles._randx = g4_dic['par_randx']
-            Particles._randy = g4_dic['par_randy']
-            #there's some parameter only use by this model
-            global s_devicenames,s_localposition
-            s_devicenames,s_localposition=[],[]
-            print("end g4")
-        else:
-            my_g4d = MyDetectorConstruction(my_d,g4_dic,detector_material,g4_dic['maxstep'])		
+
+        my_g4d = PixelDetectorConstruction(g4_dic,g4_dic['maxstep'])
+        PixelParticles._model = self.geant4_model
+        PixelParticles._randx = g4_dic['par_randx']
+        PixelParticles._randy = g4_dic['par_randy']
+        #there's some parameter only use by this model
+        global s_devicenames,s_localposition
+        s_devicenames,s_localposition=[],[]
+        print("end g4")
+	
         if g4_dic['g4_vis']: 
             ui = None
             ui = g4b.G4UIExecutive(len(sys.argv), sys.argv)
@@ -111,45 +111,14 @@ class Particles:
         self.edep_devices=s_edep_devices
         self.events_angle=s_events_angle
 
-        if(self.geant4_model=='pixel_detector'):
-            #record localpos in logicvolume
-            self.devicenames = s_devicenames
-            self.localposition = s_localposition
-            for i in range (0,len(s_devicenames)):
-                #print("eventID:",i)
-                #print("totalhits:",len(s_localposition[i]))
-                pass
-            del s_devicenames,s_localposition
-                
-        if(self.geant4_model=="beam_monitor"):
-            hittotal=0
-            for particleenergy in s_edep_devices:
-                if(particleenergy>0):
-                    hittotal=hittotal+1
-            self.hittotal=hittotal      #count the numver of hit particles
-
-            number=0
-            total_steps=0
-            for step in s_p_steps:
-                total_steps=len(step)+total_steps
-            average_steps=total_steps/len(s_p_steps)
-            for step in s_p_steps:
-                if(len(step)>=average_steps*0.9):
-                    break
-                number=number+1
-            newtype_step=s_p_steps[number]      #new particle's step
-            self.p_steps_current=[[[single_step[0]+my_d.l_x/2,
-                                    single_step[1]+my_d.l_y/2,
-                                    single_step[2]-self.init_tz_device]\
-                for single_step in newtype_step]]
-        
-            newtype_energy=[0 for i in range(len(newtype_step))]
-            for energy in s_energy_steps:
-                for i in range(len(newtype_step)):
-                    if(len(energy)>i):
-                        newtype_energy[i]+=energy[i]
-            self.energy_steps=[newtype_energy]      #new particle's every step energy
-
+        #record localpos in logicvolume
+        self.devicenames = s_devicenames
+        self.localposition = s_localposition
+        for i in range (0,len(s_devicenames)):
+            #print("eventID:",i)
+            #print("totalhits:",len(s_localposition[i]))
+            pass
+        del s_devicenames,s_localposition
         del s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps,s_events_angle
         
     def __del__(self):
@@ -292,183 +261,6 @@ class PixelDetectorConstruction(g4b.G4VUserDetectorConstruction):
     def Construct(self): # return the world volume
         self.fStepLimit.SetMaxAllowedStep(self.maxStep)
         return self.physical['world']
-        
-#Geant4 for object
-class MyDetectorConstruction(g4b.G4VUserDetectorConstruction):                
-    "My Detector Construction"
-    def __init__(self,my_d,g4_dic,detector_material,maxStep=0.5):
-        g4b.G4VUserDetectorConstruction.__init__(self)
-        self.solid = {}
-        self.logical = {}
-        self.physical = {}
-        self.checkOverlaps = True
-        self.create_world(g4_dic['world'])
-        self.geant4_model = g4_dic['geant4_model']
-        
-        if(detector_material=='Si'):
-            detector={
-                        "name" : "Device",
-                        "material" : "G4_Si",
-                        "side_x" : my_d.l_x,
-                        "side_y" : my_d.l_y,
-                        "side_z" : my_d.l_z,
-                        "colour" : [1,0,0],
-                        "position_x" : 0,
-                        "position_y" : 0,
-                        "position_z" : my_d.l_z/2.0
-                        }
-            self.create_elemental(detector)
-
-        if(detector_material=='SiC' and self.geant4_model != 'cflm'):
-            detector={
-                        "name" : "Device",
-                        "material_1" : "Si",
-                        "material_2" : "C",
-                        "compound_name" :"SiC",
-                        "density" : 3.2,
-                        "natoms_1" : 50,
-                        "natoms_2" : 50,
-                        "side_x" : my_d.l_x,
-                        "side_y" : my_d.l_y,
-                        "side_z" : my_d.l_z,
-                        "colour" : [1,0,0],
-                        "position_x" : 0,
-                        "position_y" : 0,
-                        "position_z" : my_d.l_z/2.0,
-                        "tub" : {}
-                        }
-            self.create_binary_compounds(detector)
-            
-        if(g4_dic['object']):
-            for object_type in g4_dic['object']:
-                if(object_type=="elemental"):
-                    for every_object in g4_dic['object'][object_type]:
-                        self.create_elemental(g4_dic['object'][object_type][every_object])
-                if(object_type=="binary_compounds"):
-                    for every_object in g4_dic['object'][object_type]:
-                        self.create_binary_compounds(g4_dic['object'][object_type][every_object])
-       
-        self.maxStep = maxStep*g4b.um
-        self.fStepLimit = g4b.G4UserLimits(self.maxStep)
-        
-        if (self.geant4_model == 'cflm'):
-            self.logical["detector"].SetUserLimits(self.fStepLimit)
-        else:
-           self.logical["Device"].SetUserLimits(self.fStepLimit)
-
-    def create_world(self,world_type):
-
-        self.nist = g4b.G4NistManager.Instance()
-        material = self.nist.FindOrBuildMaterial(world_type)  
-        self.solid['world'] = g4b.G4Box("world",
-                                        500000*g4b.um,
-                                        500000*g4b.um,
-                                        500000*g4b.um)
-        self.logical['world'] = g4b.G4LogicalVolume(self.solid['world'], 
-                                                    material, 
-                                                    "world")
-        self.physical['world'] = g4b.G4PVPlacement(None, 
-                                                   g4b.G4ThreeVector(0,0,0), 
-                                                   self.logical['world'], 
-                                                   "world", None, False, 
-                                                   0,self.checkOverlaps)
-        
-        self.logical['world'].SetVisAttributes(g4b.G4VisAttributes.GetInvisible())
-
-    
-    def create_elemental(self,object): 
-        name = object['name']
-        print(name)
-        if name == 'pipe':
-            material_type = self.nist.FindOrBuildMaterial(object['material'],
-                                                        False)
-
-            self.rotation = g4b.G4RotationMatrix()
-            self.rotation.rotateX(3*math.pi/2)
-           
-            translation = g4b.G4ThreeVector(object['position_x']*g4b.um, object['position_y']*g4b.um, object['position_z']*g4b.um)
-            visual = g4b.G4VisAttributes(g4b.G4Color(object['colour'][0],object['colour'][1],object['colour'][2]))
-            mother = self.physical['world']
-
-            Rmin = object['Rmin']*g4b.um
-            Rmax = object['Rmax']*g4b.um
-            Pipe_Z = object['Pipe_Z']*g4b.um
-            PipeSphi = object['PipeSphi']*g4b.deg
-            PipeDphi = object['PipeDphi']*g4b.deg
-
-            self.solid[name] = g4b.G4Tubs("Pipe",                                        
-                                           Rmin, Rmax, Pipe_Z/2,PipeSphi,PipeDphi)
-            
-            self.logical[name] = g4b.G4LogicalVolume(self.solid[name], 
-                                                    material_type, 
-                                                    name)
-            self.physical[name] = g4b.G4PVPlacement(self.rotation,translation,                                                
-                                                    name,self.logical[name],
-                                                    mother, False, 
-                                                    0,self.checkOverlaps)
-            self.logical[name].SetVisAttributes(visual)  
-
-        else:    
-            material_type = self.nist.FindOrBuildMaterial(object['material'],
-                                                        False)
-            translation = g4b.G4ThreeVector(object['position_x']*g4b.um, object['position_y']*g4b.um, object['position_z']*g4b.um)
-            visual = g4b.G4VisAttributes(g4b.G4Color(object['colour'][0],object['colour'][1],object['colour'][2]))
-            mother = self.physical['world']
-            sidex = object['side_x']*g4b.um
-            sidey = object['side_y']*g4b.um
-            sidez = object['side_z']*g4b.um
-            self.solid[name] = g4b.G4Box(name, sidex/2., sidey/2., sidez/2.)
-            
-            self.logical[name] = g4b.G4LogicalVolume(self.solid[name], 
-                                                    material_type, 
-                                                    name)
-            self.physical[name] = g4b.G4PVPlacement(None,translation,                                                
-                                                    name,self.logical[name],
-                                                    mother, False, 
-                                                    0,self.checkOverlaps)
-            self.logical[name].SetVisAttributes(visual)     
-
-    def create_binary_compounds(self,object):
-        name = object['name']
-        material_1 = self.nist.FindOrBuildElement(object['material_1'],False)
-        material_2 = self.nist.FindOrBuildElement(object['material_2'],False)
-        material_density = object['density']*g4b.g/g4b.cm3
-        compound=g4b.G4Material(object['compound_name'],material_density,2) 
-        compound.AddElement(material_1,object['natoms_1']*g4b.perCent)
-        compound.AddElement(material_2,object['natoms_2']*g4b.perCent)
-        translation = g4b.G4ThreeVector(object['position_x']*g4b.um, object['position_y']*g4b.um, object['position_z']*g4b.um)
-        visual = g4b.G4VisAttributes(g4b.G4Color(object['colour'][0],object['colour'][1],object['colour'][2]))
-        mother = self.physical['world']
-        sidex = object['side_x']*g4b.um
-        sidey = object['side_y']*g4b.um
-        sidez = object['side_z']*g4b.um
-        if not(object['tub']):
-            self.solid[name] = g4b.G4Box(name, sidex/2., sidey/2., sidez/2.)
-        else:
-            self.solid[name+"box"] = g4b.G4Box(name+"box", 
-                                           sidex/2., sidey/2., sidez/2.)
-            self.solid[name+"tub"] = g4b.G4Tubs(name+"tub", 0,object['tub']['tub_radius']*g4b.um,
-                                                object['tub']['tub_depth']*g4b.um, 0,360*g4b.deg)
-            self.solid[name] = g4b.G4SubtractionSolid(name,
-                                                    self.solid[name+"box"],
-                                                    self.solid[name+"tub"])
-            
-        self.logical[name] = g4b.G4LogicalVolume(self.solid[name], 
-                                                 compound, 
-                                                 name)
-        self.physical[name] = g4b.G4PVPlacement(None,translation,                                                
-                                                name,self.logical[name],
-                                                mother, False, 
-                                                0,self.checkOverlaps)
-        self.logical[name].SetVisAttributes(visual)
-
-
-    
-
-    def Construct(self): # return the world volume
-        self.fStepLimit.SetMaxAllowedStep(self.maxStep)
-        return self.physical['world']
-
 
 class MyPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
     "My Primary Generator Action"
@@ -489,62 +281,32 @@ class MyPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
                                                    par_in[2]*g4b.um))  
         self.particleGun = beam
         self.position = par_in
-        if(self.geant4_model=="time_resolution"):
-            beam2 = g4b.G4ParticleGun(1)
-            beam2.SetParticleEnergy(0.546*g4b.MeV)
-            beam2.SetParticleMomentumDirection(g4b.G4ThreeVector(par_direction[0],
-                                                                par_direction[1],
-                                                                par_direction[2]))
-            beam2.SetParticleDefinition(particle)
-            beam2.SetParticlePosition(g4b.G4ThreeVector(par_in[0]*g4b.um,
-                                                        par_in[1]*g4b.um,
-                                                        par_in[2]*g4b.um))  
-            self.particleGun2 = beam2
 
-        if(self.geant4_model=="pixel_detector"):
-            self.directionx = par_direction[0]
-            self.directiony = par_direction[1]
-            self.directionz = par_direction[2]
+        self.directionx = par_direction[0]
+        self.directiony = par_direction[1]
+        self.directionz = par_direction[2]
 
     def GeneratePrimaries(self, event):
-        if(self.geant4_model=="time_resolution"):
-            self.particleGun.GeneratePrimaryVertex(event)
-            self.particleGun2.GeneratePrimaryVertex(event)
-            pass
-        elif(self.geant4_model=="pixel_detector"):
-            randx = Particles._randx
-            randy = Particles._randy
-            rdo_x = random.uniform(-randx,randx)
-            rdo_y = random.uniform(-randy,randy)
-            rdi_x = random.uniform(-randx,randx)
-            rdi_y = random.uniform(-randy,randy)
-            direction = g4b.G4ThreeVector(rdo_x,rdo_y,self.directionz)
-            self.particleGun.SetParticleMomentumDirection(direction)
-            self.particleGun.SetParticlePosition(g4b.G4ThreeVector(self.position[0]*g4b.um,
-                                                   self.position[1]*g4b.um,
-                                                   self.position[2]*g4b.um))  
-            self.particleGun.GeneratePrimaryVertex(event)
-            #print("direction:",rdo_x-rdi_x,rdo_y-rdi_y,self.directionz)
-            #print(rdi_x,rdi_y,self.position[2])
-        else:
-            self.particleGun.GeneratePrimaryVertex(event)
-            
-        
+        randx = PixelParticles._randx
+        randy = PixelParticles._randy
+        rdo_x = random.uniform(-randx,randx)
+        rdo_y = random.uniform(-randy,randy)
+        rdi_x = random.uniform(-randx,randx)
+        rdi_y = random.uniform(-randy,randy)
+        direction = g4b.G4ThreeVector(rdo_x,rdo_y,self.directionz)
+        self.particleGun.SetParticleMomentumDirection(direction)
+        self.particleGun.SetParticlePosition(g4b.G4ThreeVector(self.position[0]*g4b.um,
+                                                self.position[1]*g4b.um,
+                                                self.position[2]*g4b.um))  
+        self.particleGun.GeneratePrimaryVertex(event)
+        #print("direction:",rdo_x-rdi_x,rdo_y-rdi_y,self.directionz)
+        #print(rdi_x,rdi_y,self.position[2])
 
 
 class MyRunAction(g4b.G4UserRunAction):
     def __init__(self):
         g4b.G4UserRunAction.__init__(self)
-        milligray = 1.e-3*g4b.gray
-        microgray = 1.e-6*g4b.gray
-        nanogray = 1.e-9*g4b.gray
-        picogray = 1.e-12*g4b.gray
 
-        g4b.G4UnitDefinition("milligray", "milliGy", "Dose", milligray)
-        g4b.G4UnitDefinition("microgray", "microGy", "Dose", microgray)
-        g4b.G4UnitDefinition("nanogray", "nanoGy", "Dose", nanogray)
-        g4b.G4UnitDefinition("picogray", "picoGy", "Dose", picogray)
-      
     def BeginOfRunAction(self, run):
         g4b.G4RunManager.GetRunManager().SetRandomNumberStore(False)
    
@@ -582,23 +344,15 @@ class MyEventAction(g4b.G4UserEventAction):
             self.event_angle = None
         save_geant4_events(eventID,self.edep_device,
                            self.p_step,self.energy_step,self.event_angle)
-        if(Particles._model == "pixel_detector"):
-            save_pixel_detector_events(self.volume_name,self.localposition)
+        save_pixel_detector_events(self.volume_name,self.localposition)
 
-        print("Detector: total energy:", g4b.G4BestUnit(self.edep_device, "Energy"), end="")
+        #print("Detector: total energy:", g4b.G4BestUnit(self.edep_device, "Energy"), end="")
 
     def RecordDevice(self, edep,point_in,point_out):
         self.edep_device += edep
         self.p_step.append([point_in.getX()*1000,
                            point_in.getY()*1000,point_in.getZ()*1000])
         self.energy_step.append(edep)
-   
-    def RecordDetector(self, edep,point_in,point_out):
-        self.edep_device += edep
-        self.p_step.append([point_in.getX()*1000,
-                           point_in.getY()*1000,point_in.getZ()*1000])
-        self.energy_step.append(edep)
-
 
     def RecordPixel(self,step):
         edep = step.GetTotalEnergyDeposit()
@@ -642,11 +396,11 @@ def save_geant4_events(eventID,edep_device,p_step,energy_step,event_angle):
         s_events_angle.append(event_angle)
         
 def save_pixel_detector_events(volume_name,localposition):
-        global s_devicenames,s_localposition
-        s_devicenames.append(volume_name)
-        s_localposition.append(localposition)
-        #print("volume_name len:",len(volume_name))
-        #print("localposition len: ",len(localposition))
+    global s_devicenames,s_localposition
+    s_devicenames.append(volume_name)
+    s_localposition.append(localposition)
+    #print("volume_name len:",len(volume_name))
+    #print("localposition len: ",len(localposition))
         
 def cal_angle(point_a,point_b):
     "Calculate the angle between point a and b"
@@ -682,9 +436,6 @@ class MySteppingAction(g4b.G4UserSteppingAction):
             self.fEventAction.RecordDevice(edep,point_in,point_out)
         if(volume_name.startswith("Taichu")):
             self.fEventAction.RecordPixel(step)
-        if(volume_name == "detector"):
-            self.fEventAction.RecordDetector(edep, point_in, point_out)
-            return
 
 class MyActionInitialization(g4b.G4VUserActionInitialization):
     def __init__(self,par_in,par_out,par_type,par_energy,geant4_model):
