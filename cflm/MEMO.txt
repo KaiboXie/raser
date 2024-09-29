@@ -1,0 +1,15 @@
+*********************************************** MEMO for CEPC Fast LUminosity Measurement Simulation ****************************************************
+
+Description: This memo is for recording the change of cflm.json because of the different simulation goals. The basic format is as follows:
+
+*********************************
+
+time: 2024.09.27
+goal: to simulate 10 particles hit the beam pipe at different positions and get total signal
+change:
+       "BeamOn"   : 1,
+       "NumofGun" : 10,
+       "par_direct" : [[-0.01, 0, 1], [-0.0069, 0, 1], [-0.0052, 0, 1], [-0.0042, 0, 1], [0.0056, -0.0625, 1], [0.0043, -0.0476, 1], [0.0035, -0.0385, 1], [0.0056, 0.0625, 1], [0.0043, -0.0476, 1], [0.0035, 0.0385, 1]],
+       "CurrentName"  : "Current_10particles.root"
+
+*********************************

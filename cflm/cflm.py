@@ -1,202 +1,226 @@
 #!/usr/bin/env python3 
-import geant4_pybind as g4b
-import sys
 import os
-from current import cal_current as cct
+import math
 
-G4AnalysisManager = g4b.G4RootAnalysisManager
+import geant4_pybind as g4b
+import json
+
+#G4AnalysisManager = g4b.G4RootAnalysisManager
 
 X_position = []
 Z_position = []
 Y_position = []
 Particle = []
 
+class cflmG4Particles:
+
+    def __init__(self, my_d):
+
+        global s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps
+        s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps = [],[],[],[]
+
+        geant4_json = "./raser/cflm/cflm.json"
+        with open(geant4_json) as f:
+             g4_dic = json.load(f)
+
+        runManager = g4b.G4RunManagerFactory.CreateRunManager(g4b.G4RunManagerType.Serial)
+        UImanager = g4b.G4UImanager.GetUIpointer()
+
+        physicsList = g4b.FTFP_BERT()
+        physicsList.SetVerboseLevel(1)
+        physicsList.RegisterPhysics(g4b.G4StepLimiterPhysics())
+        runManager.SetUserInitialization(physicsList)
+
+        detConstruction = cflmDetectorConstruction(g4_dic)
+        runManager.SetUserInitialization(detConstruction)
+
+        actionInitialization = cflmaActionInitialization(detConstruction,
+                                                         g4_dic['par_in'],
+                                                         g4_dic['par_direct'],
+                                                         g4_dic['par_type'],
+                                                         g4_dic['par_energy'],
+                                                         g4_dic['NumofGun'],
+                                                         g4_dic['EdepBaseName'],
+                                                         g4_dic['PosBaseName']
+                                                        )
+        runManager.SetUserInitialization(actionInitialization)
+        
+        UImanager = g4b.G4UImanager.GetUIpointer()
+        UImanager.ApplyCommand('/run/initialize')
+
+
+        runManager.BeamOn(int(g4_dic['BeamOn']))
+
+        self.p_steps=s_p_steps
+        self.init_tz_device = -31.05
+        self.p_steps_current=[[[-single_step[1] + my_d.l_x/2,                                                                                  ### *1000: mm---->um
+                                single_step[2] - g4_dic['object']['binary_compounds']['detector']['position_z']*1000 + my_d.l_y/2,
+                                self.init_tz_device*1000 - single_step[0]]\
+            for single_step in p_step] for p_step in self.p_steps]
+
+        self.energy_steps=s_energy_steps
+        self.edep_devices=s_edep_devices
+
+        del s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps
+
+    def __del__(self):
+        pass
+
 class cflmDetectorConstruction(g4b.G4VUserDetectorConstruction):
 
-    def __init__(self):
-        super().__init__()
-        self.fCheckOverlaps = True
+    def __init__(self,g4_dic):
+        g4b.G4VUserDetectorConstruction.__init__(self)
+        self.solid = {}
+        self.logical = {}
+        self.physical = {}
+        self.checkOverlaps = True
+        self.create_world(g4_dic['world'])
 
-    def DefineMaterials(self):
+        self.maxStep = g4_dic['maxStep']*g4b.um
 
-        nistManager = g4b.G4NistManager.Instance()
-        nistManager.FindOrBuildMaterial("G4_Cu")
+        self.rotation = g4b.G4RotationMatrix()
+        self.rotation.rotateZ(3*math.pi/2)
 
-        g4b.G4Material("Galactic", z=1, a=1.01*g4b.g/g4b.mole, density=g4b.universe_mean_density,
-                   state=g4b.kStateGas, temp=2.73*g4b.kelvin, pressure=3e-18*g4b.pascal)
+        for object_type in g4_dic['object']:
+            if(object_type=="elemental"):
+                for every_object in g4_dic['object'][object_type]:
+                    self.create_elemental(g4_dic['object'][object_type][every_object])
+            if(object_type=="binary_compounds"):
+                for every_object in g4_dic['object'][object_type]:
+                    self.create_binary_compounds(g4_dic['object'][object_type][every_object])
 
+        self.fStepLimit = g4b.G4UserLimits(self.maxStep)
+        self.logical["detector"].SetUserLimits(self.fStepLimit)
 
-        print(g4b.G4Material.GetMaterialTable())
+    def create_world(self,world_type):
 
-    def DefineVolumes(self):
-
-        nistManager = g4b.G4NistManager.Instance()
-        air=nistManager.FindOrBuildMaterial("G4_AIR")
-        pipeRmin = 28*g4b.mm
-        pipeRmax = 30*g4b.mm
-        pipeDz = 100*g4b.mm
-        pipeSphi = 0*g4b.deg
-        pipeDphi = 180*g4b.deg
-        detectorSizeX = 200*g4b.mm
-        detectorSizeY = 0.5*g4b.mm
-        detectorSizeZ = 200*g4b.mm
-
-        worldSizeXY = 200 * g4b.mm
-        worldSizeZ = 200 * g4b.mm
-
-        defaultMaterial = g4b.G4Material.GetMaterial("Galactic")
-        pipeMaterial = g4b.G4Material.GetMaterial("G4_Cu")
-
-        if defaultMaterial == None or pipeMaterial == None:
-            msg = "Cannot retrieve materials already defined."
-            g4b.G4Exception("cflmDetectorConstruction::DefineVolumes()",
-                        "MyCode0001", g4b.FatalException, msg)
-
-        # World
-        worldS = g4b.G4Box("World",                                     # its name
-                       worldSizeXY/2, worldSizeXY/2, worldSizeZ/2)  # its size
-
-        worldLV = g4b.G4LogicalVolume(worldS,           # its solid
-                                  defaultMaterial,  # its material
-                                  "World")          # its name
-
-        worldPV = g4b.G4PVPlacement(None,                 # no rotation
-                                g4b.G4ThreeVector(),      # at (0,0,0)
-                                worldLV,              # its logical volume
-                                "World",              # its name
-                                None,                 # its mother  volume
-                                False,                # no boolean operation
-                                0,                    # copy number
-                                self.fCheckOverlaps)  # checking overlaps
-
-
-        # Pipe
-        pipeS = g4b.G4Tubs("Pipe",                                         # its name
-                          pipeRmin, pipeRmax, pipeDz/2,pipeSphi,pipeDphi)  # its size
-
-        pipeLV = g4b.G4LogicalVolume(pipeS,         # its solid
-                                     pipeMaterial,  # its material
-                                     "Pipe")            # its name
-
-        self.fpipePV = g4b.G4PVPlacement(None,                                  # no rotation
-                                         g4b.G4ThreeVector(0, 0, 0),  # its position
-                                         pipeLV,                            # its logical volume
-                                         "Pipe",                                # its name
-                                         worldLV,                               # its mother  volume
-                                         False,                                 # no boolean operation
-                                         0,                                     # copy number
-                                         self.fCheckOverlaps)                   # checking overlaps
-
-        # detector
         self.nist = g4b.G4NistManager.Instance()
-        silicon_carbide={
-                "material_1" : "Si",
-                "material_2" : "C",
-                "compound_name" :"SiC",
-                "density" : 3.2,
-                "natoms_1" : 50,
-                "natoms_2" : 50,
-                }
-        material_1 = self.nist.FindOrBuildElement(silicon_carbide['material_1'],False)
-        material_2 = self.nist.FindOrBuildElement(silicon_carbide['material_2'],False)
-        material_density = silicon_carbide['density']*g4b.g/g4b.cm3
-        detectorMaterial = g4b.G4Material(silicon_carbide['compound_name'],material_density,2) 
-        detectorMaterial.AddElement(material_1,silicon_carbide['natoms_1']*g4b.perCent)
-        detectorMaterial.AddElement(material_2,silicon_carbide['natoms_2']*g4b.perCent)
+        material = self.nist.FindOrBuildMaterial(world_type)
+        self.solid['world'] = g4b.G4Box("world",
+                                        800*g4b.mm,
+                                        800*g4b.mm,
+                                        800*g4b.mm)
+        self.logical['world'] = g4b.G4LogicalVolume(self.solid['world'],
+                                                    material,
+                                                    "world")
+        self.physical['world'] = g4b.G4PVPlacement(None,
+                                                   g4b.G4ThreeVector(0,0,0),
+                                                   self.logical['world'],
+                                                   "world", 
+                                                   None, 
+                                                   False,
+                                                   0,
+                                                   self.checkOverlaps)
 
-        detectorS = g4b.G4Box("Detector",                                         # its name
-                     detectorSizeX/2, detectorSizeY/2, detectorSizeZ/2)  # its size
+        self.logical['world'].SetVisAttributes(g4b.G4VisAttributes.GetInvisible())
 
-        detectorLV = g4b.G4LogicalVolume(detectorS,         # its solid
-                                detectorMaterial,  # its material
-                                "Detector")        # its name
 
-        self.fdetectorPV = g4b.G4PVPlacement(None,                                  # no rotation
-                                    g4b.G4ThreeVector(0, 30.25*g4b.mm, 0),  # its position
-                                    detectorLV,                                 # its logical volume
-                                    "Detector",                                 # its name
-                                    worldLV,                               # its mother volume
-                                    False,                                 # no boolean operation
-                                    0,                                     # copy number
-                                    self.fCheckOverlaps)                   # checking overlaps
+    def create_elemental(self,object):
+        
+            material_type = self.nist.FindOrBuildMaterial(object['material'],
+                                                        False)
 
-        worldLV.SetVisAttributes(g4b.G4VisAttributes.GetInvisible())
+            translation = g4b.G4ThreeVector(object['position_x']*g4b.mm, object['position_y']*g4b.mm, object['position_z']*g4b.mm)
+            visual = g4b.G4VisAttributes(g4b.G4Color(object['colour'][0],object['colour'][1],object['colour'][2]))
+            mother = self.physical['world']
 
-        pipeVisAtt = g4b.G4VisAttributes(g4b.G4Colour(1, 1, 0))
-        detectorVisAtt = g4b.G4VisAttributes(g4b.G4Colour(1, 1, 1))
+            Rmin = object['Rmin']*g4b.mm
+            Rmax = object['Rmax']*g4b.mm
+            Pipe_Z = object['Pipe_Z']*g4b.mm
+            PipeSphi = object['PipeSphi']*g4b.deg
+            PipeDphi = object['PipeDphi']*g4b.deg
 
-        pipeLV.SetVisAttributes(pipeVisAtt)
-        detectorLV.SetVisAttributes(detectorVisAtt)
+            self.solid['pipe'] = g4b.G4Tubs("Pipe",
+                                            Rmin, Rmax, Pipe_Z/2,PipeSphi,PipeDphi)
 
-        return worldPV
+            self.logical['pipe'] = g4b.G4LogicalVolume(self.solid['pipe'],
+                                                       material_type,
+                                                       'pipe')
+            self.physical['pipe'] = g4b.G4PVPlacement(self.rotation,
+                                                      translation,
+                                                      'pipe',
+                                                      self.logical['pipe'],
+                                                      mother, 
+                                                      False,
+                                                      0,
+                                                      self.checkOverlaps)
+            self.logical['pipe'].SetVisAttributes(visual)
 
-    def Construct(self):
-        self.DefineMaterials()
-        return self.DefineVolumes()
+    def create_binary_compounds(self,object):
+        name = object['name']
+        material_1 = self.nist.FindOrBuildElement(object['material_1'],False)
+        material_2 = self.nist.FindOrBuildElement(object['material_2'],False)
+        material_density = object['density']*g4b.g/g4b.cm3
+        compound=g4b.G4Material(object['compound_name'],material_density,2)
+        compound.AddElement(material_1,object['natoms_1']*g4b.perCent)
+        compound.AddElement(material_2,object['natoms_2']*g4b.perCent)
+        translation = g4b.G4ThreeVector(object['position_x']*g4b.mm, object['position_y']*g4b.mm, object['position_z']*g4b.mm)
+        visual = g4b.G4VisAttributes(g4b.G4Color(object['colour'][0],object['colour'][1],object['colour'][2]))
+        mother = self.physical['world']
+        sidex = object['side_x']*g4b.mm
+        sidey = object['side_y']*g4b.mm
+        sidez = object['side_z']*g4b.mm
+        
+        self.solid[name] = g4b.G4Box(name, sidex/2., sidey/2., sidez/2.)
 
-    def ConstructSDandField(self):
+        self.logical[name] = g4b.G4LogicalVolume(self.solid[name],
+                                                 compound,
+                                                 name)
+        self.physical[name] = g4b.G4PVPlacement(self.rotation,
+                                                translation,
+                                                name,
+                                                self.logical[name],
+                                                mother, 
+                                                False,
+                                                0,
+                                                self.checkOverlaps)
+        
+        self.logical[name].SetVisAttributes(visual)
 
-        fieldValue = g4b.G4ThreeVector()
-        self.fMagFieldMessenger = g4b.G4GlobalMagFieldMessenger(fieldValue)
-        self.fMagFieldMessenger.SetVerboseLevel(1)
+    def Construct(self): 
+        return self.physical['world']
 
 class cflmPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
 
-    def __init__(self):
+    def __init__(self, par_in, par_direct, par_type, par_energy, numofgun):
         super().__init__()
-        nofParticles = 1
-        self.fParticleGun = g4b.G4ParticleGun(nofParticles)
-
-        particleDefinition = g4b.G4ParticleTable.GetParticleTable().FindParticle("e-")
+        self.nofParticles = numofgun
+        self.fParticleGun = g4b.G4ParticleGun(1)
+        particleDefinition = g4b.G4ParticleTable.GetParticleTable().FindParticle(par_type)
         self.fParticleGun.SetParticleDefinition(particleDefinition)
-        self.fParticleGun.SetParticleMomentumDirection(g4b.G4ThreeVector(0, 0.01, 1))
-        self.fParticleGun.SetParticleEnergy(24*g4b.GeV)
+        self.directions = []
+        self.position = par_in
+        '''
+        self.fParticleGun.SetParticleMomentumDirection(g4b.G4ThreeVector(par_direct[0],
+                                                                         par_direct[1],
+                                                                         par_direct[2]))
+        
+        for i in range(nofParticles):
+            self.fParticleGun.SetParticleMomentumDirection(g4b.G4ThreeVector(par_direct[i][0],
+                                                                         par_direct[i][1],
+                                                                         par_direct[i][2]))
+            self.fParticleGun.SetParticleEnergy(par_energy*g4b.GeV)
+            
+            self.position = par_in
+        
+        self.fParticleGun.SetParticleEnergy(par_energy*g4b.GeV)
+        self.position = par_in
+        '''
+
+        self.fParticleGun.SetParticleEnergy(par_energy*g4b.GeV)    
+
+        self.directions = [g4b.G4ThreeVector(direction[0], direction[1], direction[2]) for direction in par_direct]
 
     def GeneratePrimaries(self, anEvent):
 
-        self.fParticleGun.SetParticlePosition(g4b.G4ThreeVector(0, 26.9*g4b.mm, -100*g4b.mm))
-        self.fParticleGun.GeneratePrimaryVertex(anEvent)
-
-class cflmaEventAction(g4b.G4UserEventAction):
-
-    def BeginOfEventAction(self, event):
-
-        self.fEnergyPipe = 0
-        self.fEnergyDetector = 0
-        self.fTrackLPipe = 0
-        self.fTrackLDetector = 0
-
-    def EndOfEventAction(self, event):
-
-        analysisManager = g4b.G4AnalysisManager.Instance()
-
-        analysisManager.FillH1(0, self.fEnergyPipe)
-        analysisManager.FillH1(1, self.fEnergyDetector)
-        analysisManager.FillH1(2, self.fTrackLPipe)
-        analysisManager.FillH1(3, self.fTrackLDetector)
-
-        analysisManager.FillNtupleDColumn(0, self.fEnergyPipe)
-        analysisManager.FillNtupleDColumn(1, self.fEnergyDetector)
-        analysisManager.FillNtupleDColumn(2, self.fTrackLPipe)
-        analysisManager.FillNtupleDColumn(3, self.fTrackLDetector)
-        analysisManager.AddNtupleRow()
-
-        eventID = event.GetEventID()
-        printModulo = g4b.G4RunManager.GetRunManager().GetPrintProgress()
-        if printModulo > 0 and eventID % printModulo == 0:
-            print("---> End of event:", eventID)
-            print("Pipe: total energy:", g4b.G4BestUnit(self.fEnergyPipe, "Energy"), end="")
-            print("total track length:", g4b.G4BestUnit(self.fTrackLPipe, "Length"))
-            print("Detector: total energy:", g4b.G4BestUnit(self.fEnergyDetector, "Energy"), end="")
-            print("total track length:", g4b.G4BestUnit(self.fTrackLDetector, "Length"))
-
-    def AddPipe(self, de,  dl):
-        self.fEnergyPipe += de
-        self.fTrackLPipe += dl
-
-    def AddDetector(self, de, dl):
-        self.fEnergyDetector += de
-        self.fTrackLDetector += dl
+        self.fParticleGun.SetParticlePosition(g4b.G4ThreeVector(self.position[0]*g4b.mm,
+                                                                self.position[1]*g4b.mm,
+                                                                self.position[2]*g4b.mm))
+        
+        for i in range(self.nofParticles):
+       
+            self.fParticleGun.SetParticleMomentumDirection(self.directions[i])
+            self.fParticleGun.GeneratePrimaryVertex(anEvent)
 
 class cflmaSteppingAction(g4b.G4UserSteppingAction):
 
@@ -204,37 +228,81 @@ class cflmaSteppingAction(g4b.G4UserSteppingAction):
         super().__init__()
         self.fDetConstruction = detectorConstruction
         self.fEventAction = eventAction
-        self.number = 0
         self.X_position = X_position
         self.Z_position = Z_position
         self.Y_position = Y_position
         self.Particle = Particle
 
-    def UserSteppingAction(self, step): 
+    def UserSteppingAction(self, step):
         volume_pre = step.GetPreStepPoint().GetTouchable().GetVolume()
         volume_post = step.GetPostStepPoint().GetTouchable().GetVolume()
         edep = step.GetTotalEnergyDeposit()
+        point_in = step.GetPreStepPoint().GetPosition()
 
-        if volume_pre != self.fDetConstruction.fdetectorPV and volume_post == self.fDetConstruction.fdetectorPV:
+
+        if volume_pre != self.fDetConstruction.physical['detector']  and volume_post == self.fDetConstruction.physical['detector']:
             self.X_position.append(step.GetPostStepPoint().GetPosition().getX())
             self.Z_position.append(step.GetPostStepPoint().GetPosition().getZ())
             self.Y_position.append(step.GetPostStepPoint().GetPosition().getY())
-            self.Particle.append(step.GetTrack().GetDefinition().GetParticleName()) 
+            self.Particle.append(step.GetTrack().GetDefinition().GetParticleName())
 
-        stepLength = 0
-        if step.GetTrack().GetDefinition().GetPDGCharge() != 0:
-            stepLength = step.GetStepLength()
+        if volume_pre == self.fDetConstruction.physical['pipe']:
+            self.fEventAction.AddPipe(edep)
 
-        if volume_pre == self.fDetConstruction.fpipePV:
-            self.fEventAction.AddPipe(edep, stepLength)
+        if volume_pre == self.fDetConstruction.physical['detector']:
+            self.fEventAction.AddDetector(edep)
+            self.fEventAction.RecordDetector(edep, point_in)    
 
-        if volume_pre == self.fDetConstruction.fdetectorPV:
-            self.fEventAction.AddDetector(edep, stepLength)
-  
+class cflmaEventAction(g4b.G4UserEventAction):
+
+    def BeginOfEventAction(self, event):
+
+        self.fEnergyPipe = 0
+        self.fEnergyDetector = 0
+     
+        self.edep_device=0
+        self.p_step = []
+        self.energy_step = []
+
+
+    def EndOfEventAction(self, event):
+
+        analysisManager = g4b.G4AnalysisManager.Instance()
+
+        analysisManager.FillNtupleDColumn(0, self.fEnergyPipe)
+        analysisManager.FillNtupleDColumn(1, self.fEnergyDetector)
+        analysisManager.AddNtupleRow()
+
+        eventID = event.GetEventID()  
+        save_geant4_events(eventID,self.edep_device,self.p_step,self.energy_step)
+        printModulo = g4b.G4RunManager.GetRunManager().GetPrintProgress()
+        if printModulo > 0 and eventID % printModulo == 0:
+            print("---> End of event:", eventID)
+            print("Pipe: total energy:", g4b.G4BestUnit(self.fEnergyPipe, "Energy"), end="")
+            print("Detector: total energy:", g4b.G4BestUnit(self.fEnergyDetector, "Energy"), end="")
+            print("Detector: total energy:", g4b.G4BestUnit(self.edep_device, "Energy"), end="")
+
+
+    def AddPipe(self, de):
+        self.fEnergyPipe += de
+
+    def AddDetector(self, de):
+        self.fEnergyDetector += de
+
+    def RecordDetector(self, edep,point_in):
+        self.edep_device += edep
+        self.p_step.append([point_in.getX()*1000,
+                            point_in.getY()*1000,
+                            point_in.getZ()*1000])
+        self.energy_step.append(edep)
+
 class cflmRunAction(g4b.G4UserRunAction):
 
-    def __init__(self):
+    def __init__(self, EdepBaseName, PosBaseName):
         super().__init__()
+
+        self.EdepBaseName = EdepBaseName
+        self.PosBaseName = PosBaseName
 
         g4b.G4RunManager.GetRunManager().SetPrintProgress(1)
 
@@ -244,9 +312,6 @@ class cflmRunAction(g4b.G4UserRunAction):
         analysisManager.SetVerboseLevel(1)
         analysisManager.SetNtupleMerging(True)
 
-        analysisManager.CreateH1("Epipe", "Energy deposition in pipe", 100, 0, 1000*g4b.MeV)
-        analysisManager.CreateH1("Edetector", "Energy deposition in detector", 100, 0, 100*g4b.MeV)
-
         analysisManager.CreateNtuple("cflm", "Edep")
         analysisManager.CreateNtupleDColumn("Epipe")
         analysisManager.CreateNtupleDColumn("Edetector")
@@ -255,25 +320,18 @@ class cflmRunAction(g4b.G4UserRunAction):
     def BeginOfRunAction(self, run):
 
         analysisManager = g4b.G4AnalysisManager.Instance()
-        try:
-            os.mkdir('output/cflm')
-        except:
-            print('path already exist')
-
-        fileName = "output/cflm/energy_deposition.root"
-        analysisManager.OpenFile(fileName)
+        EdepName = f"raser/cflm/output/{self.EdepBaseName}"
+        analysisManager.OpenFile(EdepName)
         
     def EndOfRunAction(self, run):
 
         analysisManager = g4b.G4AnalysisManager.Instance()
 
-        if analysisManager.GetH1(1) != None:
-            print("\n ----> print histograms statistic ", end="")
-
-            if self.IsMaster():
-                print("for the entire run \n")
-            else:
-                print("for the local thread \n")
+        if self.IsMaster():
+            print("for the entire run \n")
+        
+        else:
+            print("for the local thread \n")
 
             print(" EPipe : mean =", g4b.G4BestUnit(analysisManager.GetH1(0).mean(), "Energy"), end="")
             print(" rms =", g4b.G4BestUnit(analysisManager.GetH1(0).rms(),  "Energy"))
@@ -282,60 +340,104 @@ class cflmRunAction(g4b.G4UserRunAction):
             print(" rms =", g4b.G4BestUnit(analysisManager.GetH1(1).rms(),  "Energy"))
         # save histograms & ntuple
         analysisManager.Write()
-        with open('./200SIC_100000.txt', 'w') as file:  
-            for i in range(len(Particle)):
-                file.write(f"{Particle[i]} {X_position[i]} {Z_position[i]} {Y_position[i]}\n")
         
+        PosName = f"raser/cflm/output/{self.PosBaseName}"
+        with open(PosName, 'w') as file:  
+             for i in range(len(Particle)):
+                file.write(f"{Particle[i]} {X_position[i]} {Z_position[i]} {Y_position[i]}\n")
+    
 class cflmaActionInitialization(g4b.G4VUserActionInitialization):
 
-    def __init__(self, detConstruction):
+    def __init__(self, detConstruction, par_in, par_direct, par_type, par_energy, numofgun, EdepBaseName, PosBaseName):
         super().__init__()
         self.fDetConstruction = detConstruction
+        self.par_in = par_in
+        self.par_direct = par_direct
+        self.par_type=par_type
+        self.par_energy=par_energy
+        self.numofgun = numofgun
+        self.EdepBaseName = EdepBaseName
+        self.PosBaseName = PosBaseName
 
     def BuildForMaster(self):
-        self.SetUserAction(cflmRunAction())
+        self.SetUserAction(cflmRunAction(self.EdepBaseName, self.PosBaseName))
 
     def Build(self):
-        self.SetUserAction(cflmPrimaryGeneratorAction())
-        self.SetUserAction(cflmRunAction())
+        self.SetUserAction(cflmPrimaryGeneratorAction(self.par_in,
+                                                      self.par_direct,
+                                                      self.par_type,
+                                                      self.par_energy,
+                                                      self.numofgun))
+        self.SetUserAction(cflmRunAction(self.EdepBaseName, self.PosBaseName))
         eventAction = cflmaEventAction()
         self.SetUserAction(eventAction)
         self.SetUserAction(cflmaSteppingAction(self.fDetConstruction, eventAction, X_position, Z_position, Y_position, Particle))
 
+def save_geant4_events(eventID,edep_device,p_step,energy_step):
+    if(len(p_step)>0):
+        s_eventIDs.append(eventID)
+        s_edep_devices.append(edep_device)
+        s_p_steps.append(p_step)
+        s_energy_steps.append(energy_step)
+    else:
+        s_eventIDs.append(eventID)
+        s_edep_devices.append(edep_device)
+        s_p_steps.append([[0,0,0]])
+        s_energy_steps.append([0])
+
+
 def main():
 
+    global s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps
+    s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps = [],[],[],[]
+
+    geant4_json = "./raser/cflm/cflm.json"
+    with open(geant4_json) as f:
+        g4_dic = json.load(f)
+
     runManager = g4b.G4RunManagerFactory.CreateRunManager(g4b.G4RunManagerType.Serial)
-
-    detConstruction = cflmDetectorConstruction()
-    runManager.SetUserInitialization(detConstruction)
-
+    
     physicsList = g4b.FTFP_BERT()
     runManager.SetUserInitialization(physicsList)
 
-    actionInitialization = cflmaActionInitialization(detConstruction)
+    detConstruction = cflmDetectorConstruction(g4_dic)
+    runManager.SetUserInitialization(detConstruction)
+
+    actionInitialization = cflmaActionInitialization(detConstruction,
+                                                     g4_dic['par_in'],
+                                                     g4_dic['par_direct'],
+                                                     g4_dic['par_type'],
+                                                     g4_dic['par_energy'],
+                                                     g4_dic['NumofGun'],
+                                                     g4_dic['EdepBaseName'],
+                                                     g4_dic['PosBaseName']
+                                                    )
     runManager.SetUserInitialization(actionInitialization)
 
     visManager = g4b.G4VisExecutive()
     visManager.Initialize()
-
     UImanager = g4b.G4UImanager.GetUIpointer()
-    UImanager.ApplyCommand("/control/execute paras/g4macro/init_vis.mac")
+   
+    if g4_dic['vis']:
+
+         UImanager.ApplyCommand("/control/execute paras/g4macro/init_vis.mac")
+    
     UImanager.ApplyCommand('/run/initialize')
     UImanager.ApplyCommand('/tracking/verbose 2')
-    UImanager.ApplyCommand('/run/beamOn 100000')
-    UImanager.ApplyCommand("/vis/geometry/set/visibility World 0 false")
-    UImanager.ApplyCommand("/vis/geometry/set/forceSolid World")
-
-    UImanager.ApplyCommand('/vis/ogl/set/printMode vectored')
-
-    UImanager.ApplyCommand('/vis/ogl/set/printSize 2000 2000')#可视化打印尺寸为2000*2000
-    UImanager.ApplyCommand("/vis/geometry/set/visibility World 0.2 true")
-    UImanager.ApplyCommand('/vis/ogl/set/printFilename output/cflm/image.pdf')
-    UImanager.ApplyCommand('/vis/ogl/export')
     
-   # for i in range(1000):
-   #    UImanager.ApplyCommand("/vis/viewer/refresh")
-
+    UImanager.ApplyCommand(f"/run/beamOn {g4_dic['BeamOn']}")
+    
+    if g4_dic['vis']:
+      
+         UImanager.ApplyCommand('/vis/ogl/set/printMode vectored')
+         UImanager.ApplyCommand("/vis/viewer/set/background 0.5 0.5 0.5")
+         UImanager.ApplyCommand('/vis/ogl/set/printSize 2000 600')#可视化打印尺寸为2000*2000
+         UImanager.ApplyCommand('/vis/ogl/set/printFilename output/cflm/image.pdf')
+         UImanager.ApplyCommand('/vis/ogl/export')
+    
+         for i in range(1000):
+             UImanager.ApplyCommand("/vis/viewer/refresh")
 
 if __name__ == '__main__':
     main()
+
