@@ -10,6 +10,7 @@ import os
 from util.output import output
 
 def draw_iv(device,V,I,path):
+
     fig2=matplotlib.pyplot.figure()
     matplotlib.pyplot.semilogy(V,I)
     matplotlib.pyplot.xlabel('Voltage (V)')
@@ -57,6 +58,59 @@ def draw_iv(device,V,I,path):
     canvas.Update()
     canvas.SaveAs(os.path.join(path, "simIV{}to{}_picture.root".format(min(V),max(V))))
     canvas.SaveAs(os.path.join(path, "simIV{}to{}_picture.pdf".format(min(V),max(V))))
+
+
+def draw_noise(device,V,noise,path):
+    fig2=matplotlib.pyplot.figure()
+    matplotlib.pyplot.semilogy(V,noise)
+    matplotlib.pyplot.xlabel('Voltage (V)')
+    matplotlib.pyplot.ylabel('Current (A)')
+    matplotlib.pyplot.yscale('log')
+    fig2.savefig(os.path.join(path, "{}_noise.png".format(device)))
+    fig2.clear()
+
+
+    file = ROOT.TFile(os.path.join(path, "simnoise{}to{}.root".format(min(V),max(V))), "RECREATE")
+    tree = ROOT.TTree("SicarTestnoise", "SicarTest with impactgen")
+    x = array('d', [0])
+    y = array('d', [0])
+
+    tree.Branch("voltage", x, "x/D")
+    tree.Branch("Current", y, "y/D")
+
+    for point in zip(V,noise):
+        x[0], y[0] = point
+        tree.Fill()
+
+    file.Write()
+    file.Close()
+
+    file = ROOT.TFile(os.path.join(path, "simnoise{}to{}.root".format(min(V),max(V))), "READ")
+    tree = file.Get("SicarTestnoise")
+
+    graph = ROOT.TGraph(tree.GetEntries())
+    for i, entry in enumerate(tree):
+        x = entry.x
+        y = entry.y
+        graph.SetPoint(i, x, y)
+
+    canvas = ROOT.TCanvas("canvas", "Graph", 800, 600)
+    graph.SetMarkerStyle(ROOT.kFullCircle)
+    graph.SetMarkerSize(0.5)
+    graph.SetMarkerColor(ROOT.kBlue)
+    graph.SetLineColor(ROOT.kWhite)
+    graph.Draw("AP")
+
+    graph.SetTitle("NoiseCurrent vs Voltage")
+    graph.GetXaxis().SetTitle("Voltage(V)")
+    graph.GetYaxis().SetTitle("NoiseCurrent(A)")
+
+    canvas.Update()
+    canvas.SaveAs(os.path.join(path, "simnoise{}to{}_picture.root".format(min(V),max(V))))
+    canvas.SaveAs(os.path.join(path, "simnoise{}to{}_picture.pdf".format(min(V),max(V))))
+
+
+
 
 def draw_cv(device,V,C,path):
     fig3=matplotlib.pyplot.figure(num=4,figsize=(4,4))

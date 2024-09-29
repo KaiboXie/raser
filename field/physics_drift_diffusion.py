@@ -101,7 +101,7 @@ def CreateSiliconPotentialOnlyContact(device, region, contact, contact_type, is_
     # Simplify it too complicated
     CreateContactNodeModel(device, contact, "{0}:{1}".format(contact_model_name,"Potential"), "1")
     if is_circuit:
-        # add_circuit_node(name=str(GetContactBiasName(contact)),value=0)
+       # add_circuit_node(name=str(GetContactBiasName(contact)),value=0)
         CreateContactNodeModel(device, contact, "{0}:{1}".format(contact_model_name,GetContactBiasName(contact)), "-1")
 
     if is_circuit:
