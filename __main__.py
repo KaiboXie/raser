@@ -26,7 +26,7 @@ parser_cce = subparsers.add_parser('cce', help='Charge Collection Efficiency')
 parser_cce.add_argument('label', help='LABEL to identify CCE experiment')
 
 parser_cflm = subparsers.add_parser('cflm', help='CEPC Fast Luminosity Measurement')
-parser_cflm.add_argument('label', help='LABEL to identify cflm options')
+parser_cflm.add_argument('label', help='LABEL to identify CFLM simulations')
 parser_cflm.add_argument('-v', '--verbose', help='VERBOSE level', 
                           action='count', default=0)
 
@@ -53,6 +53,7 @@ parser_gen_signal.add_argument('-vol', '--voltage', type=str, help='bias voltage
 parser_gen_signal.add_argument('-abs', '--absorber', type=str, help='model of particle energy absorber')
 parser_gen_signal.add_argument('-amp', '--amplifier', type=str, help='amplifier')
 parser_gen_signal.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
+parser_gen_signal.add_argument('--job', type=int, help='flag of run in job')
 
 parser_spaceres = subparsers.add_parser('spaceres', help='space resolution calculation')
 parser_spaceres.add_argument('label', help='LABEL to identify spaceres files')
