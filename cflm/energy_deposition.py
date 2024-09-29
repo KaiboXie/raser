@@ -7,7 +7,7 @@ def getedep():
     low = 0
     nbins = 25
 
-    geant4_json = "./raser/cflm/cflm.json"
+    geant4_json = "./setting/absorber/cflm.json"
     with open(geant4_json) as f:
          g4_dic = json.load(f)
 
