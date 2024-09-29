@@ -22,7 +22,7 @@ from elec import ngspice_set_input as ngsip
 from elec import ngspice as ng
 from elec.set_pwl_input import set_pwl_input as pwlin
 
-from . import draw_save
+from .draw_save import energy_deposition, draw_drift_path, draw_current, cce
 from util.output import output
 
 import json
@@ -42,8 +42,7 @@ def main(kwargs):
         DevsimCal -- Get the electric field and weighting potential 
         Particles -- Electron and hole paris distibution
         CalCurrent -- Drift of e-h pais and induced current
-        Amplifier -- Readout electronics simulation
-        draw_plots -- Draw electric field, drift path and energy deposition        
+        Amplifier -- Readout electronics simulation  
     Modify:
     ---------
         2021/09/02
@@ -93,13 +92,20 @@ def main(kwargs):
         ####
     else:
         ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
-        draw_save.draw_plots(my_d,ele_current,my_f,my_g4p,my_current)
+        now = time.strftime("%Y_%m%d_%H%M%S")
+        path = output(__file__, my_d.det_name, now)
+
+        #energy_deposition(my_g4p)   # Draw Geant4 depostion distribution
+        draw_drift_path(my_d,my_f,my_current,path)
+
+        for i in range(my_current.read_ele_num):
+            draw_current(my_d, my_current,ele_current.amplified_current,i,ele_current.amplified_current_name,path) # Draw current
+        if 'strip' in my_d.det_name:
+            cce(my_d, my_f, my_current, path)
     
     del my_f
     end = time.time()
     print("total_time:%s"%(end-start))
-
-
 
 
 # TODO: change this to a method of CalCurrent

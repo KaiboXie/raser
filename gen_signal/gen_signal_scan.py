@@ -83,13 +83,6 @@ def job_main(kwargs):
 
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
 
-    path = output(__file__, my_d.det_name, 'batch')
-    if "plugin" in my_d.det_model:
-        draw_save.draw_ele_field(my_d,my_f,"xy",my_d.det_model,my_d.l_z*0.5,path)
-    else:
-        draw_save.draw_ele_field_1D(my_d,my_f,path)
-        draw_save.draw_ele_field(my_d,my_f,"xz",my_d.det_model,my_d.l_y*0.5,path)
-
     geant4_json = "./setting/absorber/" + absorber + ".json"
     with open(geant4_json) as f:
         g4_dic = json.load(f)
