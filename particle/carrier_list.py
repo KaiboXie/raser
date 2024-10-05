@@ -33,11 +33,11 @@ class CarrierListFromG4P:
             if particle_number > 0:
                 batch=1
 
-            if batch == 0:
-                print("the sensor didn't have particles hitted")
-                raise ValueError
-        else:
-            self.batch_def(my_g4p,batch)
+                if batch == 0:
+                    print("=========RASER info ===========\nGeant4:the sensor didn't have particles hitted\n==========================")
+                    raise ValueError
+            else:
+                self.batch_def(my_g4p,batch)
 
     def batch_def(self,my_g4p,j):
         self.beam_number = j
@@ -73,7 +73,7 @@ class StripCarrierListFromG4P:
                         break
 
             if batch == 0:
-                print("the sensor didn't have particles hitted")
+                print("=========RASER info ===========\nGeant4:the sensor didn't have particles hitted\n==========================")
                 raise ValueError
         else:
             self.batch_def(my_g4p,batch)

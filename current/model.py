@@ -30,7 +30,7 @@ class Material:
             self.hole_mass = 0.386*m_e
             self.electron_mass = 0.26*m_e
             self.avalanche_model = "vanOverstraeten"
-            self.mobility_model = 'Reggiani'
+            self.mobility_model = 'Selberherr'
         if self.mat_name == "SiC":
             # 4H-SiC, use the longitudinal effective mass
             self.permittivity=9.76

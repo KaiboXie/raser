@@ -195,7 +195,9 @@ def main (kwargs):
         v_current=1
         print("=======RASER info========\nBegin simulation WeightingField\n======================")
         for contact in circuit_contacts:
-            folder_path = os.path.join(path,"/weghtingfield/{}_{}_device".format(contact,v_current))
+            print(path)
+            folder_path = os.path.join(path, "weightingfield")
+            print(folder_path)
             if not os.path.exists(folder_path):
                 os.makedirs(folder_path)
             
@@ -205,10 +207,10 @@ def main (kwargs):
                            value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
             loop.initial_solver(contact=contact,set_contact_type=None,irradiation_label=irradiation_label,irradiation_flux=irradiation_flux,impact_label=impact_label)
             
-            loop.loop_solver(circuit_contact=contact,v_current=v_current,area_factor=paras["area_factor"],path=path,device=device,region=region)
-            if(paras['milestone_mode']==True and v_current%paras['milestone_step']==0.0):
-                save_milestone.save_milestone(device=device, region=region, v=v_current, path=path,dimension=default_dimension,contact=contact,is_wf=is_wf)
-                devsim.write_devices(file=os.path.join(folder_path,"weightingfield.dat"), type="tecplot")
+            loop.loop_solver(circuit_contact=contact,v_current=v_current,area_factor=paras["area_factor"],path=folder_path,device=device,region=region)
+
+            save_milestone.save_milestone(device=device, region=region, v=v_current, path=folder_path,dimension=default_dimension,contact=contact,is_wf=is_wf)
+            devsim.write_devices(file=os.path.join(folder_path,"weightingfield.dat"), type="tecplot")
     elif is_wf == False:
         v_current = 0
         loop.initial_solver(contact=circuit_contacts,set_contact_type=None,irradiation_label=irradiation_label,irradiation_flux=irradiation_flux,impact_label=impact_label)

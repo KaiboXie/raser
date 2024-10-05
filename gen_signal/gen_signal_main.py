@@ -21,6 +21,7 @@ from elec import readout as rdo
 from elec import ngspice_set_input as ngsip
 from elec import ngspice as ng
 from elec.set_pwl_input import set_pwl_input as pwlin
+import geant4_pybind as g4b
 
 from .draw_save import energy_deposition, draw_drift_path, draw_current, cce
 from util.output import output
@@ -50,12 +51,11 @@ def main(kwargs):
     start = time.time()
 
     det_name = kwargs['det_name']
-    my_d = bdv.Detector(det_name)
-    
+    my_d = bdv.Detector(det_name,devsim_solve_paras = None)
     if kwargs['voltage'] != None:
-        voltage = float(kwargs['voltage'])
+        voltage = str(kwargs['voltage'])
     else:
-        voltage = float(my_d.voltage)
+        voltage = str(my_d.voltage)
 
     if kwargs['absorber'] != None:
         absorber = kwargs['absorber']
@@ -67,12 +67,14 @@ def main(kwargs):
     else:
         amplifier = my_d.amplifier
 
-    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
+    contact = my_d.read_out_contact
+
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage,contact, my_d.read_ele_num)
     
     g4_seed = random.randint(0,1e7)
     my_g4p = g4t.Particles(my_d, absorber, g4_seed)
 
-    if "strip" in det_name:
+    if "strip——" in det_name:
         my_current = ccrt.CalCurrentStrip(my_d, my_f, my_g4p, 0)
     else: 
         my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)

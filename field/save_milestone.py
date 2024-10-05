@@ -49,6 +49,7 @@ def milestone_save_2D(device, region, v, path):
     Potential = np.array(devsim.get_node_model_values(device=device, region=region, name="Potential")) # get the potential data
     TrappingRate_n = np.array(devsim.get_node_model_values(device=device, region=region, name="TrappingRate_n"))
     TrappingRate_p = np.array(devsim.get_node_model_values(device=device, region=region, name="TrappingRate_p"))
+    NetDoping= np.array(devsim.get_node_model_values(device=device, region=region, name="NetDoping"))
 
     devsim.element_from_edge_model(edge_model="ElectricField",   device=device, region=region)
     devsim.edge_average_model(device=device, region=region, node_model="x", edge_model="xmid")
@@ -70,8 +71,8 @@ def milestone_save_2D(device, region, v, path):
     metadata['dimension'] = 2
 
     names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
-    # if v == 0:
-    #     names.append('NetDoping')
+    if v == 0:
+        names.append('NetDoping')
 
     for name in names: # scalar field on mesh point (instead of on edge)
         with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:
@@ -105,9 +106,9 @@ def milestone_save_wf_2D(device, region, v, path,contact):
     metadata = {}
     metadata['voltage'] = v
     metadata['dimension'] = 2
-
+    save_wf_path = os.path.join(path,contact)
     for name in ['Potential']: # scalar field on mesh point (instead of on edge)
-        with open(os.path.join(path, "{}_{}_{}V.pkl".format(name,v,contact)),'wb') as file:
+        with open(os.path.join(save_wf_path, "{}_{}V.pkl".format(name,v)),'wb') as file:
             data = {}
             data['values'] = eval(name) # refer to the object with given name
             merged_list = [x, y]
@@ -122,7 +123,7 @@ def milestone_save_3D(device, region, v, path):
     Potential = np.array(devsim.get_node_model_values(device=device, region=region, name="Potential")) # get the potential data
     TrappingRate_n = np.array(devsim.get_node_model_values(device=device, region=region, name="TrappingRate_n"))
     TrappingRate_p = np.array(devsim.get_node_model_values(device=device, region=region, name="TrappingRate_p"))
-
+    NetDoping= np.array(devsim.get_node_model_values(device=device, region=region, name="NetDoping"))
     devsim.element_from_edge_model(edge_model="ElectricField",   device=device, region=region)
     devsim.edge_average_model(device=device, region=region, node_model="x", edge_model="xmid")
     devsim.edge_average_model(device=device, region=region, node_model="y", edge_model="ymid")
@@ -143,8 +144,8 @@ def milestone_save_3D(device, region, v, path):
     metadata['dimension'] = 2
 
     names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
-    # if v == 0:
-    #     names.append('NetDoping')
+    if v == 0:
+         names.append('NetDoping')
 
     for name in names: # scalar field on mesh point (instead of on edge)
         with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:

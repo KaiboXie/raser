@@ -20,7 +20,7 @@ from particle.carrier_list import CarrierListFromG4P, StripCarrierListFromG4P
 from util.math import Vector, signal_convolution
 from util.output import create_path
 
-t_bin = 50e-12
+t_bin = 100e-12
 t_end = 10e-9
 t_start = 0
 delta_t = 10e-12

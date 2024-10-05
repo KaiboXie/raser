@@ -50,6 +50,7 @@ class Detector:
 
         self.absorber = self.device_dict['absorber']
         self.amplifier = self.device_dict['amplifier']
+        self.read_out_contact = self.device_dict["read_out_contact"]
 
         if "lgad3D" in self.det_model:
             self.avalanche_bond = self.device_dict['avalanche_bond']
