@@ -11,9 +11,13 @@ import os
 import array
 import time
 import subprocess
-import ROOT
+import json
+import random
 
-from field import build_device as bdv
+import ROOT
+import geant4_pybind as g4b
+
+from . import build_device as bdv
 from particle import g4_time_resolution as g4t
 from field import devsim_field as devfield
 from current import cal_current as ccrt
@@ -21,14 +25,9 @@ from elec import readout as rdo
 from elec import ngspice_set_input as ngsip
 from elec import ngspice as ng
 from elec.set_pwl_input import set_pwl_input as pwlin
-import geant4_pybind as g4b
-
 from .draw_save import energy_deposition, draw_drift_path, draw_current, cce
 from util.output import output
 
-import json
-
-import random
 
 def main(kwargs):
     """
@@ -51,11 +50,11 @@ def main(kwargs):
     start = time.time()
 
     det_name = kwargs['det_name']
-    my_d = bdv.Detector(det_name,devsim_solve_paras = None)
+    my_d = bdv.Detector(det_name)
     if kwargs['voltage'] != None:
-        voltage = str(kwargs['voltage'])
+        voltage = kwargs['voltage']
     else:
-        voltage = str(my_d.voltage)
+        voltage = my_d.voltage
 
     if kwargs['absorber'] != None:
         absorber = kwargs['absorber']
@@ -67,20 +66,18 @@ def main(kwargs):
     else:
         amplifier = my_d.amplifier
 
-    contact = my_d.read_out_contact
-
-    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage,contact, my_d.read_ele_num)
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact)
     
     g4_seed = random.randint(0,1e7)
     my_g4p = g4t.Particles(my_d, absorber, g4_seed)
 
-    if "strip——" in det_name:
+    if "strip" in det_name:
         my_current = ccrt.CalCurrentStrip(my_d, my_f, my_g4p, 0)
     else: 
         my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
 
     if 'ngspice' in amplifier:
-        save_current(my_d, my_current,my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z), key=None)
+        save_current(my_d, my_current, key=None)
         '''
         input_p=ngsip.set_input(my_current, my_d, key=None)
         input_c=','.join(input_p)
@@ -103,7 +100,7 @@ def main(kwargs):
         for i in range(my_current.read_ele_num):
             draw_current(my_d, my_current,ele_current.amplified_current,i,ele_current.amplified_current_name,path) # Draw current
         if 'strip' in my_d.det_name:
-            cce(my_d, my_f, my_current, path)
+            cce(my_current, path)
     
     del my_f
     end = time.time()

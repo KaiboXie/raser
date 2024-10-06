@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
-import devsim
-import pickle
+
 import os
 
-"""
-this part is for loop,
-control by paras
-
-"""
-from . import initial
-from . import physics_drift_diffusion
-
+import devsim
+import pickle
 import numpy as np
 
+from . import initial
+from . import physics_drift_diffusion
+from util.output import output
 
 class loop_section():
     def __init__(self, paras,device,region,solve_model,irradiation):
@@ -36,7 +32,7 @@ class loop_section():
         self.holes = []
 
     def initial_solver(self,contact,set_contact_type,irradiation_label,irradiation_flux,impact_label):
-        initial.InitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type)
+        initial.InitialSolution(device=self.device, region=self.region, circuit_contacts=contact, paras=self.paras, set_contact_type=set_contact_type)
         devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
         print("======================\nFirst initialize successfully\n===============================")
         if self.irradiation == False:
@@ -49,60 +45,69 @@ class loop_section():
                                                     irradiation_label=None,irradiation_flux=0,impact_label=impact_label)
                 devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
         elif self.irradiation == True:
-            print("======RASER info ===========\nradiation\n================info=================")
-            initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
-                                                irradiation_label=irradiation_label,irradiation_flux=irradiation_flux,impact_label=impact_label)
-            devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
+            if self.solve_model == "wf":
+                pass
+            else:
+                print("======RASER info ===========\nradiation\n================info=================")
+                initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
+                                                    irradiation_label=irradiation_label,irradiation_flux=irradiation_flux,impact_label=impact_label)
+                devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
         else:
             print("======RASER info ===========\nirradiation should set as False or True\n================Error=================")
             exit()
+            
+        # eliminate calculation fatals from intrinsic carrier concentration
+        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicElectrons")
+        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicHoles")
+        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicElectrons:Potential")
+        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicHoles:Potential")
+
         print("=====================\nDriftDiffusion initialize successfully\n======================")
-        print("=========RASER info =========\nAll initialization successfully\n=========info========== ")
-
-
+        print("=========RASER info =========\nAll initialization successfully\n=========info========== ")    
     
-    
-    def save_values(self,device, region):
-        Holes_values = devsim.get_node_model_values(device=device, region=region, name="Holes")
-        Electrons_values = devsim.get_node_model_values(device=device, region=region, name="Electrons")
-        Potential_values = devsim.get_node_model_values(device=device, region=region, name="Potential")
-        with open('./param_file/step-model/{}_Holes.pkl'.format(device), 'wb') as file:
+    def save_values(self, v_current):
+        path = output(__file__, self.device, "temp_data")
+        Holes_values = devsim.get_node_model_values(device=self.device, region=self.region, name="Holes")
+        Electrons_values = devsim.get_node_model_values(device=self.device, region=self.region, name="Electrons")
+        Potential_values = devsim.get_node_model_values(device=self.device, region=self.region, name="Potential")
+        with open(os.path.join(path,'Holes_{}.pkl'.format(v_current),), 'wb') as file:
             file.truncate(0)
-        with open('./param_file/step-model/{}_Holes.pkl'.format(device), 'wb') as file:
+        with open(os.path.join(path,'Holes_{}.pkl'.format(v_current),), 'wb') as file:
             pickle.dump(Holes_values, file)
-        with open('./param_file/step-model/{}_Electrons.pkl'.format(device), 'wb') as file:
+        with open(os.path.join(path,'Electrons_{}.pkl'.format(v_current),), 'wb') as file:
             file.truncate(0)
-        with open('./param_file/step-model/{}_Electrons.pkl'.format(device), 'wb') as file:
+        with open(os.path.join(path,'Electrons_{}.pkl'.format(v_current),), 'wb') as file:
             pickle.dump(Electrons_values, file)
-        with open('./param_file/step-model/{}_Potential.pkl'.format(device), 'wb') as file:
+        with open(os.path.join(path,'Potential_{}.pkl'.format(v_current),), 'wb') as file:
             file.truncate(0)
-        with open('./param_file/step-model/{}_Potential.pkl'.format(device), 'wb') as file:
+        with open(os.path.join(path,'Potential_{}.pkl'.format(v_current),), 'wb') as file:
             pickle.dump(Potential_values, file)
     
-    def load_values(self,values):
+    def load_values(self, values, v_current):
+        path = output(__file__, self.device, "temp_data")
         if values=="Holes":
-            with open('./param_file/step-model/{}_Holes.pkl'.format(self.device), 'rb') as file:
+            with open(os.path.join(path,'Holes_{}.pkl'.format(v_current),), 'rb') as file:
                 return pickle.load(file)
         elif values=="Electrons":
-            with open('./param_file/step-model/{}_Electrons.pkl'.format(self.device), 'rb') as file:
+            with open(os.path.join(path,'Electrons_{}.pkl'.format(v_current),), 'rb') as file:
                 return pickle.load(file)
         elif values=="Potential":
-            with open('./param_file/step-model/{}_Potential.pkl'.format(self.device), 'rb') as file:
+            with open(os.path.join(path,'Potential_{}.pkl'.format(v_current),), 'rb') as file:
                 return pickle.load(file)
         
-    def set_values(self,device, region):
+    def set_values(self, v_current):
         for i in ("Holes","Electrons","Potential"):
-            value = self.load_values(i)
-            devsim.set_node_values(device=device, region=region,name=i,values=value)
+            value = self.load_values(i, v_current)
+            devsim.set_node_values(device=self.device, region=self.region, name=i, values=value)
 
 
-    def loop_solver(self,circuit_contact,v_current,area_factor,path,device,region):
+    def loop_solver(self,circuit_contact,v_current,area_factor):
         if self.solve_model =="step":
             if v_current == 0:
                 pass
             else:
                 print("=================RASER info==================\n Load last voltage successfully\n===============info===================")
-                self.set_values(device=device,region=region)
+                self.set_values(v_current)
 
         self.voltage.append(v_current)
         devsim.set_parameter(device=self.device, name=physics_drift_diffusion.GetContactBiasName(circuit_contact), value=v_current)
@@ -116,7 +121,6 @@ class loop_section():
                 print("==========RASER info===========\nCurrent is too large !\n==============Warning==========")
                 # break
             self.current.append(total_current)
-            print(self.current)
             if self.solve_model == "cv":
                 devsim.circuit_alter(name="V1", value=v_current)
                 devsim.solve(type="ac", frequency=self.paras["frequency"])
@@ -126,10 +130,7 @@ class loop_section():
                 devsim.solve(type="noise", frequency=self.paras["frequency"],output_node="V1.I")
                 noise=devsim.get_circuit_node_value(node="V1.I")
                 self.noise.append(noise)
-            self.save_values(device,region)
-
-            
-                
+            self.save_values(v_current)  
 
     def get_voltage_values(self):
         return self.voltage

@@ -1,82 +1,20 @@
-#!/usr/bin/env python3
-# -*- encoding: utf-8 -*-
-
-import json
 import os
 
 import devsim
-import matplotlib.pyplot
-import numpy as np
+import matplotlib
 
-from . import model_create
+from gen_signal.build_device import Detector
 from util.output import output
-from util.math import *
+from . import model_create
 
-class Detector:
-    """
-    Description:
-    ---------
-        Different types detectors parameters assignment.
-    Parameters:
-    ---------
-    device_name : string
-        name the device and define the device by device.json 
-    dimension : int
-        the dimension of devsim mesh
-    Modify:
-    ---------
-        2023/12/03
-    """ 
-    def __init__(self, device_name, devsim_solve_paras):
-        self.det_name = device_name
-        self.device = device_name
-        self.region = device_name
-        device_json = "./setting/detector/" + device_name + ".json"
-        self.control_dict = devsim_solve_paras
-        with open(device_json) as f:
-            self.device_dict = json.load(f)
-        self.dimension = self.device_dict['default_dimension']
-
-        self.l_x = self.device_dict['lx'] 
-        self.l_y = self.device_dict['ly']  
-        self.l_z = self.device_dict['lz'] 
-        
-        self.voltage = self.device_dict['bias']['voltage'] 
-        self.temperature = self.device_dict['temperature']
-        self.material = self.device_dict['material']
-        self.det_model = self.device_dict['det_model']
-
-        self.doping = self.device_dict['doping']
-
-        self.absorber = self.device_dict['absorber']
-        self.amplifier = self.device_dict['amplifier']
-        self.read_out_contact = self.device_dict["read_out_contact"]
-
-        if "lgad3D" in self.det_model:
-            self.avalanche_bond = self.device_dict['avalanche_bond']
-            self.avalanche_model = self.device_dict['avalanche_model']
-            
-        if 'plugin3D' in self.det_model: 
-            self.e_r = self.device_dict['e_r']
-            self.e_gap = self.device_dict['e_gap']
-            self.e_t = self.device_dict['e_t']
-
-        if "planarRing" in self.det_model:
-            self.e_r_inner = self.device_dict['e_r_inner']
-            self.e_r_outer = self.device_dict['e_r_outer']
-
-        if "strip" in self.det_name or "Strip" in self.det_name: 
-            # TODO: change this into model
-            self.read_ele_num = self.device_dict['read_ele_num']
-        else:
-            self.read_ele_num = 1
-            
-        if "pixel" in self.det_model:
-            self.p_x = self.device_dict['px']
-            self.p_y = self.device_dict['py']
-            self.p_z = self.device_dict['pz']
-            self.lt_z = self.device_dict['ltz']
-            self.seedcharge = self.device_dict['seedcharge']
+class DevsimMesh():
+    def __init__(self, my_d: Detector, devsim_solve_paras):  
+        self.device_dict = my_d.device_dict
+        self.det_name = my_d.det_name
+        self.dimension = my_d.dimension
+        self.device = my_d.device
+        self.region = my_d.region
+        self.solve_paras = devsim_solve_paras
 
     def mesh_define(self):
         if self.dimension == 1:
@@ -93,10 +31,13 @@ class Detector:
 
         self.setDoping()
         path = output(__file__, self.det_name)
+        if self.solve_paras["weightfield"] == True or self.solve_paras["ac-weightfield"] == True:
+            pass
+        else:
+            self.drawDoping(path)
 
         if "irradiation" in self.device_dict:
             path = output(__file__, str(self.det_name)+"/"+str(self.device_dict['irradiation']['irradiation_flux']))
-        self.drawDoping(path)
         devsim.write_devices(file=os.path.join(path, self.det_name+".dat"),type="tecplot")
 
     def create1DMesh(self):
@@ -105,7 +46,10 @@ class Detector:
         mesh = self.device_dict["mesh"]["1D_mesh"]
         for mesh_line in mesh["mesh_line"]:
             devsim.add_1d_mesh_line(mesh=mesh_name, **mesh_line)
-        
+        if (self.solve_paras["weightfield"] == True) :
+            mesh["region"][0]["material"] = "gas"
+        else:
+            pass
         for region in mesh["region"]:
             devsim.add_1d_region   (mesh=mesh_name, **region)
         for contact in mesh["contact"]:
@@ -119,8 +63,8 @@ class Detector:
         mesh = self.device_dict["mesh"]["2D_mesh"]
         for mesh_line in mesh["mesh_line"]:
             devsim.add_2d_mesh_line(mesh=mesh_name, **mesh_line)
-        if (self.control_dict["weightfield"] == True) :
-            mesh["region"]["material"] = "gas"
+        if (self.solve_paras["weightfield"] == True) :
+            mesh["region"][0]["material"] = "gas"
         else:
             pass
         for region in mesh["region"]:
@@ -129,7 +73,7 @@ class Detector:
         
         for contact in mesh["contact"] :
             devsim.add_2d_contact  (mesh=mesh_name, **contact)
-        if self.control_dict["ac-weightfield"] == True:
+        if self.solve_paras["ac-weightfield"] == True:
             print("==============================================")
             for ac_contact in mesh["ac_contact"] :
                 devsim.add_2d_contact  (mesh=mesh_name, **ac_contact)
@@ -137,13 +81,12 @@ class Detector:
                 devsim.add_2d_interface(mesh=mesh_name, **interface)
         devsim.finalize_mesh(mesh=mesh_name)
         devsim.create_device(mesh=mesh_name, device=mesh_name)
-        devsim.write_devices(file="output/field/test", type="tecplot")
 
     def createGmshMesh(self):
         mesh_name = self.device
         mesh = self.device_dict["mesh"]["gmsh_mesh"]
         devsim.create_gmsh_mesh (mesh=mesh_name, file=mesh['file'])
-        if (self.control_dict["weightfield"] == True) :
+        if (self.solve_paras["weightfield"] == True) :
             mesh["region"][0]['material']="gas"
         else:
             pass
@@ -158,14 +101,14 @@ class Detector:
         '''
         Doping
         '''
-        if self.control_dict["ac-weightfield"] == True:
+        if self.solve_paras["weightfield"] == True or self.solve_paras["ac-weightfield"] == True:
             self.device_dict["doping"]["Acceptors"] = "0"
             self.device_dict["doping"]["Donors"] = "1"
             self.device_dict.update({"doping": self.device_dict["doping"]})
-        elif self.control_dict["ac-weightfield"] == False:
+        else:
             pass
         if 'Acceptors_ir' in self.device_dict['doping']:
-            model_create.CreateNodeModel(self.device, self.region, "Acceptors",    self.device_dict['doping']['Acceptors']+"+"+self.device_dict['doping']['Acceptors_ir'])
+            model_create.CreateNodeModel(self.device, self.region, "Acceptors", self.device_dict['doping']['Acceptors']+"+"+self.device_dict['doping']['Acceptors_ir'])
         else:
             model_create.CreateNodeModel(self.device, self.region, "Acceptors", self.device_dict['doping']['Acceptors'])
         if 'Donors_ir' in self.device_dict['doping']:
@@ -191,7 +134,3 @@ class Detector:
         matplotlib.pyplot.legend(fields)
         matplotlib.pyplot.savefig(os.path.join(path, "Doping"))
 
-
-if __name__ == "__main__":
-    import sys
-    Detector(sys.argv[1])
