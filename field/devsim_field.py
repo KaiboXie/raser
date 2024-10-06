@@ -104,9 +104,6 @@ class DevsimField:
                 WeightingPotentialUniform = get_common_interpolate_3d(WeightingPotentialNotUniform)
 
             self.WeightingPotential.append(WeightingPotentialUniform)
-
-        print(self.WeightingPotential)
-
     
     def set_trap_p(self, TrappingRate_pFile):
         try:
@@ -182,95 +179,36 @@ class DevsimField:
         elif self.dimension == 3:
             return self.Potential(z, x, y)
     
-    def get_e_field(self, x, y, z): 
+    def get_e_field(self, x, y, z):
         '''
             input: position in um
             output: intensity in V/um
         ''' 
-        x, y, z = x/1e4, y/1e4, z/1e4 # um to cm  
+        x, y, z = x / 1e4, y / 1e4, z / 1e4  # um to cm
+        diff_resolutions = [(diff_res / 2, diff_res / 2), (diff_res, 0), (0, diff_res)]
+
+        def calculate_e(component, *args):
+            for diff1, diff2 in diff_resolutions:
+                try:
+                    return -((self.Potential(*(a + diff1 for a in args)) -
+                            self.Potential(*(a - diff2 for a in args))) / diff_res)
+                except ValueError:
+                    continue
+            raise ValueError(f"Point {args} might be out of bound {component}")
+
         if self.dimension == 1:
-            try:
-                E_z = - ((self.Potential(z+diff_res/2) - self.Potential(z-diff_res/2))) / diff_res
-            except ValueError:
-                try:
-                    E_z = - ((self.Potential(z+diff_res) - self.Potential(z))) / diff_res
-                except ValueError:
-                    try:
-                        E_z = - ((self.Potential(z) - self.Potential(z-diff_res))) / diff_res
-                    except ValueError:
-                        raise ValueError("Point {} might be out of bound z".format(z))
+            E_z = calculate_e('z', z)
             return (0, 0, E_z)
-        
+
         elif self.dimension == 2:
-            try:
-                E_z = - ((self.Potential(z+diff_res/2, x) - self.Potential(z-diff_res/2, x))) / diff_res
-            except ValueError:
-                try:
-                    E_z = - ((self.Potential(z+diff_res, x) - self.Potential(z, x))) / diff_res
-                except ValueError:
-                    try:
-                        E_z = - ((self.Potential(z, x) - self.Potential(z-diff_res, x))) / diff_res
-                    except ValueError:
-                        raise ValueError("Point {} might be out of bound z".format(z))
-            try:
-                E_x = - ((self.Potential(z, x+diff_res/2) - self.Potential(z, x-diff_res/2))) / diff_res
-            except ValueError:
-                try:
-                    E_x = - ((self.Potential(z, x+diff_res) - self.Potential(z, x))) / diff_res
-                except ValueError:
-                    try:
-                        E_x = - ((self.Potential(z, x) - self.Potential(z, x-diff_res))) / diff_res
-                    except ValueError:
-                        raise ValueError("Point {} might be out of bound x".format(x))
-            try:
-                E_y = - ((self.Potential(z, x+diff_res/2) - self.Potential(z, x-diff_res/2))) / diff_res
-            except ValueError:
-                try:
-                    E_y = - ((self.Potential(z, x+diff_res) - self.Potential(z, x))) / diff_res
-                except ValueError:
-                    try:
-                        E_y = - ((self.Potential(z, x) - self.Potential(z, x-diff_res))) / diff_res
-                    except ValueError:
-                        raise ValueError("Point {} might be out of bound x".format(y))
-            try:
-                return (E_x, 0, E_z)
-            except AttributeError:
-                try:
-                    return (E_x,E_y,0)
-                except AttributeError:
-                    return (0,E_y,E_z)
-        
+            E_z = calculate_e('z', z, x)
+            E_x = calculate_e('x', z, x)
+            return (E_x, 0, E_z)
+
         elif self.dimension == 3:
-            try:
-                E_z = - ((self.Potential(z+diff_res/2, x, y) - self.Potential(z-diff_res/2, x, y))) / diff_res
-            except ValueError:
-                try:
-                    E_z = - ((self.Potential(z+diff_res, x, y) - self.Potential(z, x, y))) / diff_res
-                except ValueError:
-                    try:
-                        E_z = - ((self.Potential(z, x, y) - self.Potential(z-diff_res, x, y))) / diff_res
-                    except ValueError:
-                        raise ValueError("Point {} might be out of bound z".format(z))
-            try:
-                E_x = - ((self.Potential(z, x+diff_res/2, y) - self.Potential(z, x-diff_res/2, y))) / diff_res
-            except ValueError:
-                try:
-                    E_x = - ((self.Potential(z, x+diff_res, y) - self.Potential(z, x, y))) / diff_res
-                except ValueError:
-                    try:
-                        E_x = - ((self.Potential(z, x, y) - self.Potential(z, x-diff_res, y))) / diff_res
-                    except ValueError:
-                        raise ValueError("Point {} might be out of bound x".format(x))
-            try:
-                E_y = - ((self.Potential(z, x, y+diff_res/2) - self.Potential(z, x, y-diff_res/2))) / diff_res
-            except ValueError:
-                try:
-                    E_y = - ((self.Potential(z, x, y+diff_res) - self.Potential(z, x, y))) / diff_res
-                except ValueError:
-                    try:
-                        E_y = - ((self.Potential(z, x, y) - self.Potential(z, x, y-diff_res))) / diff_res
-                    except ValueError:
-                        raise ValueError("Point {} might be out of bound y".format(y))
+            E_z = calculate_e('z', z, x, y)
+            E_x = calculate_e('x', z, x, y)
+            E_y = calculate_e('y', z, x, y)
             return (E_x, E_y, E_z)
 
     def get_w_p(self, x, y, z, i): # used in cal current
