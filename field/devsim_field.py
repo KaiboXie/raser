@@ -6,7 +6,12 @@
 @Author  :   Henry Stone 
 @Version :   1.0
 '''
-
+"""
+@File    :   Field_to_G4.py
+@Time    :   2024/09/30
+@Author  :   Sen Zhao
+@Version :   2.0
+"""
 import pickle
 import ROOT
 import numpy as np
@@ -16,23 +21,24 @@ from util.math import *
 diff_res = 1e-5 # difference resolution in cm
 
 class DevsimField:
-    def __init__(self, device_name, dimension, voltage, read_ele_num, l_z):
+    def __init__(self, device_name, dimension, voltage, contact,read_ele_num):
         self.name = device_name
         self.voltage = voltage # float
         self.dimension = dimension
         self.read_ele_num = int(read_ele_num) 
-        self.l_z = l_z # used for planar weighting field TODO: auto weighting field
 
-        DopingFile = "./output/field/{}/NetDoping_0.0V.pkl".format(self.name)
+        
+
+        DopingFile = "./output/field/{}/NetDoping_0V.pkl".format(self.name)
         PotentialFile = "./output/field/{}/Potential_{}V.pkl".format(self.name, self.voltage)
         TrappingRate_pFile = "./output/field/{}/TrappingRate_p_{}V.pkl".format(self.name, self.voltage)
         TrappingRate_nFile = "./output/field/{}/TrappingRate_n_{}V.pkl".format(self.name, self.voltage)
-
+        Weighting_Potential = "./output/field/{}/weightingfield/{}/Potential_{}V.pkl".format(self.name,contact, 1)
         self.set_doping(DopingFile) #self.Doping
         self.set_potential(PotentialFile) #self.Potential, self.x_efield, self.y_efield, self.z_efield
         self.set_trap_p(TrappingRate_pFile) # self.TrappingRate_p
         self.set_trap_n(TrappingRate_nFile) # self.TrappingRate_n
-        self.set_w_p() #self.weighting_potential[]
+        self.set_w_p(Weighting_Potential) #self.weighting_potential[]
 
     def set_doping(self, DopingFile):
         try:
@@ -78,18 +84,30 @@ class DevsimField:
 
         self.Potential = PotentialUniform
 
-    def set_w_p(self):
-        self.WeightingPotentials = [] #length = ele_num
-        if self.read_ele_num == 1:
-            print("Linear weighting potential loaded")
-            pass
-        elif self.read_ele_num >= 2:  
-            for i in range(self.read_ele_num):
-                self.WeightingPotentials.append(strip_w_p(i))
-                print("Weighting potential loaded for {}, strip {}".format(self.name, i+1))
-        else:
-            raise ValueError(self.read_ele_num)
 
+    def set_w_p(self,Weighting_PotentialFile):
+        try:
+            with open(Weighting_PotentialFile,'rb') as file:
+                Weighting_PotentialNotUniform=pickle.load(file)
+                print("Weighting_Potential file loaded for {}".format(self.name))
+                if Weighting_PotentialNotUniform['metadata']['dimension'] < self.dimension:
+                    print("Weighting_Potential dimension not match")
+                    return
+        except FileNotFoundError:
+            print("Weighting_Potential file not found, please run field simulation first")
+            print("or manually set the Weighting_Potential file")
+            return
+        
+        if Weighting_PotentialNotUniform['metadata']['dimension'] == 1:
+            weighting_PotentialUniform = get_common_interpolate_1d(Weighting_PotentialNotUniform)
+        elif Weighting_PotentialNotUniform['metadata']['dimension'] == 2:
+            weighting_PotentialUniform = get_common_interpolate_2d(Weighting_PotentialNotUniform)
+        elif Weighting_PotentialNotUniform['metadata']['dimension'] == 3:
+            weighting_PotentialUniform = get_common_interpolate_3d(Weighting_PotentialNotUniform)
+
+        self.weighting_Potential = weighting_PotentialUniform
+
+    
     def set_trap_p(self, TrappingRate_pFile):
         try:
             with open(TrappingRate_pFile,'rb') as file:
@@ -134,6 +152,7 @@ class DevsimField:
 
         self.TrappingRate_n = TrappingRate_nUniform
         
+
     # DEVSIM dimension order: x, y, z
     # RASER dimension order: z, x, y
 
@@ -203,7 +222,23 @@ class DevsimField:
                         E_x = - ((self.Potential(z, x) - self.Potential(z, x-diff_res))) / diff_res
                     except ValueError:
                         raise ValueError("Point {} might be out of bound x".format(x))
-            return (E_x, 0, E_z)
+            try:
+                E_y = - ((self.Potential(z, x+diff_res/2) - self.Potential(z, x-diff_res/2))) / diff_res
+            except ValueError:
+                try:
+                    E_y = - ((self.Potential(z, x+diff_res) - self.Potential(z, x))) / diff_res
+                except ValueError:
+                    try:
+                        E_y = - ((self.Potential(z, x) - self.Potential(z, x-diff_res))) / diff_res
+                    except ValueError:
+                        raise ValueError("Point {} might be out of bound x".format(y))
+            try:
+                return (E_x, 0, E_z)
+            except AttributeError:
+                try:
+                    return (E_x,E_y,0)
+                except AttributeError:
+                    return (0,E_y,E_z)
         
         elif self.dimension == 3:
             try:
@@ -238,15 +273,15 @@ class DevsimField:
                         raise ValueError("Point {} might be out of bound y".format(y))
             return (E_x, E_y, E_z)
 
-    def get_w_p(self, x, y, z, i):
-        '''
-            input: position in um
-            output: weighting potential in 1
-        '''
-        if self.read_ele_num == 1:
-            return linear_w_p(z, self.l_z)
-        elif self.read_ele_num > 1:
-            return self.WeightingPotentials[i].Interpolate(z, x)
+    def get_w_p(self, x, y, z,i): # used in cal current
+        x, y, z = x/1e4, y/1e4, z/1e4 # um to cm
+        if self.dimension == 1:
+            return self.weighting_Potential(z)
+        elif self.dimension == 2:
+            return self.weighting_Potential(z, x)
+        elif self.dimension == 3:
+            return self.weighting_Potential(z, x, y)
+
     
     def get_trap_e(self, x, y, z):
         '''
@@ -256,8 +291,10 @@ class DevsimField:
         x, y, z = x/1e4, y/1e4, z/1e4 # um to cm
         if self.dimension == 1:
             return self.TrappingRate_n(z)
+        
         elif self.dimension == 2:
             return self.TrappingRate_n(z, x)
+        
         elif self.dimension == 3:
             return self.TrappingRate_n(z, x, y)
     
@@ -274,46 +311,6 @@ class DevsimField:
         elif self.dimension == 3:
             return self.TrappingRate_p(z, x, y)
 
-
-def linear_w_p(z, l_z):
-    if z >= l_z:
-        w_potential = 0
-    elif z >= 1:
-        w_potential = 1 - (1/(l_z-1)) * (z-1)
-    else:
-        w_potential = 1
-    return w_potential
-
-def strip_w_p(ele_number):
-    nx = 51  
-    ny = 321  
-    xmin, xmax = 0.0, 50.0  
-    ymin, ymax = 0.0, 320.0 
-    dx = (xmax - xmin) / (nx - 1)  
-    dy = (ymax - ymin) / (ny - 1) 
-
-    u = np.zeros((ny, nx))
-    u[ele_number*75:(ele_number*75+20), 0] = 1.0  
-    u[:, -1] = 0.0  
-
-    max_iter = 100000  
-    tolerance = 1e-6  
-    for iteration in range(max_iter):
-        u_old = u.copy()
-        for i in range(1, ny - 1):
-            for j in range(1, nx - 1):
-                u[i, j] = (u[i+1, j] + u[i-1, j] + u[i, j+1] + u[i, j-1]) / 4
-        diff = np.abs(u - u_old).max()
-        if diff < tolerance:
-            break
-
-    x = np.linspace(xmin, xmax, nx)
-    y = np.linspace(ymin, ymax, ny)
-    w_potential=ROOT.TGraph2D()
-    for i in range(len(y)):
-        for j in range(len(x)):
-            w_potential.SetPoint(int(i*len(x)+j),x[j]*6,y[i],u[i][j])
-    return w_potential
 
 if __name__ == "__main__":
     testField = DevsimField("ITk-Si-strip", 2, -500.0, 4)

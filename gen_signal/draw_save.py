@@ -226,6 +226,7 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
 
     if ele_current[read_ele_num].GetMinimum() < 0:
         rightmax = 1.1*ele_current[read_ele_num].GetMinimum()
+
     else:
         rightmax = 1.1*ele_current[read_ele_num].GetMaximum()
     if rightmax == 0:
@@ -282,7 +283,7 @@ def cce(my_d,my_f,my_current, path):
         for j in range(my_current.n_bin):
             sum_charge=sum_charge+my_current.sum_cu[i].GetBinContent(j)*my_current.t_bin
         charge.append(sum_charge/1.6e-19)
-    print(charge)
+    print("===========RASER info================\nCollected Charge is {} C\n==============Result==============".format(list(charge)))
     n=int(len(charge))
     c1=ROOT.TCanvas("c1","canvas1",1000,1000)
     cce=ROOT.TGraph(n,x,charge)
