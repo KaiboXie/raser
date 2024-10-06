@@ -11,7 +11,7 @@ import time
 
 import ROOT
 
-from field import build_device as bdv
+from gen_signal import build_device as bdv
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec import readout as rdo
@@ -64,11 +64,7 @@ def main(kwargs):
     else:
         amplifier = my_d.amplifier
 
-    if "strip" in det_name:
-        my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
-    else: 
-        my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z)
-
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact)
     my_l = TCTTracks(my_d, laser_dic)
 
     if "strip" in det_name:

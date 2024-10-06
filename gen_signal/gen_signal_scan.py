@@ -13,7 +13,7 @@ import time
 import subprocess
 import ROOT
 
-from field import build_device as bdv
+from . import build_device as bdv
 from particle import g4_time_resolution as g4t
 from field import devsim_field as devfield
 from current import cal_current as ccrt
@@ -81,7 +81,7 @@ def job_main(kwargs):
     else:
         amplifier = my_d.amplifier
 
-    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_ele_num, my_d.l_z)
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact)
 
     geant4_json = "./setting/absorber/" + absorber + ".json"
     with open(geant4_json) as f:

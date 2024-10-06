@@ -13,6 +13,8 @@ import math
 import matplotlib.pyplot as plt
 import os
 
+from util.output import output
+
 class Material:
 
     def __init__(self,mat_name,mobility_model=None,avalanche_model=None):
@@ -205,7 +207,9 @@ class Material:
         plt.title("Mobility Model")
         plt.grid(True,ls = '--',which="both")
         fig.show()
-        fig.savefig("./output/current/model/"+self.mat_name+"Mobility"+self.mobility_model+".png")
+        output_directory = output(__file__, "model")
+        path = os.path.join(output_directory, self.mat_name+"Mobility"+self.mobility_model+".png", )
+        fig.savefig(path)
 
     def cal_coefficient(self, electric_field, charges, temperature):
         """ Define Avalanche Model """

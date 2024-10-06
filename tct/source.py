@@ -1,7 +1,7 @@
 import math
 import ROOT
 import numpy as np
-from field.build_device import Detector
+from gen_signal.build_device import Detector
 
 class TCTTracks():
     """

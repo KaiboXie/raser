@@ -47,8 +47,8 @@ class Particles:
 
         self.geant4_model = g4_dic['geant4_model']
         detector_material=my_d.device_dict['material']
-
-        my_g4d = MyDetectorConstruction(my_d,g4_dic,detector_material,g4_dic['maxstep'])		
+        my_g4d = MyDetectorConstruction(my_d,g4_dic,detector_material,g4_dic['maxstep'])
+        	
         if g4_dic['g4_vis']: 
             ui = None
             ui = g4b.G4UIExecutive(len(sys.argv), sys.argv)

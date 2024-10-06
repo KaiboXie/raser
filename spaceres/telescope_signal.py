@@ -15,7 +15,7 @@ import acts
 import numpy as np
 
 from particle.g4_pixel import PixelParticles
-from field.build_device import Detector
+from gen_signal.build_device import Detector
 from current.cal_current_diffuse import CalCurrentPixel
 from util.output import create_path
 

@@ -9,7 +9,8 @@ import math
 import devsim 
 import numpy as np
 
-from .build_device import Detector
+from gen_signal.build_device import Detector
+from .create_mesh import DevsimMesh
 from . import model_create
 from . import save_milestone
 from . import loop_section
@@ -41,7 +42,7 @@ paras = {
     "milestone_mode" : True,
     "milestone_step" : 50,
 
-    "voltage_step" : 0.1,
+    "voltage_step" : 1,
     "acreal" : 1.0, 
     "acimag" : 0.0,
     "frequency" : 1000.0,
@@ -78,8 +79,9 @@ def main (kwargs):
 
     device = simname
     region = simname
-    MyDetector = Detector(device, devsim_solve_paras=paras)
-    MyDetector.mesh_define()
+    MyDetector = Detector(device)
+    MyDevsimMesh = DevsimMesh(MyDetector, devsim_solve_paras=paras)
+    MyDevsimMesh.mesh_define()
 
     if "frequency" in MyDetector.device_dict:
         paras.update({"frequency": MyDetector.device_dict['frequency']})
@@ -146,14 +148,18 @@ def main (kwargs):
     if is_wf == True:
         if MyDetector.device_dict.get("mesh", {}).get("2D_mesh", {}).get("ac_contact"):
             print("=========RASER info===================\nACLGAD is simulating\n=============info====================")
-            for read_out_lsit in MyDetector.device_dict["mesh"]["2D_mesh"]["ac_contact"]:
-                circuit_contacts.append( read_out_lsit["name"])
-                for i,c in enumerate(circuit_contacts):
-                    devsim.circuit_element(name="V{}".format(i), n1=physics_drift_diffusion.GetContactBiasName(c), n2=0,
-                           value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
+            for read_out_electrode in MyDetector.device_dict["mesh"]["2D_mesh"]["ac_contact"]:
+                circuit_contacts.append(read_out_electrode["name"])
+            for i,c in enumerate(circuit_contacts):
+                devsim.circuit_element(name="V{}".format(i+1), n1=physics_drift_diffusion.GetContactBiasName(c), n2=0,
+                        value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
         else:
             print("===============RASER info===================\nNot AC detector\n===========info=============")
-            circuit_contacts.append( MyDetector.device_dict['bias']['electrode'])
+            for read_out_electrode in MyDetector.device_dict["read_out_contact"]:
+                circuit_contacts.append(read_out_electrode)
+            for i,c in enumerate(circuit_contacts):
+                devsim.circuit_element(name="V{}".format(i+1), n1=physics_drift_diffusion.GetContactBiasName(c), n2=0,
+                        value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
             
     else:
         circuit_contacts=MyDetector.device_dict['bias']['electrode']
@@ -181,7 +187,7 @@ def main (kwargs):
     def worker_function(queue, lock, circuit_contacts, v_current, area_factor, path, device, region, solve_model, irradiation, is_wf):
         try:
             print(f"运行 loop_solver,参数:{circuit_contacts}, {v_current}, {area_factor}")
-            loop.loop_solver(circuit_contact=circuit_contacts, v_current=v_current, area_factor=area_factor, path=path, device=device, region=region)
+            loop.loop_solver(circuit_contact=circuit_contacts, v_current=v_current, area_factor=area_factor)
             result_message = "Execution completed successfully"
 
         except Exception as e:
@@ -203,11 +209,9 @@ def main (kwargs):
             
             paras["milestone_step"] == 1
             paras.update({"milestone_step":paras["milestone_step"]})
-            devsim.circuit_element(name="V1", n1=physics_drift_diffusion.GetContactBiasName(contact), n2=0,
-                           value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
+
             loop.initial_solver(contact=contact,set_contact_type=None,irradiation_label=irradiation_label,irradiation_flux=irradiation_flux,impact_label=impact_label)
-            
-            loop.loop_solver(circuit_contact=contact,v_current=v_current,area_factor=paras["area_factor"],path=folder_path,device=device,region=region)
+            loop.loop_solver(circuit_contact=contact,v_current=v_current,area_factor=paras["area_factor"])
 
             save_milestone.save_milestone(device=device, region=region, v=v_current, path=folder_path,dimension=default_dimension,contact=contact,is_wf=is_wf)
             devsim.write_devices(file=os.path.join(folder_path,"weightingfield.dat"), type="tecplot")
@@ -222,7 +226,7 @@ def main (kwargs):
             voltage_step = -1 * paras['voltage_step']
         if is_step == False:
             while abs(v_current) <= abs(v_goal):
-                loop.loop_solver(circuit_contact=circuit_contacts,v_current=v_current,area_factor=paras["area_factor"],path=path,device=device,region=region)
+                loop.loop_solver(circuit_contact=circuit_contacts,v_current=v_current,area_factor=paras["area_factor"])
                 if(paras['milestone_mode']==True and v_current%paras['milestone_step']==0.0) or abs(v_current) == abs(v_goal) :
                     save_milestone.save_milestone(device=device, region=region, v=v_current, path=path,dimension=default_dimension,contact=circuit_contacts,is_wf=is_wf)
                     devsim.write_devices(file=os.path.join(path,"Ele_Characterization/{}".format(v_current)), type="tecplot")

@@ -274,7 +274,7 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
     c.SaveAs(path+'/'+model+my_d.det_model+tag+"No_"+str(read_ele_num+1)+"electrode"+"_basic_infor.root")
     del c
 
-def cce(my_d,my_f,my_current, path):
+def cce(my_current, path):
     charge=array('d')
     x=array('d')
     for i in range(my_current.read_ele_num):

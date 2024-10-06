@@ -8,7 +8,7 @@ import time
 import subprocess
 import ROOT
 
-from field import build_device as bdv
+from gen_signal import build_device as bdv
 from . import cflm
 from field import devsim_field as devfield
 from current import cal_current as ccrt
@@ -41,14 +41,14 @@ def get_signal():
     print(my_d.device)
     print(voltage)
     
-    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z)
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact)
 
     my_g4p = cflm.cflmG4Particles(my_d)
 
     my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
 
     if 'ngspice' in amplifier:
-        save_current(my_d, my_current, g4_dic, my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z))
+        save_current(my_d, my_current, g4_dic, my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact))
         pwlin(f"raser/cflm/output/{g4_dic['CurrentName'].split('.')[0]}_pwl_current.txt", 'raser/cflm/ucsc.cir', 'raser/cflm/output/')
         subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/ucsc_tmp.cir"], shell=True)
     
