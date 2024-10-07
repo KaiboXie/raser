@@ -71,7 +71,7 @@ def main(kwargs):
     g4_seed = random.randint(0,1e7)
     my_g4p = g4t.Particles(my_d, absorber, g4_seed)
 
-    if "strip" in det_name:
+    if "strip" in my_d.det_model:
         my_current = ccrt.CalCurrentStrip(my_d, my_f, my_g4p, 0)
     else: 
         my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
@@ -99,7 +99,7 @@ def main(kwargs):
 
         for i in range(my_current.read_ele_num):
             draw_current(my_d, my_current,ele_current.amplified_current,i,ele_current.amplified_current_name,path) # Draw current
-        if 'strip' in my_d.det_name:
+        if 'strip' in my_d.det_model:
             cce(my_current, path)
     
     del my_f

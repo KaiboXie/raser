@@ -46,9 +46,9 @@ def main(kwargs):
     my_d = bdv.Detector(det_name)
     
     if kwargs['voltage'] != None:
-        voltage = float(kwargs['voltage'])
+        voltage = kwargs['voltage']
     else:
-        voltage = float(my_d.voltage)
+        voltage = my_d.voltage
 
     if kwargs['laser'] != None:
         laser = kwargs['laser']
@@ -67,10 +67,7 @@ def main(kwargs):
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact, my_d.irradiation_flux)
     my_l = TCTTracks(my_d, laser_dic)
 
-    if "strip" in det_name:
-        pass
-    else: 
-        my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
+    my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
 
     if 'ngspice' in amplifier:
         save_current(my_d, my_current, key=None)
@@ -94,9 +91,8 @@ def main(kwargs):
     else:
         path = output(__file__, my_d.det_name, my_l.model)
         draw_drift_path(my_d,my_f,my_current,path)
-        draw_current(my_d, my_current, ele_current.amplified_current, read_ele_num=my_current.read_ele_num, model=my_l.model, path=path)
         for i in range(my_current.read_ele_num):
-            draw_current(my_d, my_current,ele_current.amplified_current,i,ele_current.amplified_current_name,path) # Draw current
+            draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.amplified_current_name, path) # Draw current
 
         my_l.draw_nocarrier3D(path)
         my_l.draw_nocarrier2D(path)

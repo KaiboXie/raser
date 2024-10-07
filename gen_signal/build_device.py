@@ -71,8 +71,7 @@ class Detector:
             self.e_r_inner = self.device_dict['e_r_inner']
             self.e_r_outer = self.device_dict['e_r_outer']
 
-        if "strip" in self.det_name or "Strip" in self.det_name: 
-            # TODO: change this into model
+        if "strip" in self.det_model: 
             self.read_ele_num = self.device_dict['read_ele_num']
         else:
             self.read_ele_num = 1
