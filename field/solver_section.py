@@ -185,7 +185,7 @@ def main (kwargs):
 
     path = output(__file__, device)
     if irradiation and not is_wf:
-        path = output(__file__, device, irradiation_flux)
+        path = output(__file__, device, str(irradiation_flux))
 
     loop=loop_section.loop_section(paras=paras,device=device,region=region,solve_model=solve_model,irradiation=irradiation)
     def worker_function(queue, lock, circuit_contacts, v_current, area_factor, path, device, region, solve_model, irradiation, is_wf):
