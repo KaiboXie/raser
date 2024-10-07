@@ -31,7 +31,7 @@ class loop_section():
         self.electrons = []
         self.holes = []
 
-    def initial_solver(self,contact,set_contact_type,irradiation_label,irradiation_flux,impact_label):
+    def initial_solver(self,contact,set_contact_type,irradiation_model,irradiation_flux,impact_model):
         initial.InitialSolution(device=self.device, region=self.region, circuit_contacts=contact, paras=self.paras, set_contact_type=set_contact_type)
         devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
         print("======================\nFirst initialize successfully\n===============================")
@@ -42,7 +42,7 @@ class loop_section():
                 print("======RASER info ===========\nNo radiation\n================info=================")
 
                 initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
-                                                    irradiation_label=None,irradiation_flux=0,impact_label=impact_label)
+                                                    irradiation_model=None,irradiation_flux=0,impact_model=impact_model)
                 devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
         elif self.irradiation == True:
             if self.solve_model == "wf":
@@ -50,7 +50,7 @@ class loop_section():
             else:
                 print("======RASER info ===========\nradiation\n================info=================")
                 initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
-                                                    irradiation_label=irradiation_label,irradiation_flux=irradiation_flux,impact_label=impact_label)
+                                                    irradiation_model=irradiation_model,irradiation_flux=irradiation_flux,impact_model=impact_model)
                 devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
         else:
             print("======RASER info ===========\nirradiation should set as False or True\n================Error=================")

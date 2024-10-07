@@ -64,7 +64,7 @@ def main(kwargs):
     else:
         amplifier = my_d.amplifier
 
-    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact)
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact, my_d.irradiation_flux)
     my_l = TCTTracks(my_d, laser_dic)
 
     if "strip" in det_name:

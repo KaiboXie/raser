@@ -75,7 +75,7 @@ def InitialSolution(device, region,paras, circuit_contacts, set_contact_type=Non
                     print("Waring info:++++++++++++++++++++++++++++++++++++++++++/nWarning: There is no SiO2 layer in your detector\n++++++++++++++++++++++++++++++++++++++")
                     pass 
 
-def DriftDiffusionInitialSolution(device, region, paras, irradiation_label=None, irradiation_flux=1e15, impact_label=None, circuit_contacts=None, set_contact_type=None):
+def DriftDiffusionInitialSolution(device, region, paras, irradiation_model=None, irradiation_flux=1e15, impact_model=None, circuit_contacts=None, set_contact_type=None):
     if paras["Cylindrical_coordinate"]==True:
         switch_Cylindrical_coordinate(device,region)
     else:
@@ -98,7 +98,7 @@ def DriftDiffusionInitialSolution(device, region, paras, irradiation_label=None,
     ### Set up equations
     ###
     
-    CreateSiliconDriftDiffusion(device, region, irradiation_label=irradiation_label, irradiation_flux=irradiation_flux, impact_label=impact_label)
+    CreateSiliconDriftDiffusion(device, region, irradiation_model=irradiation_model, irradiation_flux=irradiation_flux, impact_model=impact_model)
     for i in devsim.get_contact_list(device=device):
         if set_contact_type and i in set_contact_type:
             contact_type = set_contact_type[i]
