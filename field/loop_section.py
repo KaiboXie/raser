@@ -18,7 +18,7 @@ class loop_section():
         self.solve_model = solve_model
         self.device = device
         self.region = region
-        self.irradiation = False
+        self.irradiation = irradiation
         self.voltage = []
         self.current = []
         self.capacitance = []
