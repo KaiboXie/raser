@@ -48,6 +48,7 @@ class CarrierListFromG4P:
     
 
 class StripCarrierListFromG4P:
+    # P13 cut condition
     def __init__(self, material, my_g4p, batch):
         if (material == "SiC"):
             self.energy_loss = 8.4 #ev

@@ -43,10 +43,16 @@ class Detector:
         self.voltage = self.device_dict['bias']['voltage'] 
         self.temperature = self.device_dict['temperature']
         self.material = self.device_dict['material']
-        self.det_model = self.device_dict['det_model']
 
+        self.det_model = self.device_dict['det_model']
         self.doping = self.device_dict['doping']
         self.read_out_contact = self.device_dict["read_out_contact"]
+        if "irradiation" in self.device_dict:
+            self.irradiation_model = self.device_dict['irradiation']['irradiation_model']
+            self.irradiation_flux = self.device_dict['irradiation']['irradiation_flux']
+        else:
+            self.irradiation_model = None
+            self.irradiation_flux = 0
 
         self.absorber = self.device_dict['absorber']
         self.amplifier = self.device_dict['amplifier']

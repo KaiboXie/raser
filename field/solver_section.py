@@ -133,15 +133,15 @@ def main (kwargs):
     else:
         model_create.CreateNodeModel(device,region,"U_const",0)
     if "irradiation" in MyDetector.device_dict:
-        irradiation_label=MyDetector.device_dict['irradiation']['irradiation_label']
+        irradiation_model=MyDetector.device_dict['irradiation']['irradiation_model']
         irradiation_flux=MyDetector.device_dict['irradiation']['irradiation_flux']
     else:
-        irradiation_label=None
+        irradiation_model=None
         irradiation_flux=None
     if 'avalanche_model' in MyDetector.device_dict:
-        impact_label=MyDetector.device_dict['avalanche_model']
+        impact_model=MyDetector.device_dict['avalanche_model']
     else:
-        impact_label=None
+        impact_model=None
 
         
     circuit_contacts=[]
@@ -182,7 +182,11 @@ def main (kwargs):
         solve_model = "step"
     else :
         solve_model = None
+
     path = output(__file__, device)
+    if irradiation and not is_wf:
+        path = output(__file__, device, str(irradiation_flux))
+
     loop=loop_section.loop_section(paras=paras,device=device,region=region,solve_model=solve_model,irradiation=irradiation)
     def worker_function(queue, lock, circuit_contacts, v_current, area_factor, path, device, region, solve_model, irradiation, is_wf):
         try:
@@ -194,8 +198,6 @@ def main (kwargs):
             result_message = f"Error: {e}"
         with lock:
             queue.put(result_message)  
-
-    
     
     if is_wf == True:
         v_current=1
@@ -210,14 +212,15 @@ def main (kwargs):
             paras["milestone_step"] == 1
             paras.update({"milestone_step":paras["milestone_step"]})
 
-            loop.initial_solver(contact=contact,set_contact_type=None,irradiation_label=irradiation_label,irradiation_flux=irradiation_flux,impact_label=impact_label)
+            loop.initial_solver(contact=contact,set_contact_type=None,irradiation_model=irradiation_model,irradiation_flux=irradiation_flux,impact_model=impact_model)
             loop.loop_solver(circuit_contact=contact,v_current=v_current,area_factor=paras["area_factor"])
 
             save_milestone.save_milestone(device=device, region=region, v=v_current, path=folder_path,dimension=default_dimension,contact=contact,is_wf=is_wf)
             devsim.write_devices(file=os.path.join(folder_path,"weightingfield.dat"), type="tecplot")
+            
     elif is_wf == False:
         v_current = 0
-        loop.initial_solver(contact=circuit_contacts,set_contact_type=None,irradiation_label=irradiation_label,irradiation_flux=irradiation_flux,impact_label=impact_label)
+        loop.initial_solver(contact=circuit_contacts,set_contact_type=None,irradiation_model=irradiation_model,irradiation_flux=irradiation_flux,impact_model=impact_model)
         v_current = 0
         v_goal =MyDetector.device_dict['bias']['voltage']
         if v_goal > 0:

@@ -112,7 +112,7 @@ def milestone_save_2D(device, region, v, path):
             pickle.dump(data, file)
 
 
-def milestone_save_wf_2D(device, region, v, path,contact):
+def milestone_save_wf_2D(device, region, v, path, contact):
     save_wf_path = os.path.join(path,contact)
     create_path(save_wf_path)
 
@@ -172,7 +172,7 @@ def milestone_save_3D(device, region, v, path):
 
     names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
     if v == 0:
-         names.append('NetDoping')
+        names.append('NetDoping')
 
     for name in names: # scalar field on mesh point (instead of on edge)
         with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:
@@ -188,7 +188,7 @@ def milestone_save_wf_3D(device, region, v, path,contact):
     # not finished
     pass
 
-def save_milestone(device, region, v, path,dimension,contact,is_wf):
+def save_milestone(device, region, v, path, dimension, contact, is_wf):
     if dimension ==1 :
         if is_wf == True:
             milestone_save_wf_1D(device, region, v, path, contact)

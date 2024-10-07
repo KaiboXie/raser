@@ -41,14 +41,14 @@ def get_signal():
     print(my_d.device)
     print(voltage)
     
-    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact)
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact, my_d.irradiation_flux)
 
     my_g4p = cflm.cflmG4Particles(my_d)
 
     my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
 
     if 'ngspice' in amplifier:
-        save_current(my_d, my_current, g4_dic, my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact))
+        save_current(my_d, my_current, g4_dic, len(my_d.read_out_contact))
         pwlin(f"raser/cflm/output/{g4_dic['CurrentName'].split('.')[0]}_pwl_current.txt", 'raser/cflm/ucsc.cir', 'raser/cflm/output/')
         subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/ucsc_tmp.cir"], shell=True)
     
@@ -56,14 +56,14 @@ def get_signal():
     end = time.time()
     print("total_time:%s"%(end-start))
     
-def save_current(my_d, my_current, g4_dic, my_f):
+def save_current(my_d, my_current, g4_dic, read_ele_num):
 
     time = array.array('d', [999.])
     current = array.array('d', [999.])
     fout = ROOT.TFile(os.path.join("raser/cflm/output/", g4_dic['CurrentName'].split('.')[0])  + ".root", "RECREATE")
     t_out = ROOT.TTree("tree", "signal")
     t_out.Branch("time", time, "time/D")
-    for i in range(my_f.read_ele_num):
+    for i in range(read_ele_num):
         t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
         for j in range(my_current.n_bin):
             current[0]=my_current.sum_cu[i].GetBinContent(j)

@@ -36,8 +36,6 @@ class DevsimMesh():
         else:
             self.drawDoping(path)
 
-        if "irradiation" in self.device_dict:
-            path = output(__file__, str(self.det_name)+"/"+str(self.device_dict['irradiation']['irradiation_flux']))
         devsim.write_devices(file=os.path.join(path, self.det_name+".dat"),type="tecplot")
 
     def create1DMesh(self):

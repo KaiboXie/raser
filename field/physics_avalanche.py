@@ -13,34 +13,34 @@ from .model_create import *
 import math
 
 
-def CreateImpactGeneration(device, region, impact_label,custom_ion_n='0', custom_ion_p='0' ):   
+def CreateImpactGeneration(device, region, impact_model,custom_ion_n='0', custom_ion_p='0' ):   
     
     material = devsim.get_material(device=device, region=region)
     #create impact ionization model
-    if impact_label == "NoAvalanche":
+    if impact_model == "NoAvalanche":
         Ion_coeff_rate = '0'
     else:
         
-        if material == 'Silicon' and impact_label != "CustomAvalanche":
+        if material == 'Silicon' and impact_model != "CustomAvalanche":
             Ion_coeff_n, Ion_coeff_p = CreateImpactModel_vanOvenstraeten(device, region)
-        elif material=='SiliconCarbide' and impact_label != "CustomAvalanche" and impact_label != "Fine_exponential_models":
+        elif material=='SiliconCarbide' and impact_model != "CustomAvalanche" and impact_model != "Fine_exponential_models":
             Ion_coeff_n, Ion_coeff_p = CreateImpactModel_Hatakeyama(device, region)#default SiC model
-        elif material=='SiliconCarbide' and impact_label == "Fine_exponential_models":
+        elif material=='SiliconCarbide' and impact_model == "Fine_exponential_models":
             Ion_coeff_n, Ion_coeff_p = CreateImpactModel_Fine_exponential_models(device, region)
             #changebale models
-            if impact_label=="Hatakeyama":
+            if impact_model=="Hatakeyama":
                 pass
-            if impact_label=="Tunnel":
+            if impact_model=="Tunnel":
                 pass
-            if impact_label=="sze":
+            if impact_model=="sze":
                 Ion_coeff_n, Ion_coeff_p = CreateImpactModel_sze(device, region)
-            if impact_label=="chynoweth":
+            if impact_model=="chynoweth":
                 Ion_coeff_n, Ion_coeff_p = CreateImpactModel_chynoweth(device, region)
-            if impact_label=="bologna":
+            if impact_model=="bologna":
                 Ion_coeff_n, Ion_coeff_p = CreateImpactModel_bologna(device, region)
-            if impact_label=="sic_custom":
+            if impact_model=="sic_custom":
                 Ion_coeff_n, Ion_coeff_p = CreateImpactModel_sic_custom(device, region)
-            elif impact_label=="CustomAvalanche":
+            elif impact_model=="CustomAvalanche":
                 Ion_coeff_n, Ion_coeff_p = custom_ion_n, custom_ion_p
         else:
             Ion_coeff_n, Ion_coeff_p = custom_ion_n, custom_ion_p
@@ -63,7 +63,7 @@ def CreateImpactGeneration(device, region, impact_label,custom_ion_n='0', custom
         CreateFESRH(device,region)
         Ion_coeff_rate +="+R_TAT" #default create trap assisted tunneling in SiC
     
-    if impact_label == 'Tunnel':
+    if impact_model == 'Tunnel':
         print("creating tunnel")
         Ion_coeff_rate += CreateTunnelModel_Zaiyi(device, region)#tunneling model in P5
     

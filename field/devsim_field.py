@@ -16,19 +16,28 @@ from util.math import *
 diff_res = 1e-5 # difference resolution in cm
 
 class DevsimField:
-    def __init__(self, device_name, dimension, voltage, read_out_contacts):
+    def __init__(self, device_name, dimension, voltage, read_out_contacts, irradiation_flux = 0):
         self.name = device_name
         self.voltage = voltage
         self.dimension = dimension
-        self.read_ele_num = int(len(read_out_contacts)) 
+        self.read_ele_num = int(len(read_out_contacts))
 
-        DopingFile = "./output/field/{}/NetDoping_0V.pkl".format(self.name)
-        PotentialFile = "./output/field/{}/Potential_{}V.pkl".format(self.name, self.voltage)
-        TrappingRate_pFile = "./output/field/{}/TrappingRate_p_{}V.pkl".format(self.name, self.voltage)
-        TrappingRate_nFile = "./output/field/{}/TrappingRate_n_{}V.pkl".format(self.name, self.voltage)
+        path = "./output/field/{}/".format(self.name)
+
+        # Weighting Potential is universal for all irradiation flux
+        # TODO: Net Doping should be here too
         WeightingPotentialFiles = []
         for contact in read_out_contacts:
-            WeightingPotentialFiles.append("./output/field/{}/weightingfield/{}/Potential_{}V.pkl".format(self.name,contact, 1))
+            WeightingPotentialFiles.append(path + "weightingfield/{}/Potential_{}V.pkl".format(contact, 1))
+
+        if irradiation_flux != 0:
+            path = "./output/field/{}/{}/".format(self.name, irradiation_flux)
+
+        DopingFile = path + "NetDoping_0V.pkl"
+        PotentialFile = path + "Potential_{}V.pkl".format(self.voltage)
+        TrappingRate_pFile = path + "TrappingRate_p_{}V.pkl".format(self.voltage)
+        TrappingRate_nFile = path + "TrappingRate_n_{}V.pkl".format(self.voltage)
+
         self.set_doping(DopingFile) #self.Doping
         self.set_potential(PotentialFile) #self.Potential, self.x_efield, self.y_efield, self.z_efield
         self.set_trap_p(TrappingRate_pFile) # self.TrappingRate_p
@@ -44,7 +53,7 @@ class DevsimField:
                     print("Doping dimension not match")
                     return
         except FileNotFoundError:
-            print("Doping file not found, please run field simulation first")
+            print("Doping file not found at {}, please run field simulation first".format(DopingFile))
             print("or manually set the doping file")
             return
         
@@ -66,7 +75,7 @@ class DevsimField:
                     print("Potential dimension not match")
                     return
         except FileNotFoundError:
-            print("Potential file not found, please run field simulation first")
+            print("Potential file not found at {}, please run field simulation first".format(PotentialFile))
             print("or manually set the potential file")
             return
         
@@ -87,13 +96,13 @@ class DevsimField:
             try:
                 with open(WeightingPotentialFile,'rb') as file:
                     WeightingPotentialNotUniform=pickle.load(file)
-                    print("Weighting_Potential file loaded for {}".format(self.name))
+                    print("Weighting Potential file loaded for {} at electrode {}".format(self.name, i+1))
                     if WeightingPotentialNotUniform['metadata']['dimension'] < self.dimension:
-                        print("Weighting_Potential dimension not match")
+                        print("Weighting Potential dimension not match")
                         return
             except FileNotFoundError:
-                print("Weighting_Potential file not found, please run field simulation first")
-                print("or manually set the Weighting_Potential file")
+                print("Weighting Potential file not found at {}, please run field simulation first".format(WeightingPotentialFile))
+                print("or manually set the Weighting Potential file")
                 return
             
             if WeightingPotentialNotUniform['metadata']['dimension'] == 1:
@@ -114,7 +123,7 @@ class DevsimField:
                     print("TrappingRate_p dimension not match")
                     return
         except FileNotFoundError:
-            print("TrappingRate_p file not found, please run field simulation first")
+            print("TrappingRate_p file not found at {}, please run field simulation first".format(TrappingRate_pFile))
             print("or manually set the hole trapping rate file")
             return
         
@@ -136,7 +145,7 @@ class DevsimField:
                     print("TrappingRate_n dimension not match")
                     return
         except FileNotFoundError:
-            print("TrappingRate_n file not found, please run field simulation first")
+            print("TrappingRate_n file not found at {}, please run field simulation first".format(TrappingRate_nFile))
             print("or manually set the electron trapping rate file")
             return
         
