@@ -60,8 +60,8 @@ class Vector:
 def get_common_interpolate_1d(data):
     values = data['values']
     points = data['points']
-    f = p1d(points, values)
-    return f
+         
+    return p1d(points, values)
 
 def get_common_interpolate_2d(data):
     values = data['values']
@@ -74,8 +74,8 @@ def get_common_interpolate_2d(data):
     new_y = np.linspace(min(points_y), max(points_y), y_bin)
     new_points = np.array(np.meshgrid(new_x, new_y)).T.reshape(-1, 2)
     new_values = griddata((points_x, points_y), values, new_points, method='linear')
-    f = p2d(new_x, new_y, new_values)
-    return f
+
+    return p2d(new_x, new_y, new_values)
 
 def get_common_interpolate_3d(data):
     values = data['values']
@@ -92,10 +92,10 @@ def get_common_interpolate_3d(data):
     new_z = np.linspace(min(points_z), max(points_z), z_bin)
     new_points = np.array(np.meshgrid(new_x, new_y, new_z)).T.reshape(-1, 3)
     new_values = griddata((points_x, points_y, points_z), values, new_points, method='linear')
-    lndi = LNDI(new_points, new_values)
+
     def f(x, y, z):
         point = [x, y, z]
-        return lndi(point)
+        return LNDI(new_points, new_values)(point)
     return f
 
 def signal_convolution(signal_original: ROOT.TH1F, signal_convolved: ROOT.TH1F, pulse_responce_function_list: list[Callable[[float],float]]):
@@ -119,3 +119,23 @@ def signal_convolution(signal_original: ROOT.TH1F, signal_convolved: ROOT.TH1F, 
 
     sc.Add(st)
 
+
+def calculate_gradient(function: Callable, component: list, coordinate: list):
+    diff_res = 1e-5 # difference resolution in cm
+    diff_steps = [(diff_res / 2, diff_res / 2), (diff_res, 0), (0, diff_res)]
+
+    gradient = []
+    for i in range(len(coordinate)):
+        for diff1, diff2 in diff_steps:
+            try:
+                args_plus = [c + diff1 if i == j else c for j, c in enumerate(coordinate)]
+                args_minus = [c - diff2 if i == j else c for j, c in enumerate(coordinate)] 
+                gradient_trial = (function(*args_plus) - function(*args_minus)) / diff_res
+                gradient.append(gradient_trial)
+                break
+            except ValueError:
+                continue
+        else:
+            raise ValueError(f"Point {component[i]} might be out of bound")
+    
+    return gradient
