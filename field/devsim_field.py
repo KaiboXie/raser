@@ -13,8 +13,6 @@ import numpy as np
 
 from util.math import *
 
-diff_res = 1e-5 # difference resolution in cm
-
 class DevsimField:
     def __init__(self, device_name, dimension, voltage, read_out_contacts, irradiation_flux = 0):
         self.name = device_name
@@ -194,30 +192,23 @@ class DevsimField:
             output: intensity in V/um
         ''' 
         x, y, z = x / 1e4, y / 1e4, z / 1e4  # um to cm
-        diff_resolutions = [(diff_res / 2, diff_res / 2), (diff_res, 0), (0, diff_res)]
-
-        def calculate_e(component, *args):
-            for diff1, diff2 in diff_resolutions:
-                try:
-                    return -((self.Potential(*(a + diff1 for a in args)) -
-                            self.Potential(*(a - diff2 for a in args))) / diff_res)
-                except ValueError:
-                    continue
-            raise ValueError(f"Point {args} might be out of bound {component}")
 
         if self.dimension == 1:
-            E_z = calculate_e('z', z)
+            nabla_U = calculate_gradient(self.Potential, ['z'], [z])
+            E_z = -1 * nabla_U[0]
             return (0, 0, E_z)
 
         elif self.dimension == 2:
-            E_z = calculate_e('z', z, x)
-            E_x = calculate_e('x', z, x)
+            nabla_U = calculate_gradient(self.Potential, ['z', 'x'], [z, x])
+            E_z = -1 * nabla_U[0]
+            E_x = -1 * nabla_U[1]
             return (E_x, 0, E_z)
 
         elif self.dimension == 3:
-            E_z = calculate_e('z', z, x, y)
-            E_x = calculate_e('x', z, x, y)
-            E_y = calculate_e('y', z, x, y)
+            nabla_U = calculate_gradient(self.Potential, ['z', 'x', 'y'], [z, x, y])
+            E_z = -1 * nabla_U[0]
+            E_x = -1 * nabla_U[1]
+            E_y = -1 * nabla_U[2]
             return (E_x, E_y, E_z)
 
     def get_w_p(self, x, y, z, i): # used in cal current

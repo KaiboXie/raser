@@ -89,7 +89,7 @@ def main (kwargs):
         paras.update({"area_factor": MyDetector.device_dict['area_factor']})
     if "default_dimension" in MyDetector.device_dict:
         default_dimension =MyDetector.device_dict["default_dimension"]
-    if "irradiation" in MyDetector.device_dict:
+    if "irradiation" in MyDetector.device_dict and not is_wf:
         irradiation = True
     else:
         irradiation = False
@@ -184,7 +184,7 @@ def main (kwargs):
         solve_model = None
 
     path = output(__file__, device)
-    if irradiation and not is_wf:
+    if irradiation:
         path = output(__file__, device, str(irradiation_flux))
 
     loop=loop_section.loop_section(paras=paras,device=device,region=region,solve_model=solve_model,irradiation=irradiation)

@@ -67,9 +67,9 @@ def job_main(kwargs):
     my_d = bdv.Detector(det_name)
     
     if kwargs['voltage'] != None:
-        voltage = float(kwargs['voltage'])
+        voltage = kwargs['voltage']
     else:
-        voltage = float(my_d.voltage)
+        voltage = my_d.voltage
 
     if kwargs['absorber'] != None:
         absorber = kwargs['absorber']
