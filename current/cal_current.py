@@ -16,7 +16,7 @@ import numpy as np
 import ROOT
 
 from .model import Material
-from particle.carrier_list import CarrierListFromG4P, StripCarrierListFromG4P
+from particle.carrier_list import CarrierListFromG4P
 from util.math import Vector, signal_convolution
 from util.output import create_path
 
