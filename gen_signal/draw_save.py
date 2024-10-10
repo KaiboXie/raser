@@ -224,17 +224,18 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
     my_current.sum_cu[read_ele_num].SetLineWidth(2)
     c.Update()
 
-    if ele_current[read_ele_num].GetMinimum() < 0:
+    if abs(ele_current[read_ele_num].GetMinimum()) > abs(ele_current[read_ele_num].GetMaximum()):
         rightmax = 1.1*ele_current[read_ele_num].GetMinimum()
     else:
         rightmax = 1.1*ele_current[read_ele_num].GetMaximum()
 
     if rightmax == 0.0:
         n_scale = 0.0
-    elif ele_current[read_ele_num].GetMinimum() <0:
+    elif abs(ele_current[read_ele_num].GetMinimum()) > abs(ele_current[read_ele_num].GetMaximum()):
         n_scale = ROOT.gPad.GetUymin() / rightmax
     else:
         n_scale = ROOT.gPad.GetUymax() / rightmax
+
     ele_current[read_ele_num].Scale(n_scale)
     ele_current[read_ele_num].Draw("SAME HIST")
     ele_current[read_ele_num].SetLineWidth(2)   
