@@ -283,7 +283,7 @@ def cce(my_current, path):
         for j in range(my_current.n_bin):
             sum_charge=sum_charge+my_current.sum_cu[i].GetBinContent(j)*my_current.t_bin
         charge.append(sum_charge/1.6e-19)
-    print("===========RASER info================\nCollected Charge is {} C\n==============Result==============".format(list(charge)))
+    print("===========RASER info================\nCollected Charge is {} e\n==============Result==============".format(list(charge)))
     n=int(len(charge))
     c1=ROOT.TCanvas("c1","canvas1",1000,1000)
     cce=ROOT.TGraph(n,x,charge)

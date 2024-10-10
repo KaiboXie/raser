@@ -280,7 +280,8 @@ class MyPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
 
     def GeneratePrimaries(self, event):
         self.particleGun.GeneratePrimaryVertex(event)
-        self.particleGun2.GeneratePrimaryVertex(event)
+        if self.geant4_model == "time_resolution":
+            self.particleGun2.GeneratePrimaryVertex(event)
         pass            
         
 
