@@ -266,16 +266,17 @@ class MyPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
         self.particleGun = beam
         self.position = par_in
 
-        beam2 = g4b.G4ParticleGun(1)
-        beam2.SetParticleEnergy(0.546*g4b.MeV)
-        beam2.SetParticleMomentumDirection(g4b.G4ThreeVector(par_direction[0],
-                                                            par_direction[1],
-                                                            par_direction[2]))
-        beam2.SetParticleDefinition(particle)
-        beam2.SetParticlePosition(g4b.G4ThreeVector(par_in[0]*g4b.um,
-                                                    par_in[1]*g4b.um,
-                                                    par_in[2]*g4b.um))  
-        self.particleGun2 = beam2
+        if self.geant4_model == "time_resolution":
+            beam2 = g4b.G4ParticleGun(1)
+            beam2.SetParticleEnergy(0.546*g4b.MeV)
+            beam2.SetParticleMomentumDirection(g4b.G4ThreeVector(par_direction[0],
+                                                                par_direction[1],
+                                                                par_direction[2]))
+            beam2.SetParticleDefinition(particle)
+            beam2.SetParticlePosition(g4b.G4ThreeVector(par_in[0]*g4b.um,
+                                                        par_in[1]*g4b.um,
+                                                        par_in[2]*g4b.um))  
+            self.particleGun2 = beam2
 
     def GeneratePrimaries(self, event):
         self.particleGun.GeneratePrimaryVertex(event)

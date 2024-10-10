@@ -20,7 +20,8 @@ from particle.carrier_list import CarrierListFromG4P, StripCarrierListFromG4P
 from util.math import Vector, signal_convolution
 from util.output import create_path
 
-t_bin = 100e-12
+t_bin = 50e-12
+# resolution of oscilloscope
 t_end = 10e-9
 t_start = 0
 delta_t = 10e-12
@@ -137,14 +138,13 @@ class Carrier:
                 U_w_1 = my_f.get_w_p(self.path[i][0],self.path[i][1],self.path[i][2],j) # x,y,z
                 U_w_2 = my_f.get_w_p(self.path[i+1][0],self.path[i+1][1],self.path[i+1][2],j)
                 e0 = 1.60217733e-19
-                if i>0:
-                    if (my_f.read_ele_num)>1:
-                        d_t=self.path[i][3]-self.path[i-1][3]
-                        if self.charge>=0:
-                            self.trapping_rate=my_f.get_trap_h(self.path[i][0],self.path[i][1],self.path[i][2])
-                        else:
-                            self.trapping_rate=my_f.get_trap_e(self.path[i][0],self.path[i][1],self.path[i][2])
-                        charge=charge*np.exp(-d_t*self.trapping_rate)
+                if i>0 and my_d.irradiation_model != None:
+                    d_t=self.path[i][3]-self.path[i-1][3]
+                    if self.charge>=0:
+                        self.trapping_rate=my_f.get_trap_h(self.path[i][0],self.path[i][1],self.path[i][2])
+                    else:
+                        self.trapping_rate=my_f.get_trap_e(self.path[i][0],self.path[i][1],self.path[i][2])
+                    charge=charge*np.exp(-d_t*self.trapping_rate)
                 q = charge * e0
                 dU_w = U_w_2 - U_w_1
                 self.signal[j].append(q*dU_w)
@@ -152,7 +152,7 @@ class Carrier:
 
     def drift_end(self,my_f):
         e_field = my_f.get_e_field(self.x,self.y,self.z)
-        if (e_field[0]==0 and e_field[1]==0 and e_field[2] == 0):
+        if (e_field[0] == 0 and e_field[1] == 0 and e_field[2] == 0):
             self.end_condition = "out of bound"
         elif (self.t > t_end):
             self.end_condition = "time out"
@@ -213,13 +213,20 @@ class CalCurrent:
             self.sum_cu[i].Reset()
             self.positive_cu[i].Reset()
             self.negative_cu[i].Reset()
-        self.get_current(my_d,self.read_ele_num)
+        self.get_current(self.read_ele_num)
+        for i in range(self.read_ele_num):
+            self.sum_cu[i].Add(self.positive_cu[i])
+            self.sum_cu[i].Add(self.negative_cu[i])
+
         if "lgad3D" in my_d.det_model:
             self.gain_current = CalCurrentGain(my_d, my_f, self)
             for i in range(self.read_ele_num):
                 self.gain_positive_cu[i].Reset()
                 self.gain_negative_cu[i].Reset()
-            self.get_current_gain(self.read_ele_num)
+                self.gain_negative_cu[i] = self.gain_current.negative_cu[i]
+                self.gain_positive_cu[i] = self.gain_current.positive_cu[i]
+                self.sum_cu[i].Add(self.gain_negative_cu[i])
+                self.sum_cu[i].Add(self.gain_positive_cu[i])
 
     def drifting_loop(self, my_d, my_f):
         for electron in self.electrons:
@@ -263,55 +270,25 @@ class CalCurrent:
                                     self.n_bin, self.t_start, self.t_end))
             
         
-    def get_current(self,my_d,read_ele_num):
+    def get_current(self,read_ele_num):
         test_p = ROOT.TH1F("test+","test+",self.n_bin,self.t_start,self.t_end)
         test_p.Reset()
         for j in range(read_ele_num):
-            sum_max_hole=0
-            sum_min_hole=0
             for hole in self.holes:
-                if (len(hole.signal[j])!=0):
-                    sum_max_hole=sum_max_hole+max(hole.signal[j])/self.t_bin
-                    sum_min_hole=sum_min_hole+min(hole.signal[j])/self.t_bin
-            if(sum_max_hole<1e-11 or abs(sum_min_hole)<1e-11) and (my_d.det_model == "Si_Strip"):
-                pass
-            else:
-                for hole in self.holes:
-                    for i in range(len(hole.path)-1):
-                        test_p.Fill(hole.path[i][3],hole.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
-                    self.positive_cu[j].Add(test_p)
-                    test_p.Reset()
+                for i in range(len(hole.path)-1):
+                    test_p.Fill(hole.path[i][3],hole.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
+                self.positive_cu[j].Add(test_p)
+                test_p.Reset()
 
 
         test_n = ROOT.TH1F("test-","test-",self.n_bin,self.t_start,self.t_end)
         test_n.Reset()
         for j in range(read_ele_num):
-            sum_max_electron=0
-            sum_min_electron=0
-            for electron in self.electrons:
-                if (len(electron.signal[j])!=0):
-                    sum_max_electron=sum_max_electron+max(electron.signal[j])/self.t_bin
-                    sum_min_electron=sum_min_electron+min(electron.signal[j])/self.t_bin
-            if(sum_max_hole<1e-11 or abs(sum_min_hole)<1e-11) and (my_d.det_model == "Si_Strip"):
-                pass
-            else:
-                for electron in self.electrons:             
-                    for i in range(len(electron.path)-1):
-                        test_n.Fill(electron.path[i][3],electron.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
-                    self.negative_cu[j].Add(test_n)
-                    test_n.Reset()
-    
-        for i in range(read_ele_num):
-            self.sum_cu[i].Add(self.positive_cu[i])
-            self.sum_cu[i].Add(self.negative_cu[i])
-
-    def get_current_gain(self,read_ele_num):
-        for i in range(read_ele_num):
-            self.gain_negative_cu[i] = self.gain_current.negative_cu[i]
-            self.gain_positive_cu[i] = self.gain_current.positive_cu[i]
-        for i in range(read_ele_num):
-            self.sum_cu[i].Add(self.gain_negative_cu[i])
-            self.sum_cu[i].Add(self.gain_positive_cu[i])
+            for electron in self.electrons:             
+                for i in range(len(electron.path)-1):
+                    test_n.Fill(electron.path[i][3],electron.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
+                self.negative_cu[j].Add(test_n)
+                test_n.Reset()
     
 class CalCurrentGain(CalCurrent):
     '''Calculation of gain carriers and gain current, simplified version'''
@@ -370,7 +347,7 @@ class CalCurrentGain(CalCurrent):
         for i in range(self.read_ele_num):
             self.positive_cu[i].Reset()
             self.negative_cu[i].Reset()
-        self.get_current(my_d,self.read_ele_num)
+        self.get_current(self.read_ele_num)
 
     def gain_rate(self, my_d, my_f, cal_coefficient):
 
@@ -437,57 +414,14 @@ class CalCurrentGain(CalCurrent):
         for i in range(read_ele_num):
             self.positive_cu.append(ROOT.TH1F("gain_charge_tmp+"+str(i+1)," No."+str(i+1)+"Gain Positive Current",
                                         self.n_bin, self.t_start, self.t_end))
-            self.negative_cu.append(ROOT.TH1F("gain_charge_tmp-"+str(i+1)," No."+str(i+1)+"Gain Positive Current",
+            self.negative_cu.append(ROOT.TH1F("gain_charge_tmp-"+str(i+1)," No."+str(i+1)+"Gain Negative Current",
                                         self.n_bin, self.t_start, self.t_end))
-        
-    def get_current(self,my_d,read_ele_num):
-        test_p = ROOT.TH1F("test+","test+",self.n_bin,self.t_start,self.t_end)
-        test_p.Reset()
-        for j in range(read_ele_num):
-            sum_max_hole=0
-            sum_min_hole=0
-            for hole in self.holes:
-                if (len(hole.signal[j])!=0):
-                    sum_max_hole=sum_max_hole+max(hole.signal[j])/self.t_bin
-                    sum_min_hole=sum_min_hole+min(hole.signal[j])/self.t_bin
-            if(sum_max_hole<1e-11 or abs(sum_min_hole)<1e-11) and (my_d.det_model == "Si_Strip"):
-                pass
-            else:
-                for hole in self.holes:
-                    for i in range(len(hole.path)-1):
-                        test_p.Fill(hole.path[i][3],hole.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
-                    self.positive_cu[j].Add(test_p)
-                    test_p.Reset()
-
-        test_n = ROOT.TH1F("test-","test-",self.n_bin,self.t_start,self.t_end)
-        test_n.Reset()
-        for j in range(read_ele_num):
-            sum_max_electron=0
-            sum_min_electron=0
-            for electron in self.electrons:
-                if (len(electron.signal[j])!=0):
-                    sum_max_electron=sum_max_electron+max(electron.signal[j])/self.t_bin
-                    sum_min_electron=sum_min_electron+min(electron.signal[j])/self.t_bin
-            if(sum_max_hole<1e-11 or abs(sum_min_hole)<1e-11) and (my_d.det_model == "Si_Strip"):
-                pass
-            else:
-                for electron in self.electrons:             
-                    for i in range(len(electron.path)-1):
-                        test_n.Fill(electron.path[i][3],electron.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
-                    self.negative_cu[j].Add(test_n)
-                    test_n.Reset()
-
 
 class CalCurrentG4P(CalCurrent):
     def __init__(self, my_d, my_f, my_g4p, batch):
         G4P_carrier_list = CarrierListFromG4P(my_d.material, my_g4p, batch)
         super().__init__(my_d, my_f, G4P_carrier_list.ionized_pairs, G4P_carrier_list.track_position)
 
-
-class CalCurrentStrip(CalCurrent):
-    def __init__(self, my_d, my_f, my_g4p, batch):
-        G4P_carrier_list = StripCarrierListFromG4P(my_d.material, my_g4p, batch)
-        super().__init__(my_d, my_f, G4P_carrier_list.ionized_pairs, G4P_carrier_list.track_position)
 
 
 class CalCurrentLaser(CalCurrent):

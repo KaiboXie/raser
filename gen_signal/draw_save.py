@@ -226,11 +226,11 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
 
     if ele_current[read_ele_num].GetMinimum() < 0:
         rightmax = 1.1*ele_current[read_ele_num].GetMinimum()
-
     else:
         rightmax = 1.1*ele_current[read_ele_num].GetMaximum()
-    if rightmax == 0:
-        n_scale=0
+
+    if rightmax == 0.0:
+        n_scale = 0.0
     elif ele_current[read_ele_num].GetMinimum() <0:
         n_scale = ROOT.gPad.GetUymin() / rightmax
     else:

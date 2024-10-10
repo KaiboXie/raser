@@ -19,7 +19,7 @@ class CarrierListFromG4P:
         elif (material == "Si"):
             self.energy_loss = 3.6 #ev
 
-        if batch == 0:
+        if batch == 0 and my_g4p.geant4_model == "time_resolution":
             total_step=0
             particle_number=0
             for p_step in my_g4p.p_steps_current:   # selecting particle with long enough track
@@ -33,11 +33,33 @@ class CarrierListFromG4P:
             if particle_number > 0:
                 batch=1
 
-                if batch == 0:
-                    print("=========RASER info ===========\nGeant4:the sensor didn't have particles hitted\n==========================")
-                    raise ValueError
-            else:
-                self.batch_def(my_g4p,batch)
+            if batch == 0:
+                print("=========RASER info ===========\nGeant4:the sensor didn't have particles hitted\n==========================")
+                raise ValueError
+            
+        elif batch == 0 and my_g4p.geant4_model == "Si_strip":
+            h1 = ROOT.TH1F("Edep_device", "Energy deposition in Detector", 100, 0, max(my_g4p.edep_devices)*1.1)
+            for i in range (len(my_g4p.edep_devices)):
+                h1.Fill(my_g4p.edep_devices[i])
+            max_event_bin=h1.GetMaximumBin()
+            bin_wide=max(my_g4p.edep_devices)*1.1/100
+            c=ROOT.TCanvas("c","c",700,500)
+            h1.Draw()
+            # c.SaveAs("./output/particle/edeptest.pdf")
+
+            for j in range (len(my_g4p.edep_devices)):
+                #compare to experimental data
+                if (my_g4p.edep_devices[j]<0.084 and my_g4p.edep_devices[j]>0.083):
+                    try_p=1
+                    for single_step in my_g4p.p_steps_current[j]:
+                        if abs(single_step[0]-my_g4p.p_steps_current[j][0][0])>5:
+                            try_p=0
+                    if try_p==1:
+                        self.batch_def(my_g4p,j)
+                        batch = 1
+                        break
+        else:
+            self.batch_def(my_g4p,batch)
 
     def batch_def(self,my_g4p,j):
         self.beam_number = j
@@ -55,23 +77,7 @@ class StripCarrierListFromG4P:
         elif (material == "Si"):
             self.energy_loss = 3.6 #ev
 
-        if batch == 0:
-            h1 = ROOT.TH1F("Edep_device", "Energy deposition in Detector", 100, 0, max(my_g4p.edep_devices)*1.1)
-            for i in range (len(my_g4p.edep_devices)):
-                h1.Fill(my_g4p.edep_devices[i])
-            max_event_bin=h1.GetMaximumBin()
-            bin_wide=max(my_g4p.edep_devices)*1.1/100
-            for j in range (len(my_g4p.edep_devices)):
-                #compare to experimental data
-                if (my_g4p.edep_devices[j]<0.084 and my_g4p.edep_devices[j]>0.083):
-                    try_p=1
-                    for single_step in my_g4p.p_steps_current[j]:
-                        if abs(single_step[0]-my_g4p.p_steps_current[j][0][0])>5:
-                            try_p=0
-                    if try_p==1:
-                        self.batch_def(my_g4p,j)
-                        batch = 1
-                        break
+        
 
             if batch == 0:
                 print("=========RASER info ===========\nGeant4:the sensor didn't have particles hitted\n==========================")
