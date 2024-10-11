@@ -42,7 +42,7 @@ paras = {
     "milestone_mode" : True,
     "milestone_step" : 50,
 
-    "voltage_step" : 1,
+    "voltage_step" : 0.1,
     "acreal" : 1.0, 
     "acimag" : 0.0,
     "frequency" : 1000.0,
