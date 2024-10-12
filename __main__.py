@@ -13,7 +13,7 @@ VERSION = 4.0
 parser = argparse.ArgumentParser(prog='raser')
 parser.add_argument('--version', action='version', 
                     version='%(prog)s {}'.format(VERSION))
-parser.add_argument('-b', '--batch', help='submit BATCH job to cluster', action="store_true")
+parser.add_argument('-b', '--batch', help='submit BATCH job to cluster', action='count', default=0)
 parser.add_argument('-t', '--test', help='TEST', action="store_true")
 parser.add_argument('-sh', '--shell', help='flag of run raser in SHELL', action="store_true")
 
@@ -89,13 +89,16 @@ submodule = kwargs['subparser_name']
 if submodule not in submodules:
     raise NameError(submodule)
 
-if kwargs['batch'] == True:
+if kwargs['batch'] != 0:
+    batch_number = kwargs['batch']
+    import re
     from util import batchjob
     destination = submodule
     command = ' '.join(sys.argv[1:])
     command = command.replace('--batch ', '')
-    command = command.replace('-b ', '')
-    batchjob.main(destination, command, args)
+    for bs in re.findall('-b* ', command):
+        command = command.replace(bs, '')
+    batchjob.main(destination, command, batch_number, args)
 
 elif kwargs['shell'] == False: # not in shell
     try:
