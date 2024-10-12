@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
-@File    :   devsim.py
+@File    :   devsim_field.py
 @Time    :   2023/06/04
 @Author  :   Henry Stone, Sen Zhao
 @Version :   2.0
 '''
 
 import pickle
+
 import ROOT
 import numpy as np
 
 from util.math import *
+
+verbose = 0
 
 class DevsimField:
     def __init__(self, device_name, dimension, voltage, read_out_contacts, irradiation_flux = 0):
@@ -214,11 +217,27 @@ class DevsimField:
     def get_w_p(self, x, y, z, i): # used in cal current
         x, y, z = x/1e4, y/1e4, z/1e4 # um to cm
         if self.dimension == 1:
-            return self.WeightingPotential[i](z)
+            U_w = self.WeightingPotential[i](z)
         elif self.dimension == 2:
-            return self.WeightingPotential[i](z, x)
+            U_w = self.WeightingPotential[i](z, x)
         elif self.dimension == 3:
-            return self.WeightingPotential[i](z, x, y)
+            U_w = self.WeightingPotential[i](z, x, y)
+
+        # exclude non-physical values
+        if U_w < 0:
+            if verbose > 0:
+                print('U_w is negative at',x*1e4,y*1e4,z*1e4,i,'as',U_w)
+            return 0
+        elif U_w > 1:
+            if verbose > 0:
+                print('U_w is greater than 1 at',x*1e4,y*1e4,z*1e4,i,'as',U_w)
+            return 1
+        elif U_w != U_w:
+            if verbose > 0:
+                print('U_w is nan at',x*1e4,y*1e4,z*1e4,i)
+            return 0
+        else:
+            return U_w
 
     
     def get_trap_e(self, x, y, z):

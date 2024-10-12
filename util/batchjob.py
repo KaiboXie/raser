@@ -15,31 +15,42 @@ import pwd
 
 from util.output import create_path
 
-def main(destination_subfolder, command, args):
+def main(destination_subfolder, command, batch_number, args):
     test = vars(args)['test'] 
     stat_info = os.stat("./")
     uid = stat_info.st_uid
     gid = stat_info.st_gid
     user = pwd.getpwuid(uid)[0]
     group = grp.getgrgid(gid)[0]
+    
+    if batch_number < 0:
+        mem = 10 * (-batch_number)
+    elif batch_number > 0:
+        mem = 5000 * batch_number
  
     create_path("./output/{}/jobs".format(destination_subfolder))
     command_name = command.replace(" ","_").replace("/","_")
     jobfile_name = "./output/{}/jobs/".format(destination_subfolder)+command_name+".job"
-    gen_job(jobfile_name,run_code='python3 raser'+' '+command)
-    submit_job(jobfile_name,destination_subfolder,group,test=test)
+    IMGFILE = os.environ.get('IMGFILE')
+    BINDPATH = os.environ.get('BINDPATH')
+    raser_shell = "/usr/bin/apptainer exec --env-file cfg/env -B" + " " \
+                + BINDPATH + " " \
+                + IMGFILE + " " \
+                + "python3 raser"
+    gen_job(jobfile_name, run_code=raser_shell+' '+command)
+    submit_job(jobfile_name, destination_subfolder, group, mem, test=test)
 
-def gen_job(jobfile_name,run_code):
-    jobfile = open(jobfile_name,"w")
+def gen_job(jobfile_name, run_code):
+    jobfile = open(jobfile_name, "w")
     jobfile.write(run_code)
     jobfile.close()
     print("Generate job file: ", jobfile_name)
 
-def submit_job(jobfile_name,destination_subfolder,group, test=False):
+def submit_job(jobfile_name, destination_subfolder, group, mem, test=False):
     print("Submit job file: ", jobfile_name)
     os.chmod(jobfile_name, 0o755)
-    command = "hep_sub -o ./output/{}/jobs -e ./output/{}/jobs {} -g {}".format(
-        destination_subfolder,destination_subfolder,jobfile_name,group)
+    command = "hep_sub -o ./output/{}/jobs -e ./output/{}/jobs {} -mem {} -g {}".format(
+        destination_subfolder, destination_subfolder, jobfile_name, mem, group)
     run_cmd(command, test)
 
 def run_cmd(command, test=False):

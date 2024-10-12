@@ -28,21 +28,21 @@ noise = []
 
 paras = {
     "absolute_error_Initial" : 1e10, 
-    "relative_error_Initial" : 1e-3, 
+    "relative_error_Initial" : 1e-10, 
     "maximum_iterations_Initial" : 1000,
 
-    "absolute_error_DriftDiffusion" : 1e20, 
-    "relative_error_DriftDiffusion" : 1e-3, 
+    "absolute_error_DriftDiffusion" : 1e10, 
+    "relative_error_DriftDiffusion" : 1e-10, 
     "maximum_iterations_DriftDiffusion" : 1000,
 
-    "absolute_error_VoltageSteps" : 1e20, 
-    "relative_error_VoltageSteps" : 1e-3, 
+    "absolute_error_VoltageSteps" : 1e10, 
+    "relative_error_VoltageSteps" : 1e-10, 
     "maximum_iterations_VoltageSteps" : 1000,
 
     "milestone_mode" : True,
     "milestone_step" : 50,
 
-    "voltage_step" : 1,
+    "voltage_step" : 0.1,
     "acreal" : 1.0, 
     "acimag" : 0.0,
     "frequency" : 1000.0,
@@ -228,12 +228,14 @@ def main (kwargs):
         else: 
             voltage_step = -1 * paras['voltage_step']
         if is_step == False:
+            i = 0
             while abs(v_current) <= abs(v_goal):
                 loop.loop_solver(circuit_contact=circuit_contacts,v_current=v_current,area_factor=paras["area_factor"])
-                if(paras['milestone_mode']==True and v_current%paras['milestone_step']==0.0) or abs(v_current) == abs(v_goal) :
+                if(paras['milestone_mode']==True and abs(v_current%paras['milestone_step'])<0.01) or abs(v_current) == abs(v_goal) :
                     save_milestone.save_milestone(device=device, region=region, v=v_current, path=path,dimension=default_dimension,contact=circuit_contacts,is_wf=is_wf)
                     devsim.write_devices(file=os.path.join(path,"Ele_Characterization/{}".format(v_current)), type="tecplot")
-                v_current += voltage_step
+                i += 1
+                v_current = voltage_step*i
 
         if is_step:
             lock = multiprocessing.Lock()

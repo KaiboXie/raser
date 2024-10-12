@@ -125,7 +125,7 @@ class Material:
                 if Neff >= 0:
                     N_D = Neff
                     N_A = 0
-                if Neff < 0:
+                else:
                     N_A = -Neff
                     N_D = 0
 

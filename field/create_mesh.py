@@ -45,7 +45,8 @@ class DevsimMesh():
         for mesh_line in mesh["mesh_line"]:
             devsim.add_1d_mesh_line(mesh=mesh_name, **mesh_line)
         if (self.solve_paras["weightfield"] == True) :
-            mesh["region"][0]["material"] = "gas"
+            for region in mesh["region"]:
+                region["material"] = "gas"
         else:
             pass
         for region in mesh["region"]:
@@ -62,7 +63,8 @@ class DevsimMesh():
         for mesh_line in mesh["mesh_line"]:
             devsim.add_2d_mesh_line(mesh=mesh_name, **mesh_line)
         if (self.solve_paras["weightfield"] == True) :
-            mesh["region"][0]["material"] = "gas"
+            for region in mesh["region"]:
+                region["material"] = "gas"
         else:
             pass
         for region in mesh["region"]:
@@ -85,7 +87,8 @@ class DevsimMesh():
         mesh = self.device_dict["mesh"]["gmsh_mesh"]
         devsim.create_gmsh_mesh (mesh=mesh_name, file=mesh['file'])
         if (self.solve_paras["weightfield"] == True) :
-            mesh["region"][0]['material']="gas"
+            for region in mesh["region"]:
+                region["material"] = "gas"
         else:
             pass
         for region in mesh["region"]:
