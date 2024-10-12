@@ -31,7 +31,13 @@ def main(destination_subfolder, command, batch_number, args):
     create_path("./output/{}/jobs".format(destination_subfolder))
     command_name = command.replace(" ","_").replace("/","_")
     jobfile_name = "./output/{}/jobs/".format(destination_subfolder)+command_name+".job"
-    gen_job(jobfile_name, run_code='python3 raser'+' '+command)
+    IMGFILE = os.environ.get('IMGFILE')
+    BINDPATH = os.environ.get('BINDPATH')
+    raser_shell = "/usr/bin/apptainer exec --env-file cfg/env -B" + " " \
+                + BINDPATH + " " \
+                + IMGFILE + " " \
+                + "python3 raser"
+    gen_job(jobfile_name, run_code=raser_shell+' '+command)
     submit_job(jobfile_name, destination_subfolder, group, mem, test=test)
 
 def gen_job(jobfile_name, run_code):
