@@ -6,7 +6,6 @@
 import sys 
 import argparse
 import importlib
-import subprocess
 
 VERSION = 4.0
 
