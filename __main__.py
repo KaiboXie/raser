@@ -15,7 +15,6 @@ parser.add_argument('--version', action='version',
                     version='%(prog)s {}'.format(VERSION))
 parser.add_argument('-b', '--batch', help='submit BATCH job to cluster', action='count', default=0)
 parser.add_argument('-t', '--test', help='TEST', action="store_true")
-parser.add_argument('-sh', '--shell', help='flag of run raser in SHELL', action="store_true")
 
 subparsers = parser.add_subparsers(help='sub-command help', dest="subparser_name")
 
@@ -99,28 +98,7 @@ if kwargs['batch'] != 0:
     for bs in re.findall('-b* ', command):
         command = command.replace(bs, '')
     batchjob.main(destination, command, batch_number, args)
-
-elif kwargs['shell'] == False: # not in shell
-    try:
-        for package in ['ROOT', 'geant4_pybind', 'devsim', 'numpy', 'scipy']:
-            # package dependency check
-            import package
-        submodule = importlib.import_module(submodule)
-        submodule.main(kwargs)
-
-    except ModuleNotFoundError:
-        # use apptainer instead
-        command = ' '.join(['-sh']+sys.argv[1:])
-        import os
-        IMGFILE = os.environ.get('IMGFILE')
-        BINDPATH = os.environ.get('BINDPATH')
-        raser_shell = "/usr/bin/apptainer exec --env-file cfg/env -B" + " " \
-                    + BINDPATH + " " \
-                    + IMGFILE + " " \
-                    + "python3 raser"
-
-        subprocess.run([raser_shell+' '+command], shell=True, executable='/bin/bash')
-else: # in shell
+else:
     submodule = importlib.import_module(submodule)
     submodule.main(kwargs)
     
