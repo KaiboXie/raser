@@ -7,7 +7,7 @@ import sys
 import argparse
 import importlib
 
-VERSION = 4.0
+VERSION = 4.1
 
 parser = argparse.ArgumentParser(prog='raser')
 parser.add_argument('--version', action='version', 

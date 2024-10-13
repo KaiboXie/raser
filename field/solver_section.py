@@ -11,10 +11,11 @@ import numpy as np
 
 from gen_signal.build_device import Detector
 from .create_mesh import DevsimMesh
-from . import model_create
+from .create_parameter import create_parameter
 from . import save_milestone
 from . import loop_section
 from . import physics_drift_diffusion
+from . import initial
 from util.output import output
 from .devsim_draw import *
 import multiprocessing
@@ -40,7 +41,7 @@ paras = {
     "maximum_iterations_VoltageSteps" : 1000,
 
     "milestone_mode" : True,
-    "milestone_step" : 50,
+    "milestone_step" : 10,
 
     "voltage_step" : 0.1,
     "acreal" : 1.0, 
@@ -49,9 +50,7 @@ paras = {
     
     "Cylindrical_coordinate": False,
 
-
     "ac-weightfield" : False,
-
 
     "Voltage-step-model" : False,
     "step":1,
@@ -75,8 +74,6 @@ def main (kwargs):
     else:
         paras.update({"Voltage-step-model": False})
 
-    
-
     device = simname
     region = simname
     MyDetector = Detector(device)
@@ -94,44 +91,8 @@ def main (kwargs):
     else:
         irradiation = False
 
-    devsim.open_db(filename="./output/field/SICARDB.db", permission="readonly")
-    
-    T = MyDetector.device_dict['temperature']
-    k = 1.3806503e-23  # J/K
-    q = 1.60217646e-19 # coul
-    devsim.add_db_entry(material="global",   parameter="T",    value=T,     unit="K",   description="T")
-    devsim.add_db_entry(material="global",   parameter="k_T",    value=k*T,       unit="J",        description="k*T")
-    devsim.add_db_entry(material="global",   parameter="Volt_thermal",    value=k*T/q,     unit="J/coul",   description="k*T/q")
-    N_c=2.82e19*pow(T/300,1.5)
-    N_v=1.83e19*pow(T/300,1.5)
-    devsim.add_db_entry(material="Silicon",parameter="N_c",value=N_c, unit="/cm^3", description="effective density of states in conduction band")
-    devsim.add_db_entry(material="Silicon",parameter="N_v",value=N_v, unit="/cm^3", description="effective density of states in valence band")
-    E_g=1.12*1.6e-19
-    N_i=pow(N_c*N_v,0.5)*math.exp(-E_g/(2*k*T))
-    devsim.add_db_entry(material="Silicon",   parameter="n_i",    value=N_i,   unit="/cm^3",     description="Intrinsic Electron Concentration")
-    devsim.add_db_entry(material="SiliconCarbide",   parameter="n_i",    value=N_i,   unit="/cm^3",     description="Intrinsic Electron Concentration")
-    devsim.add_db_entry(material="gas",   parameter="n_i",    value="1e-9",   unit="/cm^3",     description="Intrinsic Electron Concentration")
-    devsim.add_db_entry(material="gas",   parameter="Permittivity",    value="1",   unit="1",     description="Permittivity")
-    devsim.add_db_entry(material="Silicon",   parameter="n1",     value=N_i,   unit="/cm^3",     description="n1")
-    devsim.add_db_entry(material="Silicon",   parameter="p1",     value=N_i,   unit="/cm^3",     description="p1")
+    create_parameter(MyDetector, device, region)
 
-    if "parameter_alter" in MyDetector.device_dict:
-        for material in MyDetector.device_dict["parameter_alter"]:
-            print (material)
-            for parameter in MyDetector.device_dict["parameter_alter"][material]:
-                print (parameter)
-                devsim.add_db_entry(material=material,
-                                    parameter=parameter['name'],
-                                    value=parameter['value'],
-                                    unit=parameter['unit'],
-                                    description=parameter['name'])
-    if "parameter" in MyDetector.device_dict:
-        devsim.add_db_entry(material=MyDetector.device_dict['parameter']['material'],parameter=MyDetector.device_dict['parameter']['name'],value=MyDetector.device_dict['parameter']['value'],unit=MyDetector.device_dict['parameter']['unit'],description=MyDetector.device_dict['parameter']['description'])
-    if "U_const" in MyDetector.device_dict:
-        U_const=MyDetector.device_dict["U_const"]
-        model_create.CreateNodeModel(device,region,"U_const",U_const)
-    else:
-        model_create.CreateNodeModel(device,region,"U_const",0)
     if "irradiation" in MyDetector.device_dict:
         irradiation_model=MyDetector.device_dict['irradiation']['irradiation_model']
         irradiation_flux=MyDetector.device_dict['irradiation']['irradiation_flux']
@@ -142,7 +103,6 @@ def main (kwargs):
         impact_model=MyDetector.device_dict['avalanche_model']
     else:
         impact_model=None
-
         
     circuit_contacts=[]
     if is_wf == True:
@@ -167,7 +127,7 @@ def main (kwargs):
                            value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
     T1 = time.time()
     print("================RASER info============\nWelcome to RASER TCAD PART, mesh load successfully\n=============info===============")
-    devsim.set_parameter(name="debug_level", value="info")
+    devsim.set_parameter(name = "debug_level", value="info")
     devsim.set_parameter(name = "extended_solver", value=True)
     devsim.set_parameter(name = "extended_model", value=True)
     devsim.set_parameter(name = "extended_equation", value=True)
@@ -222,7 +182,7 @@ def main (kwargs):
         v_current = 0
         loop.initial_solver(contact=circuit_contacts,set_contact_type=None,irradiation_model=irradiation_model,irradiation_flux=irradiation_flux,impact_model=impact_model)
         v_current = 0
-        v_goal =MyDetector.device_dict['bias']['voltage']
+        v_goal = MyDetector.device_dict['bias']['voltage']
         if v_goal > 0:
             voltage_step = paras['voltage_step']
         else: 
@@ -233,7 +193,6 @@ def main (kwargs):
                 loop.loop_solver(circuit_contact=circuit_contacts,v_current=v_current,area_factor=paras["area_factor"])
                 if(paras['milestone_mode']==True and abs(v_current%paras['milestone_step'])<0.01) or abs(v_current) == abs(v_goal) :
                     save_milestone.save_milestone(device=device, region=region, v=v_current, path=path,dimension=default_dimension,contact=circuit_contacts,is_wf=is_wf)
-                    devsim.write_devices(file=os.path.join(path,"Ele_Characterization/{}".format(v_current)), type="tecplot")
                 i += 1
                 v_current = voltage_step*i
 

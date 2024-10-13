@@ -5,6 +5,7 @@ import devsim
 import numpy as np
 
 from . import devsim_draw
+from .create_parameter import create_parameter
 from util.output import create_path
 
 def milestone_save_1D(device, region, v, path):
@@ -26,7 +27,12 @@ def milestone_save_1D(device, region, v, path):
     devsim_draw.draw1D(x,TrappingRate_p,"Hole Trapping Rate","Depth[cm]","Trapping Rate[s]", v, path)
 
     dd = os.path.join(path, str(v)+'V.dd')
+    devsim_device = os.path.join(path, str(v)+'V.devsim')
     devsim.write_devices(file=dd, type="tecplot")
+    devsim.write_devices(file=devsim_device, type="devsim_data")
+    #devsim.reset_devsim()
+    # flush devsim memory
+    #devsim.load_devices(file=devsim_device)
 
     metadata = {}
     metadata['voltage'] = v
@@ -91,7 +97,12 @@ def milestone_save_2D(device, region, v, path):
     devsim_draw.draw2D(x,y,TrappingRate_p,"TrappingRate_p",v, path)
 
     dd = os.path.join(path, str(v)+'V.dd')
+    devsim_device = os.path.join(path, str(v)+'V.devsim')
     devsim.write_devices(file=dd, type="tecplot")
+    devsim.write_devices(file=devsim_device, type="devsim_data")
+    #devsim.reset_devsim()
+    # flush devsim memory
+    #devsim.load_devices(file=devsim_device)
 
     metadata = {}
     metadata['voltage'] = v
@@ -164,7 +175,12 @@ def milestone_save_3D(device, region, v, path):
     devsim_draw.draw2D(x,y,TrappingRate_p,"TrappingRate_p",v, path)
 
     dd = os.path.join(path, str(v)+'V.dd')
+    devsim_device = os.path.join(path, str(v)+'V.devsim')
     devsim.write_devices(file=dd, type="tecplot")
+    devsim.write_devices(file=devsim_device, type="devsim_data")
+    #devsim.reset_devsim()
+    # flush devsim memory
+    #devsim.load_devices(file=devsim_device)
 
     metadata = {}
     metadata['voltage'] = v

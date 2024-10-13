@@ -10,6 +10,7 @@ import numpy as np
 from . import initial
 from . import physics_drift_diffusion
 from util.output import output
+from util.memory_decorator import memory_decorator
 
 class loop_section():
     def __init__(self, paras,device,region,solve_model,irradiation):
@@ -61,6 +62,10 @@ class loop_section():
         devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicHoles")
         devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicElectrons:Potential")
         devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicHoles:Potential")
+        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicCharge")
+        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicCharge:Potential")
+        devsim.delete_node_model(device=self.device, region=self.region, name="PotentialIntrinsicCharge")
+        devsim.delete_node_model(device=self.device, region=self.region, name="PotentialIntrinsicCharge:Potential")
 
         print("=====================\nDriftDiffusion initialize successfully\n======================")
         print("=========RASER info =========\nAll initialization successfully\n=========info========== ")    
@@ -100,7 +105,7 @@ class loop_section():
             value = self.load_values(i, v_current)
             devsim.set_node_values(device=self.device, region=self.region, name=i, values=value)
 
-
+    @memory_decorator
     def loop_solver(self,circuit_contact,v_current,area_factor):
         if self.solve_model =="step":
             if v_current == 0:
