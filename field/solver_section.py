@@ -16,6 +16,7 @@ from . import save_milestone
 from . import loop_section
 from . import physics_drift_diffusion
 from . import initial
+from . import restart
 from util.output import output
 from .devsim_draw import *
 
@@ -178,9 +179,11 @@ def main (kwargs):
                 devsim_device = os.path.join(path, str(v_current)+'V.devsim')
                 devsim.write_devices(file=dd, type="tecplot")
                 devsim.write_devices(file=devsim_device, type="devsim")
-                #devsim.reset_devsim()
-                # flush devsim memory
-                #devsim.load_devices(file=devsim_device)
+                # devsim.reset_devsim()
+                # # flush devsim memory
+                # devsim.load_devices(file=devsim_device)
+                # restart.PotentialOnlyRestartSolution(device, region, paras, circuit_contacts, set_contact_type=None)
+                # restart.DriftDiffusionRestartSolution(device, region, paras, irradiation_model=irradiation_model, irradiation_flux=irradiation_flux, impact_model=impact_model, circuit_contacts=circuit_contacts, set_contact_type=None)
 
             i += 1
             v_current = voltage_step*i
