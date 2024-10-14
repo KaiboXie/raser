@@ -1,12 +1,14 @@
-import geant4_pybind as g4b
+
 import sys
 import os
-import ROOT
-import numpy as np
 import math
 import time
-
 from array import array
+
+import ROOT
+ROOT.gROOT.SetBatch(True)
+import numpy as np
+import geant4_pybind as g4b
 
 from util.output import create_path
 

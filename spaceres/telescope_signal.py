@@ -11,6 +11,7 @@ import time
 import os
 
 import ROOT
+ROOT.gROOT.SetBatch(True)
 import acts
 import numpy as np
 

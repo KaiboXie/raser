@@ -14,6 +14,7 @@ import os
 
 import numpy as np
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 from .model import Material
 from util.math import Vector

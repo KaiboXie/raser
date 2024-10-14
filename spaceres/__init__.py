@@ -4,6 +4,7 @@ import time
 import subprocess
 
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 def main(kwargs):
     label = kwargs['label']

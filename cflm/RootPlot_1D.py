@@ -1,5 +1,6 @@
-import ROOT
 import json
+import ROOT
+ROOT.gROOT.SetBatch(True)
 
 def RootPlot_1D():
 

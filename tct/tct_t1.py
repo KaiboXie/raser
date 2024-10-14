@@ -3,15 +3,17 @@
 
 import os
 import sys
+from array import array
+import time
+
+import ROOT
+ROOT.gROOT.SetBatch(True)
+
+from . import save_TTree
 #sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import raser
-
 # TODO: Need to be rewritten or deleted!
 
-import time
-from . import save_TTree
-from array import array
-import ROOT
 
 args = sys.argv[1:]
 start = time.time()

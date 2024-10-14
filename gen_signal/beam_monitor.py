@@ -1,11 +1,12 @@
 import sys
 import os
-import ROOT
-import numpy as np
 import math
 import time
-
 from array import array
+
+import ROOT
+ROOT.gROOT.SetBatch(True)
+import numpy as np
 
 from util.output import create_path
 

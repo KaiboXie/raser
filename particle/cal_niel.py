@@ -7,11 +7,12 @@ Description:  NIEL calculator
 @version    : 1.0
 '''
 
-import ROOT
 import math
 import sys
 from array import array
 
+import ROOT
+ROOT.gROOT.SetBatch(True)
 
 def usage():
     sys.stdout.write('''

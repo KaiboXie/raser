@@ -2,13 +2,15 @@
 # -*- encoding: utf-8 -*-
 
 import os
+import pickle
 
 import devsim
-import pickle
 import numpy as np
 
 from . import initial
+from . import restart
 from . import physics_drift_diffusion
+from .create_parameter import delete_init
 from util.output import output
 from util.memory_decorator import memory_decorator
 
@@ -33,39 +35,19 @@ class loop_section():
         self.holes = []
 
     def initial_solver(self,contact,set_contact_type,irradiation_model,irradiation_flux,impact_model):
-        initial.InitialSolution(device=self.device, region=self.region, circuit_contacts=contact, paras=self.paras, set_contact_type=set_contact_type)
+        initial.PotentialOnlyInitialSolution(device=self.device, region=self.region, circuit_contacts=contact, paras=self.paras, set_contact_type=set_contact_type)
         devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
         print("======================\nFirst initialize successfully\n===============================")
-        if self.irradiation == False:
-            if self.solve_model == "wf":
-                pass
-            else:
-                print("======RASER info ===========\nNo radiation\n================info=================")
-
-                initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
-                                                    irradiation_model=None,irradiation_flux=0,impact_model=impact_model)
-                devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
-        elif self.irradiation == True:
-            if self.solve_model == "wf":
-                pass
-            else:
-                print("======RASER info ===========\nradiation\n================info=================")
-                initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
-                                                    irradiation_model=irradiation_model,irradiation_flux=irradiation_flux,impact_model=impact_model)
-                devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
+        if self.solve_model == "wf":
+            pass
         else:
-            print("======RASER info ===========\nirradiation should set as False or True\n================Error=================")
-            exit()
+            print("======RASER info ===========\nradiation\n================info=================")
+            initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
+                                                irradiation_model=irradiation_model,irradiation_flux=irradiation_flux,impact_model=impact_model)
+            devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
             
         # eliminate calculation fatals from intrinsic carrier concentration
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicElectrons")
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicHoles")
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicElectrons:Potential")
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicHoles:Potential")
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicCharge")
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicCharge:Potential")
-        devsim.delete_node_model(device=self.device, region=self.region, name="PotentialIntrinsicCharge")
-        devsim.delete_node_model(device=self.device, region=self.region, name="PotentialIntrinsicCharge:Potential")
+        delete_init(device=self.device, region=self.region)
 
         print("=====================\nDriftDiffusion initialize successfully\n======================")
         print("=========RASER info =========\nAll initialization successfully\n=========info========== ")    

@@ -18,6 +18,7 @@ from scipy.interpolate import interp2d as p2d
 from scipy.interpolate import griddata
 from scipy.interpolate import LinearNDInterpolator as LNDI
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 x_bin = 1000
 y_bin = 1000

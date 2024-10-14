@@ -5,7 +5,7 @@ import devsim
 import numpy as np
 
 from . import devsim_draw
-from .create_parameter import create_parameter
+from .create_parameter import create_parameter, delete_init
 from util.output import create_path
 
 def milestone_save_1D(device, region, v, path):
@@ -25,14 +25,6 @@ def milestone_save_1D(device, region, v, path):
     devsim_draw.draw1D(x_mid,ElectricField,"Electric Field","Depth[cm]","Electric Field[V/cm]", v, path)
     devsim_draw.draw1D(x,TrappingRate_n,"Electron Trapping Rate","Depth[cm]","Trapping Rate[s]", v, path)
     devsim_draw.draw1D(x,TrappingRate_p,"Hole Trapping Rate","Depth[cm]","Trapping Rate[s]", v, path)
-
-    dd = os.path.join(path, str(v)+'V.dd')
-    devsim_device = os.path.join(path, str(v)+'V.devsim')
-    devsim.write_devices(file=dd, type="tecplot")
-    devsim.write_devices(file=devsim_device, type="devsim_data")
-    #devsim.reset_devsim()
-    # flush devsim memory
-    #devsim.load_devices(file=devsim_device)
 
     metadata = {}
     metadata['voltage'] = v
@@ -96,14 +88,6 @@ def milestone_save_2D(device, region, v, path):
     devsim_draw.draw2D(x,y,TrappingRate_n,"TrappingRate_n",v, path)
     devsim_draw.draw2D(x,y,TrappingRate_p,"TrappingRate_p",v, path)
 
-    dd = os.path.join(path, str(v)+'V.dd')
-    devsim_device = os.path.join(path, str(v)+'V.devsim')
-    devsim.write_devices(file=dd, type="tecplot")
-    devsim.write_devices(file=devsim_device, type="devsim_data")
-    #devsim.reset_devsim()
-    # flush devsim memory
-    #devsim.load_devices(file=devsim_device)
-
     metadata = {}
     metadata['voltage'] = v
     metadata['dimension'] = 2
@@ -156,49 +140,8 @@ def milestone_save_wf_2D(device, region, v, path, contact):
             pickle.dump(data, file)
 
 def milestone_save_3D(device, region, v, path):
-    x = np.array(devsim.get_node_model_values(device=device, region=region, name="x")) # get x-node values
-    y = np.array(devsim.get_node_model_values(device=device, region=region, name="y")) # get y-node values
-    Potential = np.array(devsim.get_node_model_values(device=device, region=region, name="Potential")) # get the potential data
-    TrappingRate_n = np.array(devsim.get_node_model_values(device=device, region=region, name="TrappingRate_n"))
-    TrappingRate_p = np.array(devsim.get_node_model_values(device=device, region=region, name="TrappingRate_p"))
-    NetDoping= np.array(devsim.get_node_model_values(device=device, region=region, name="NetDoping"))
-    devsim.element_from_edge_model(edge_model="ElectricField",   device=device, region=region)
-    devsim.edge_average_model(device=device, region=region, node_model="x", edge_model="xmid")
-    devsim.edge_average_model(device=device, region=region, node_model="y", edge_model="ymid")
-    ElectricField=np.array(devsim.get_edge_model_values(device=device, region=region, name="ElectricField"))
-    x_mid = np.array(devsim.get_edge_model_values(device=device, region=region, name="xmid")) 
-    y_mid = np.array(devsim.get_edge_model_values(device=device, region=region, name="ymid")) 
-
-    devsim_draw.draw2D(x,y,Potential,"Potential",v, path)
-    devsim_draw.draw2D(x_mid,y_mid,ElectricField,"ElectricField",v, path)
-    devsim_draw.draw2D(x,y,TrappingRate_n,"TrappingRate_n",v, path)
-    devsim_draw.draw2D(x,y,TrappingRate_p,"TrappingRate_p",v, path)
-
-    dd = os.path.join(path, str(v)+'V.dd')
-    devsim_device = os.path.join(path, str(v)+'V.devsim')
-    devsim.write_devices(file=dd, type="tecplot")
-    devsim.write_devices(file=devsim_device, type="devsim_data")
-    #devsim.reset_devsim()
-    # flush devsim memory
-    #devsim.load_devices(file=devsim_device)
-
-    metadata = {}
-    metadata['voltage'] = v
-    metadata['dimension'] = 3
-
-    names = ['Potential', 'TrappingRate_p', 'TrappingRate_n']
-    if v == 0:
-        names.append('NetDoping')
-
-    for name in names: # scalar field on mesh point (instead of on edge)
-        with open(os.path.join(path, "{}_{}V.pkl".format(name,v)),'wb') as file:
-            data = {}
-            data['values'] = eval(name) # refer to the object with given name
-            merged_list = [x, y]
-            transposed_list = list(map(list, zip(*merged_list)))
-            data['points'] = transposed_list
-            data['metadata'] = metadata
-            pickle.dump(data, file)
+    # not finished
+    pass
 
 def milestone_save_wf_3D(device, region, v, path,contact):
     # not finished
@@ -226,3 +169,4 @@ def save_milestone(device, region, v, path, dimension, contact, is_wf):
             milestone_save_3D(device, region, v, path)
         else:
             print("==========RASER info ==========\nis_wf only has 2 values, True or False\n==========Error=========")
+

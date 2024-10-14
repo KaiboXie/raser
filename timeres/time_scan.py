@@ -6,7 +6,9 @@ import sys
 import os
 import time
 import csv
+
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 
 def main():

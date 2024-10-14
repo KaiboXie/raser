@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 
-import ROOT
-import matplotlib.pyplot
 import csv
 from array import array
 import os
+
+import ROOT
+ROOT.gROOT.SetBatch(True)
+import matplotlib.pyplot
 
 from util.output import output
 

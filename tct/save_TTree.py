@@ -1,7 +1,10 @@
 import os
-from util.output import create_path
 from array import array
+
 import ROOT
+ROOT.gROOT.SetBatch(True)
+
+from util.output import create_path
 
 def save_signal_TTree(my_d,key,ele_current,my_f):
     if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:

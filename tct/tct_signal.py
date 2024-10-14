@@ -10,6 +10,7 @@ import json
 import time
 
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 from gen_signal import build_device as bdv
 from field import devsim_field as devfield

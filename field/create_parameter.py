@@ -45,3 +45,12 @@ def create_parameter(MyDetector, device, region):
         model_create.CreateNodeModel(device,region,"U_const",0)
     
 
+def delete_init(device, region):
+    devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons")
+    devsim.delete_node_model(device=device, region=region, name="IntrinsicHoles")
+    devsim.delete_node_model(device=device, region=region, name="IntrinsicElectrons:Potential")
+    devsim.delete_node_model(device=device, region=region, name="IntrinsicHoles:Potential")
+    devsim.delete_node_model(device=device, region=region, name="IntrinsicCharge")
+    devsim.delete_node_model(device=device, region=region, name="IntrinsicCharge:Potential")
+    devsim.delete_node_model(device=device, region=region, name="PotentialIntrinsicCharge")
+    devsim.delete_node_model(device=device, region=region, name="PotentialIntrinsicCharge:Potential")
