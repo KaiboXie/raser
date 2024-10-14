@@ -1,5 +1,7 @@
-import ROOT
+
 import os
+import ROOT
+ROOT.gROOT.SetBatch(True)
 
 def read_file(file_path, wave_name):
     with open(file_path + '/' + wave_name, 'r') as f:

@@ -6,11 +6,13 @@ Description:  Initial.py
 '''
 
 import json
+
 import devsim
+
 from .model_create import *
 from .physics_drift_diffusion import *
 
-def switch_Cylindrical_coordinate(device,region):
+def switch_Cylindrical_coordinate(device, region):
     devsim.set_parameter(device=device, name="raxis_variable", value="x")
     devsim.set_parameter(device=device, name="raxis_zero",     value=0)
     devsim.cylindrical_node_volume(device=device, region=region)
@@ -25,7 +27,7 @@ def switch_Cylindrical_coordinate(device,region):
     devsim.set_parameter(name="element_node1_volume_model",value="ElementCylindricalNodeVolume@en1")
 
 
-def InitialSolution(device, region, paras, circuit_contacts, set_contact_type=None):
+def PotentialOnlyInitialSolution(device, region, paras, circuit_contacts, set_contact_type=None):
     if paras["Cylindrical_coordinate"]==True:
         switch_Cylindrical_coordinate(device,region)
     else:

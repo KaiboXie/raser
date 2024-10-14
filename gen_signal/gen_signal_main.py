@@ -15,6 +15,7 @@ import json
 import random
 
 import ROOT
+ROOT.gROOT.SetBatch(True)
 import geant4_pybind as g4b
 
 from . import build_device as bdv

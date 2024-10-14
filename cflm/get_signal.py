@@ -6,20 +6,20 @@ import os
 import array
 import time
 import subprocess
+import re
+import json
+
 import ROOT
+ROOT.gROOT.SetBatch(True)
+import numpy
 
 from gen_signal import build_device as bdv
 from . import cflm
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec.set_pwl_input import set_pwl_input as pwlin
-
 from util.output import output
 
-import json
-
-import re
-import numpy
 
 def get_signal():
 

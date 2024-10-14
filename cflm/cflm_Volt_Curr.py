@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+import sys
+import json
 
 import ROOT
-import sys
+ROOT.gROOT.SetBatch(True)
 import numpy
-import json
+
 
 def read_file_voltage(file_path,file_name):
     with open(file_path + '/' + file_name) as f:

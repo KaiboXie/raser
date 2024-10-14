@@ -2,17 +2,20 @@
 # -*- encoding: utf-8 -*-
 
 import os
+import pickle
 
 import devsim
-import pickle
 import numpy as np
 
 from . import initial
+from . import restart
 from . import physics_drift_diffusion
+from .create_parameter import delete_init
 from util.output import output
+from util.memory_decorator import memory_decorator
 
 class loop_section():
-    def __init__(self, paras,device,region,solve_model,irradiation):
+    def __init__(self, paras, device, region, solve_model, irradiation):
         self.paras = paras
         self.step_model  = False
         self.solve_model = solve_model
@@ -31,36 +34,20 @@ class loop_section():
         self.electrons = []
         self.holes = []
 
-    def initial_solver(self,contact,set_contact_type,irradiation_model,irradiation_flux,impact_model):
-        initial.InitialSolution(device=self.device, region=self.region, circuit_contacts=contact, paras=self.paras, set_contact_type=set_contact_type)
+    def initial_solver(self, contact, set_contact_type, irradiation_model, irradiation_flux, impact_model):
+        initial.PotentialOnlyInitialSolution(device=self.device, region=self.region, circuit_contacts=contact, paras=self.paras, set_contact_type=set_contact_type)
         devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
         print("======================\nFirst initialize successfully\n===============================")
-        if self.irradiation == False:
-            if self.solve_model == "wf":
-                pass
-            else:
-                print("======RASER info ===========\nNo radiation\n================info=================")
-
-                initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
-                                                    irradiation_model=None,irradiation_flux=0,impact_model=impact_model)
-                devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
-        elif self.irradiation == True:
-            if self.solve_model == "wf":
-                pass
-            else:
-                print("======RASER info ===========\nradiation\n================info=================")
-                initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
-                                                    irradiation_model=irradiation_model,irradiation_flux=irradiation_flux,impact_model=impact_model)
-                devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
+        if self.solve_model == "wf":
+            pass
         else:
-            print("======RASER info ===========\nirradiation should set as False or True\n================Error=================")
-            exit()
+            print("======RASER info ===========\nradiation\n================info=================")
+            initial.DriftDiffusionInitialSolution(device=self.device, region=self.region, circuit_contacts=contact,paras=self.paras,set_contact_type=set_contact_type,
+                                                irradiation_model=irradiation_model,irradiation_flux=irradiation_flux,impact_model=impact_model)
+            devsim.solve(type="dc", absolute_error=self.paras['absolute_error_Initial'], relative_error=self.paras['relative_error_Initial'], maximum_iterations=self.paras['maximum_iterations_Initial'])
             
         # eliminate calculation fatals from intrinsic carrier concentration
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicElectrons")
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicHoles")
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicElectrons:Potential")
-        devsim.delete_node_model(device=self.device, region=self.region, name="IntrinsicHoles:Potential")
+        delete_init(device=self.device, region=self.region)
 
         print("=====================\nDriftDiffusion initialize successfully\n======================")
         print("=========RASER info =========\nAll initialization successfully\n=========info========== ")    
@@ -100,8 +87,8 @@ class loop_section():
             value = self.load_values(i, v_current)
             devsim.set_node_values(device=self.device, region=self.region, name=i, values=value)
 
-
-    def loop_solver(self,circuit_contact,v_current,area_factor):
+    @memory_decorator
+    def loop_solver(self, circuit_contact, v_current, area_factor):
         if self.solve_model =="step":
             if v_current == 0:
                 pass
@@ -114,9 +101,9 @@ class loop_section():
         devsim.solve(type="dc", absolute_error=self.paras['absolute_error_VoltageSteps'], relative_error=self.paras['relative_error_VoltageSteps'], maximum_iterations=self.paras['maximum_iterations_VoltageSteps'])
         if self.solve_model !="wf":     
             physics_drift_diffusion.PrintCurrents(device=self.device, contact=circuit_contact)
-            electron_current= devsim.get_contact_current(device=self.device, contact=circuit_contact, equation="ElectronContinuityEquation")
-            hole_current    = devsim.get_contact_current(device=self.device, contact=circuit_contact, equation="HoleContinuityEquation")
-            total_current   = electron_current + hole_current
+            electron_current = devsim.get_contact_current(device=self.device, contact=circuit_contact, equation="ElectronContinuityEquation")
+            hole_current     = devsim.get_contact_current(device=self.device, contact=circuit_contact, equation="HoleContinuityEquation")
+            total_current    = electron_current + hole_current
             if(abs(total_current/area_factor)>105e-6): 
                 print("==========RASER info===========\nCurrent is too large !\n==============Warning==========")
                 # break

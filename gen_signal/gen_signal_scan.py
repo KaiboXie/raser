@@ -11,7 +11,11 @@ import os
 import array
 import time
 import subprocess
+import json
+import random
+
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 from . import build_device as bdv
 from particle import g4_time_resolution as g4t
@@ -20,13 +24,10 @@ from current import cal_current as ccrt
 from elec import readout as rdo
 from elec import ngspice_set_input as ngsip
 from elec import ngspice as ng
-
 from . import draw_save
 from util.output import output
 
-import json
 
-import random
 
 def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_number):
     """

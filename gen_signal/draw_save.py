@@ -10,6 +10,7 @@ from array import array
 import time
 
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 

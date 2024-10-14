@@ -4,8 +4,10 @@
 import time
 import os
 from array import array
-import ROOT
 import csv
+
+import ROOT
+ROOT.gROOT.SetBatch(True)
 
 def T1():
     c = ROOT.TCanvas('c', '', 800, 600)

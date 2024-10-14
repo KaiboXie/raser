@@ -13,8 +13,11 @@ import contextlib
 import os
 import sys
 import re
-import ROOT
 import math
+
+import ROOT
+ROOT.gROOT.SetBatch(True)
+
 from util.output import output
 
 noise_avg = -0.001

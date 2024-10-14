@@ -7,7 +7,7 @@ import sys
 import argparse
 import importlib
 
-VERSION = 4.0
+VERSION = 4.1
 
 parser = argparse.ArgumentParser(prog='raser')
 parser.add_argument('--version', action='version', 
@@ -40,8 +40,6 @@ parser_field.add_argument('-v', '--verbose', help='VERBOSE level',
                           action='count', default=0)
 parser_field.add_argument('-cv', help='CV simulation', action="store_true")
 parser_field.add_argument("-wf", help="WeightField Simulation", action="store_true")
-parser_field.add_argument("-step", help="Voltage step-by-step simulation", action="store_true")
-parser_field.add_argument("-loop", help="Voltage step-by-step simulation", action="store_true")
 parser_field.add_argument("-v_current", help="Current voltage for step-by-step simulation", type=float)
 parser_field.add_argument("-noise", help="Detector Noise simulation", action="store_true")
 

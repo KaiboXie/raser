@@ -1,8 +1,5 @@
-import sys
 import io
 from contextlib import redirect_stdout, redirect_stderr
-import importlib.util
-import inspect
 
 def io_decorator(func):
     def wrapper(*args, **kwargs):

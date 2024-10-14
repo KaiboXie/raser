@@ -1,13 +1,15 @@
 #!/usr/bin/env python3 
-import geant4_pybind as g4b
 import sys
 import os
-import ROOT
 import array
 import random
-import numpy as np
 import math
+
+import geant4_pybind as g4b
 import ROOT
+ROOT.gROOT.SetBatch(True)
+import numpy as np
+
 from current.model import Material
 from current.model import Vector
 

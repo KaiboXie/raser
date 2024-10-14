@@ -1,6 +1,9 @@
 import math
+
 import ROOT
+ROOT.gROOT.SetBatch(True)
 import numpy as np
+
 from gen_signal.build_device import Detector
 
 class TCTTracks():

@@ -13,6 +13,7 @@ import math
 import json
 
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 from util.math import signal_convolution
 from util.output import output

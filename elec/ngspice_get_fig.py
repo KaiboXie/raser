@@ -5,6 +5,7 @@ import os
 
 import numpy
 import ROOT
+ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 

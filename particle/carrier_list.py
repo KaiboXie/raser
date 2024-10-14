@@ -1,4 +1,5 @@
 import ROOT
+ROOT.gROOT.SetBatch(True)
 class CarrierListFromG4P:
     def __init__(self, material, my_g4p, batch):
         """

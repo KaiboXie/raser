@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 # TODO: Need to be TOTALLY rewritten
-import ROOT
+
 import os
-import numpy as np
 import sys
+
+import numpy as np
+import ROOT
+ROOT.gROOT.SetBatch(True)
+
 args = sys.argv[1:]
 pardic={}
 for par in args:
