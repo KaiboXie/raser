@@ -34,6 +34,7 @@ parser_draw.add_argument('label', help='LABEL to identify root files')
 parser_elec = subparsers.add_parser('elec', help='electronic readout')
 parser_elec.add_argument('label', help='LABEL to identify electronics operations')
 parser_elec.add_argument('name', help='LABEL to identify electronics files')
+parser_elec.add_argument('-tct', help='signal from TCT', action="store_true")
 
 parser_field = subparsers.add_parser('field', help='calculate field/weight field and iv/cv')
 parser_field.add_argument('label', help='LABEL to identify operation')

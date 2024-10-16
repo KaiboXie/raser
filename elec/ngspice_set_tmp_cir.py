@@ -1,5 +1,5 @@
 import re
-def ngspice(input_c, det_name, ele_name):
+def ngspice_set_tmp_cir(input_c, det_name, ele_name):
     with open('./param_file/circuit/{}.cir'.format(ele_name), 'r') as f:
         lines = f.readlines()
         for i in range(len(lines)):

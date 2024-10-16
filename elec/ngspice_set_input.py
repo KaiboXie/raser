@@ -7,13 +7,16 @@ ROOT.gROOT.SetBatch(True)
 from util.output import output
 
 # TODO: Need to be TOTALLY rewritten
-def set_input(det_name, key=None):
+def set_input(det_name, is_tct=False, key=None):
     current=[]
     time=[]
     if key == None:
         key = ""
     path = "output/current/{}".format(det_name)
-    myFile = ROOT.TFile(os.path.join(path, "sim-current"+str(key))+".root")
+    if is_tct:
+        myFile = ROOT.TFile(os.path.join(path, "sim-current-TCT"+str(key))+".root")
+    else:
+        myFile = ROOT.TFile(os.path.join(path, "sim-current"+str(key))+".root")
 
     myt = myFile.tree
     for entry in myt:
