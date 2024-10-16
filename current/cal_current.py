@@ -294,11 +294,9 @@ class CalCurrent:
 
     def save_current(self, my_d, key=None):
         
+        path = output(__file__, my_d.det_name)
         if key==None:
-            path = output(__file__, my_d.det_name)
             key = ""
-        else:
-            path = output(__file__, my_d.det_name, key)
 
         time = array('d', [999.])
         current = array('d', [999.])

@@ -13,10 +13,7 @@ def set_input(det_name, is_tct=False, key=None):
     if key == None:
         key = ""
     path = "output/current/{}".format(det_name)
-    if is_tct:
-        myFile = ROOT.TFile(os.path.join(path, "sim-current-TCT"+str(key))+".root")
-    else:
-        myFile = ROOT.TFile(os.path.join(path, "sim-current"+str(key))+".root")
+    myFile = ROOT.TFile(os.path.join(path, "sim-current"+str(key))+".root")
 
     myt = myFile.tree
     for entry in myt:

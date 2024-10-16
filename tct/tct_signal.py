@@ -68,7 +68,7 @@ def main(kwargs):
     my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
 
     if 'ngspice' in amplifier:
-        my_current.save_current(my_d)
+        my_current.save_current(my_d, my_l.model)
     else:
         path = output(__file__, my_d.det_name, my_l.model)
         ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)

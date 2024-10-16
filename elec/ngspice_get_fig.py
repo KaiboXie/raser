@@ -24,8 +24,8 @@ def read_file(file_path,file_name):
 
     return time,volt
 
-def main(elec_name, file_path):
-    fig_name = os.path.join(file_path, elec_name+'.pdf')
+def main(elec_name, file_path, key=None):
+    fig_name = os.path.join(file_path, elec_name+key+'.pdf')
     time,volt = [],[]
 
     time,volt = read_file(file_path, elec_name+'.raw')

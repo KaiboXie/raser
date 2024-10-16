@@ -212,9 +212,9 @@ class Amplifier:
             volt = array('d', [999.])
             time = array('d', [999.])
             if self.read_ele_num==1:
-                fout = ROOT.TFile(os.path.join(path, "sim-current") + str(key) + ".root", "RECREATE")
+                fout = ROOT.TFile(os.path.join(path, "amplified-current") + str(key) + ".root", "RECREATE")
             else:
-                fout = ROOT.TFile(os.path.join(path, "sim-current") + str(key)+"No_"+str(j)+".root", "RECREATE")
+                fout = ROOT.TFile(os.path.join(path, "amplified-current") + str(key)+"No_"+str(j)+".root", "RECREATE")
             t_out = ROOT.TTree("tree", "signal")
             t_out.Branch("volt", volt, "volt/D")
             t_out.Branch("time", time, "time/D")
