@@ -1,18 +1,28 @@
 import os
-def main(kwargs):
-    label = kwargs['label']
-    os.makedirs('output/elec', exist_ok=True)
+import subprocess
+from util.output import output
 
-    if label == 'ngspice_t1':
-        import subprocess
-        subprocess.run(['ngspice -b output/elec/T1_tmp.cir'], shell=True)
-    elif label.startswith('ngspice_'):
-        import subprocess
-        elec_name = label.replace('ngspice_', '')
-        subprocess.run(['ngspice -b param_file/circuit/{}.cir'.format(elec_name)], shell=True)
-    elif label.endswith('_get_fig'):
+def main(kwargs):
+    label = kwargs['label'] # Operation label or detector name
+    name = kwargs['name']
+    os.makedirs('output/elec/{}'.format(name), exist_ok=True)
+
+    if label == 'trans':
+        subprocess.run(['ngspice -b param_file/circuit/{}.cir'.format(name)], shell=True)
+    elif label == 'get_fig':
         from . import ngspice_get_fig
-        ngspice_get_fig.main(label.replace('_get_fig', ''))
-    else:
+        file_path = output(__file__)
+        ngspice_get_fig.main(label, file_path)
+    elif label == 'readout':
         from . import readout
         readout.main(label)
+    else:
+        from . import ngspice_set_input
+        from . import ngspice
+        input_p = ngspice_set_input.set_input(label)
+        input_c=','.join(input_p)
+        ngspice.ngspice(input_c, label, name)
+        subprocess.run(['ngspice -b output/elec/{}/{}_tmp.cir'.format(label, name)], shell=True)
+        file_path = output(__file__, label)
+        from . import ngspice_get_fig
+        ngspice_get_fig.main(name, file_path)

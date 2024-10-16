@@ -22,8 +22,6 @@ from particle import g4_time_resolution as g4t
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec import readout as rdo
-from elec import ngspice_set_input as ngsip
-from elec import ngspice as ng
 from . import draw_save
 from util.output import output
 

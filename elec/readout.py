@@ -11,6 +11,8 @@ Description:
 
 import math
 import json
+from array import array
+import os
 
 import ROOT
 ROOT.gROOT.SetBatch(True)
@@ -202,6 +204,26 @@ class Amplifier:
             input_Q_tot = cu.Integral()
             output_Q_max = self.amplified_current[i].GetMaximum()
             self.amplified_current[i].Scale(self.scale(output_Q_max, input_Q_tot))
+
+    def save_signal_TTree(self, path, key):
+        if key == None:
+            key = ""
+        for j in range(self.read_ele_num):
+            volt = array('d', [999.])
+            time = array('d', [999.])
+            if self.read_ele_num==1:
+                fout = ROOT.TFile(os.path.join(path, "sim-current") + str(key) + ".root", "RECREATE")
+            else:
+                fout = ROOT.TFile(os.path.join(path, "sim-current") + str(key)+"No_"+str(j)+".root", "RECREATE")
+            t_out = ROOT.TTree("tree", "signal")
+            t_out.Branch("volt", volt, "volt/D")
+            t_out.Branch("time", time, "time/D")
+            for i in range(self.amplified_current[j].GetNbinsX()):
+                time[0]=i*self.amplified_current[j].GetBinWidth(i)
+                volt[0]=self.amplified_current[j][i]
+                t_out.Fill()
+            t_out.Write()
+            fout.Close()
 
 def main(label):
     '''main function for readout.py to test the output of the given amplifier'''

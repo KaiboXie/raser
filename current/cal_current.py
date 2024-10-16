@@ -11,6 +11,7 @@ Description:
 import random
 import math
 import os
+from array import array
 
 import numpy as np
 import ROOT
@@ -19,7 +20,7 @@ ROOT.gROOT.SetBatch(True)
 from .model import Material
 from particle.carrier_list import CarrierListFromG4P
 from util.math import Vector, signal_convolution
-from util.output import create_path
+from util.output import output
 
 t_bin = 50e-12
 # resolution of oscilloscope
@@ -239,7 +240,7 @@ class CalCurrent:
                 hole.drift_single_step(my_d, my_f)
             hole.get_signal(my_f,my_d)
 
-    def current_define(self,read_ele_num):
+    def current_define(self, read_ele_num):
         """
         @description: 
             Parameter current setting     
@@ -271,7 +272,7 @@ class CalCurrent:
                                     self.n_bin, self.t_start, self.t_end))
             
         
-    def get_current(self,read_ele_num):
+    def get_current(self, read_ele_num):
         test_p = ROOT.TH1F("test+","test+",self.n_bin,self.t_start,self.t_end)
         test_p.Reset()
         for j in range(read_ele_num):
@@ -281,7 +282,6 @@ class CalCurrent:
                 self.positive_cu[j].Add(test_p)
                 test_p.Reset()
 
-
         test_n = ROOT.TH1F("test-","test-",self.n_bin,self.t_start,self.t_end)
         test_n.Reset()
         for j in range(read_ele_num):
@@ -290,6 +290,30 @@ class CalCurrent:
                     test_n.Fill(electron.path[i][3],electron.signal[j][i]/self.t_bin)# time,current=int(i*dt)/Δt
                 self.negative_cu[j].Add(test_n)
                 test_n.Reset()
+
+
+    def save_current(self, my_d, key=None):
+        
+        if key==None:
+            path = output(__file__, my_d.det_name)
+            key = ""
+        else:
+            path = output(__file__, my_d.det_name, key)
+
+        time = array('d', [999.])
+        current = array('d', [999.])
+        fout = ROOT.TFile(os.path.join(path, "sim-current"+str(key))  + ".root", "RECREATE")
+        t_out = ROOT.TTree("tree", "signal")
+        t_out.Branch("time", time, "time/D")
+        for i in range(self.read_ele_num):
+            t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
+            for j in range(self.n_bin):
+                current[0]=self.sum_cu[i].GetBinContent(j)
+                time[0]=j*self.t_bin
+                t_out.Fill()
+        t_out.Write()
+        fout.Close()
+
     
 class CalCurrentGain(CalCurrent):
     '''Calculation of gain carriers and gain current, simplified version'''

@@ -31,8 +31,9 @@ parser_cflm.add_argument('-v', '--verbose', help='VERBOSE level',
 parser_draw = subparsers.add_parser('current', help='calculate drift current')
 parser_draw.add_argument('label', help='LABEL to identify root files')
 
-parser_gsignal = subparsers.add_parser('elec', help='electronic readout')
-parser_gsignal.add_argument('label', help='LABEL to identify electronics files')
+parser_elec = subparsers.add_parser('elec', help='electronic readout')
+parser_elec.add_argument('label', help='LABEL to identify electronics operations')
+parser_elec.add_argument('name', help='LABEL to identify electronics files')
 
 parser_field = subparsers.add_parser('field', help='calculate field/weight field and iv/cv')
 parser_field.add_argument('label', help='LABEL to identify operation')
