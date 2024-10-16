@@ -9,7 +9,6 @@ ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 
-# TODO: Need to be TOTALLY rewritten
 def read_file(file_path,file_name):
     with open(file_path + '/' + file_name) as f:
         lines = f.readlines()

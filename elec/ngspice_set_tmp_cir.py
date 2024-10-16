@@ -15,4 +15,3 @@ def ngspice_set_tmp_cir(input_c, det_name, ele_name, label=None):
     with open('output/elec/{}/{}{}_tmp.cir'.format(det_name, ele_name, label), 'w+') as f:
         f.writelines(lines)
         f.close()
-# TODO: Need to be TOTALLY rewritten

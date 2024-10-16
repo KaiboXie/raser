@@ -6,7 +6,6 @@ ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 
-# TODO: Need to be TOTALLY rewritten
 def set_input(det_name, key=None):
     current=[]
     time=[]
