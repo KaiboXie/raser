@@ -5,8 +5,7 @@ def ngspice_set_tmp_cir(input_c, det_name, ele_name):
         for i in range(len(lines)):
             if lines[i].startswith('I1'):
                 # replace pulse by PWL
-                pattern = r"pulse"
-                lines[i] = re.sub(pattern + r".*", 'PWL('+str(input_c)+') \n', lines[i], flags=re.IGNORECASE)
+                lines[i] = re.sub(r"pulse" + r".*", 'PWL('+str(input_c)+') \n', lines[i], flags=re.IGNORECASE)
             if lines[i].startswith('wrdata'):
                 # replace output file name & path
                 lines[i] = re.sub(r".*" + r".raw", "wrdata output/elec/{}/{}.raw".format(det_name, ele_name), lines[i])
