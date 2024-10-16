@@ -18,14 +18,23 @@ def main(kwargs):
         from . import readout
         readout.main(label)
     else:
-        from . import ngspice_set_input
-        from . import ngspice_set_tmp_cir
         if tct == None:
-            tct = ''
-        input_p = ngspice_set_input.set_input(label, tct)
-        input_c=','.join(input_p)
-        ngspice_set_tmp_cir.ngspice_set_tmp_cir(input_c, label, name)
-        subprocess.run(['ngspice -b output/elec/{}/{}_tmp.cir'.format(label, name)], shell=True)
-        file_path = output(__file__, label)
-        from . import ngspice_get_fig
-        ngspice_get_fig.main(name, file_path, tct)
+            from . import ngspice_set_input
+            from . import ngspice_set_tmp_cir
+            input_p = ngspice_set_input.set_input(label)
+            input_c=','.join(input_p)
+            ngspice_set_tmp_cir.ngspice_set_tmp_cir(input_c, label, name)
+            subprocess.run(['ngspice -b output/elec/{}/{}_tmp.cir'.format(label, name)], shell=True)
+            file_path = output(__file__, label)
+            from . import ngspice_get_fig
+            ngspice_get_fig.main(name, file_path)
+        if tct != None:
+            from . import ngspice_set_input
+            from . import ngspice_set_tmp_cir
+            input_p = ngspice_set_input.set_input(label, tct)
+            input_c=','.join(input_p)
+            ngspice_set_tmp_cir.ngspice_set_tmp_cir(input_c, label, name, tct)
+            subprocess.run(['ngspice -b output/elec/{}/{}{}_tmp.cir'.format(label, name, tct)], shell=True)
+            file_path = output(__file__, label)
+            from . import ngspice_get_fig
+            ngspice_get_fig.main(name, file_path, tct)

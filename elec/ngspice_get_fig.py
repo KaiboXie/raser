@@ -25,10 +25,12 @@ def read_file(file_path,file_name):
     return time,volt
 
 def main(elec_name, file_path, key=None):
+    if key is None:
+        key = ''
     fig_name = os.path.join(file_path, elec_name+key+'.pdf')
     time,volt = [],[]
 
-    time,volt = read_file(file_path, elec_name+'.raw')
+    time,volt = read_file(file_path, elec_name+key+'.raw')
     length = len(time)
     t_min, t_max = time[0], time[-1]
 
