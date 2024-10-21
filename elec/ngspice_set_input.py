@@ -4,19 +4,19 @@ from array import array
 import ROOT
 ROOT.gROOT.SetBatch(True)
 
-# TODO: Need to be TOTALLY rewritten
-def set_input(my_current,my_l,my_d,key):
-    if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
-        path = os.path.join('output', 'pintct', my_d.det_name, )
-    elif "lgad3D" in my_d.det_model:
-        path = os.path.join('output', 'lgadtct', my_d.det_name, )
-    L = eval("my_l.{}".format(key))
+from util.output import output
+
+def set_input(det_name, key=None):
     current=[]
     time=[]
-    myFile = ROOT.TFile(os.path.join(path,"sim-TCT-current")+str(L)+".root")
+    if key == None:
+        key = ""
+    path = "output/current/{}".format(det_name)
+    myFile = ROOT.TFile(os.path.join(path, "sim-current"+str(key))+".root")
+
     myt = myFile.tree
     for entry in myt:
-       current.append(entry.current0)
+       current.append(entry.current0) # current[i], i for electrode number
        time.append(entry.time)
     input_c=[]
     if abs(min(current))>max(current): #set input signal
@@ -64,11 +64,13 @@ def set_input(my_current,my_l,my_d,key):
             current[i]=0
     in_put=array("d",[0.])
     t=array("d",[0.])
-    fout = ROOT.TFile(os.path.join(path, "input") + str(L) + ".root", "RECREATE")
+    out_path = output(__file__, det_name)
+    fout = ROOT.TFile(os.path.join(out_path, "input"+str(key))+".root", "RECREATE")
     t_out = ROOT.TTree("tree", "signal")
     t_out.Branch("time", t, "time/D")
     t_out.Branch("current", in_put, "current/D")
-    for m in range(my_current.n_bin):
+    n_bin = myt.GetEntries()
+    for m in range(n_bin):
         in_put[0]=current[m]
         t[0]=time[m]
         t_out.Fill()

@@ -9,7 +9,6 @@ ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 
-# TODO: Need to be TOTALLY rewritten
 def read_file(file_path,file_name):
     with open(file_path + '/' + file_name) as f:
         lines = f.readlines()
@@ -24,17 +23,19 @@ def read_file(file_path,file_name):
 
     return time,volt
 
-def main(elec_name):
-    file_path = output(__file__)
-    fig_name = os.path.join(file_path, elec_name+'.pdf')
+def main(elec_name, file_path, key=None):
+    if key is None:
+        key = ''
+    fig_name = os.path.join(file_path, elec_name+key+'.pdf')
     time,volt = [],[]
 
-    time,volt = read_file(file_path, elec_name+'.raw')
+    time,volt = read_file(file_path, elec_name+key+'.raw')
     length = len(time)
     t_min, t_max = time[0], time[-1]
 
     ROOT.gROOT.SetBatch()    
     c = ROOT.TCanvas('c','c',700,600)
+    c.SetMargin(0.2,0.1,0.2,0.1)
     f1 = ROOT.TGraph(length,time,volt)
     f1.SetTitle(' ')
 
@@ -44,13 +45,17 @@ def main(elec_name):
     f1.GetXaxis().SetTitle('Time [ns]')
     f1.GetXaxis().SetLimits(t_min, t_max)
     f1.GetXaxis().CenterTitle()
-    f1.GetXaxis().SetTitleSize(0.05)
-    f1.GetXaxis().SetTitleOffset(0.8)
+    f1.GetXaxis().SetTitleSize(0.08)
+    f1.GetXaxis().SetLabelSize(0.08)
+    f1.GetXaxis().SetNdivisions(5)
+    f1.GetXaxis().SetTitleOffset(1)
 
     f1.GetYaxis().SetTitle('Voltage [mV]')
     f1.GetYaxis().CenterTitle()
-    f1.GetYaxis().SetTitleSize(0.05)
-    f1.GetYaxis().SetTitleOffset(0.7)
+    f1.GetYaxis().SetTitleSize(0.08)
+    f1.GetYaxis().SetLabelSize(0.08)
+    f1.GetYaxis().SetNdivisions(5)
+    f1.GetYaxis().SetTitleOffset(1)
 
     c.cd()
     f1.Draw('AL')

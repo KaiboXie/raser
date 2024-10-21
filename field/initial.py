@@ -12,7 +12,7 @@ import devsim
 from .model_create import *
 from .physics_drift_diffusion import *
 
-def switch_Cylindrical_coordinate(device, region):
+def switch_cylindrical_coordinate(device, region):
     devsim.set_parameter(device=device, name="raxis_variable", value="x")
     devsim.set_parameter(device=device, name="raxis_zero",     value=0)
     devsim.cylindrical_node_volume(device=device, region=region)
@@ -29,7 +29,7 @@ def switch_Cylindrical_coordinate(device, region):
 
 def PotentialOnlyInitialSolution(device, region, paras, circuit_contacts, set_contact_type=None):
     if paras["Cylindrical_coordinate"]==True:
-        switch_Cylindrical_coordinate(device,region)
+        switch_cylindrical_coordinate(device,region)
     else:
         pass
     # Create Potential, Potential@n0, Potential@n1
@@ -58,7 +58,7 @@ def PotentialOnlyInitialSolution(device, region, paras, circuit_contacts, set_co
             contact_type = {"type" : "Ohmic"}
         devsim.set_parameter(device=device, name=GetContactBiasName(i), value=0)
         if str(circuit_contacts) in i :
-            CreateSiliconPotentialOnlyContact(device, region, i, contact_type,True)
+            CreateSiliconPotentialOnlyContact(device, region, i, contact_type, True)
             if paras["weightfield"]==True:
                 try:
                     CreateOxideContact(device=device, region="SiO2", contact=i)
@@ -79,7 +79,7 @@ def PotentialOnlyInitialSolution(device, region, paras, circuit_contacts, set_co
 
 def DriftDiffusionInitialSolution(device, region, paras, irradiation_model=None, irradiation_flux=1e15, impact_model=None, circuit_contacts=None, set_contact_type=None):
     if paras["Cylindrical_coordinate"]==True:
-        switch_Cylindrical_coordinate(device,region)
+        switch_cylindrical_coordinate(device,region)
     else:
         pass
     ####

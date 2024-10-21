@@ -70,8 +70,7 @@ def CreateImpactGeneration(device, region, impact_model,custom_ion_n='0', custom
     ImpactGen_n = "+ElectronCharge*(%s)"%(Ion_coeff_rate)
     ImpactGen_p = "-ElectronCharge*(%s)"%(Ion_coeff_rate)
     
-
-#for all material
+    #for all material
     CreateEdgeModel(device, region, "ImpactGen_n", ImpactGen_n)
     CreateEdgeModelDerivatives(device, region, "ImpactGen_n", ImpactGen_n, "Potential")
     CreateEdgeModelDerivatives(device, region, "ImpactGen_n", ImpactGen_n, "Electrons")
