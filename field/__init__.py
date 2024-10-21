@@ -12,9 +12,5 @@ def main(kwargs):
     logging.info('This is INFO messaage')
     logging.debug('This is DEBUG messaage')
 
-    if label == 'gen_devsim_db':
-        from . import gen_devsim_db
-        gen_devsim_db.main()
-    else:
-        from . import solver_section
-        solver_section.main(kwargs)
+    from . import solver_section
+    solver_section.main(kwargs)
