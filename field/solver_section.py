@@ -11,7 +11,7 @@ import numpy as np
 
 from gen_signal.build_device import Detector
 from .create_mesh import DevsimMesh
-from .create_parameter import create_parameter
+from .create_parameter import create_parameter, delete_init
 from . import save_milestone
 from . import loop_section
 from . import physics_drift_diffusion
@@ -115,7 +115,7 @@ def main (kwargs):
                         value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
             
     else:
-        circuit_contacts=MyDetector.device_dict['bias']['electrode']
+        circuit_contacts = MyDetector.device_dict['bias']['electrode']
         devsim.circuit_element(name="V1", n1=physics_drift_diffusion.GetContactBiasName(circuit_contacts), n2=0,
                            value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
     T1 = time.time()
@@ -172,18 +172,26 @@ def main (kwargs):
         i = 0
         while abs(v_current) <= abs(v_goal):
             loop.loop_solver(circuit_contact=circuit_contacts,v_current=v_current,area_factor=paras["area_factor"])
-            if (paras['milestone_mode']==True and abs(v_current%paras['milestone_step'])<0.01*paras['milestone_step']) or abs(abs(v_current)-abs(v_goal))<0.01*paras['milestone_step'] :
+            if (paras['milestone_mode']==True and abs(v_current%paras['milestone_step'])<0.01*paras['voltage_step']) or abs(abs(v_current)-abs(v_goal))<0.01*paras['milestone_step'] :
                 save_milestone.save_milestone(device=device, region=region, v=v_current, path=path, dimension=default_dimension, contact=circuit_contacts, is_wf=is_wf)
 
                 dd = os.path.join(path, str(v_current)+'V.dd')
                 devsim_device = os.path.join(path, str(v_current)+'V.devsim')
                 devsim.write_devices(file=dd, type="tecplot")
                 devsim.write_devices(file=devsim_device, type="devsim")
-                # devsim.reset_devsim()
                 # # flush devsim memory
+                # devsim.reset_devsim()
+                # # Resume solver settings
                 # devsim.load_devices(file=devsim_device)
-                # restart.PotentialOnlyRestartSolution(device, region, paras, circuit_contacts, set_contact_type=None)
+                # create_parameter(MyDetector, device, region)
+                # circuit_contacts = MyDetector.device_dict['bias']['electrode']
+                # devsim.circuit_element(name="V1", n1=physics_drift_diffusion.GetContactBiasName(circuit_contacts), n2=0,
+                #                        value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
+                # restart.PotentialOnlyRestartSolution(device, region, paras, circuit_contacts=circuit_contacts, set_contact_type=None)
+                # devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
                 # restart.DriftDiffusionRestartSolution(device, region, paras, irradiation_model=irradiation_model, irradiation_flux=irradiation_flux, impact_model=impact_model, circuit_contacts=circuit_contacts, set_contact_type=None)
+                # devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
+                # delete_init(device, region)
 
             i += 1
             v_current = voltage_step*i
