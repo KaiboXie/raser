@@ -74,11 +74,10 @@ def main(kwargs):
     path = output(__file__, my_d.det_name, now)
 
     #energy_deposition(my_g4p)   # Draw Geant4 depostion distribution
-    draw_drift_path(my_d,my_f,my_current,path)
+    draw_drift_path(my_d,my_g4p,my_f,my_current,path)
 
-    if 'ngspice' in amplifier:
-        my_current.save_current(my_d)
-    else:
+    my_current.save_current(my_d)
+    if 'ngspice' not in amplifier:
         ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
         for i in range(my_current.read_ele_num):
             draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.amplified_current_name, path) # Draw current

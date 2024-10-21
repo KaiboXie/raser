@@ -35,6 +35,7 @@ def main(elec_name, file_path, key=None):
 
     ROOT.gROOT.SetBatch()    
     c = ROOT.TCanvas('c','c',700,600)
+    c.SetMargin(0.2,0.1,0.2,0.1)
     f1 = ROOT.TGraph(length,time,volt)
     f1.SetTitle(' ')
 
@@ -44,13 +45,17 @@ def main(elec_name, file_path, key=None):
     f1.GetXaxis().SetTitle('Time [ns]')
     f1.GetXaxis().SetLimits(t_min, t_max)
     f1.GetXaxis().CenterTitle()
-    f1.GetXaxis().SetTitleSize(0.05)
-    f1.GetXaxis().SetTitleOffset(0.8)
+    f1.GetXaxis().SetTitleSize(0.08)
+    f1.GetXaxis().SetLabelSize(0.08)
+    f1.GetXaxis().SetNdivisions(5)
+    f1.GetXaxis().SetTitleOffset(1)
 
     f1.GetYaxis().SetTitle('Voltage [mV]')
     f1.GetYaxis().CenterTitle()
-    f1.GetYaxis().SetTitleSize(0.05)
-    f1.GetYaxis().SetTitleOffset(0.7)
+    f1.GetYaxis().SetTitleSize(0.08)
+    f1.GetYaxis().SetLabelSize(0.08)
+    f1.GetYaxis().SetNdivisions(5)
+    f1.GetYaxis().SetTitleOffset(1)
 
     c.cd()
     f1.Draw('AL')

@@ -18,7 +18,7 @@ from current import cal_current as ccrt
 from elec import readout as rdo
 from .source import TCTTracks
 from util.output import output, create_path
-from gen_signal.draw_save import draw_drift_path, draw_current
+from gen_signal.draw_save import draw_current
 
 def main(kwargs):
     """
@@ -66,17 +66,14 @@ def main(kwargs):
     my_l = TCTTracks(my_d, laser_dic)
 
     my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
-
-    if 'ngspice' in amplifier:
-        my_current.save_current(my_d, my_l.model)
-    else:
+    my_current.save_current(my_d, my_l.model)
+    if 'ngspice' not in amplifier:
         path = output(__file__, my_d.det_name, my_l.model)
         ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
         if kwargs['scan'] != None: #assume parameter alter
             key = my_l.fz_rel
             ele_current.save_signal_TTree(path, key)
         else:
-            draw_drift_path(my_d,my_f,my_current,path)
             for i in range(my_current.read_ele_num):
                 draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.amplified_current_name, path) # Draw current
 

@@ -71,10 +71,10 @@ def draw_scat_angle(evnets_angle,angle,model):
     h2.Draw("HIST")    
     c1.SaveAs("scat_angle"+model+".pdf")
 
-def draw_drift_path(my_d,my_f,my_current,path):
+def draw_drift_path(my_d,my_g4p,my_f,my_current,path):
     ROOT.gStyle.SetOptStat(0)
     # # ROOT.gROOT.SetBatch(1)
-    c1 = ROOT.TCanvas("c", "canvas1", 200,10,1000, 1000)
+    c1 = ROOT.TCanvas("c", "canvas1", 200, 10, 1500, 2000)
     c1.Divide(1,2)
 
     if "plugin3D" in my_d.det_model:
@@ -89,6 +89,7 @@ def draw_drift_path(my_d,my_f,my_current,path):
                                     n_bin[1],0,my_d.l_y,
                                     n_bin[2],0,my_d.l_z)
     c1.cd(1)
+    ROOT.gPad.SetMargin(0.15, 0.1, 0.1, 0.1)
     for k in range(n_bin[2]):
         for j in range (n_bin[1]):
             for i in range(n_bin[0]):
@@ -109,18 +110,27 @@ def draw_drift_path(my_d,my_f,my_current,path):
                 except RuntimeError:
                     structure.SetBinContent(i+1,j+1,k+1,1)
     structure.SetFillColor(1)
-    structure.GetXaxis().SetTitle("x axis")
-    structure.GetYaxis().SetTitle("y axis")
-    structure.GetZaxis().SetTitle("z axis")
+    structure.GetXaxis().SetTitle("x axis [\mum]")
+    structure.GetYaxis().SetTitle("y axis [\mum]")
+    structure.GetZaxis().SetTitle("z axis [\mum]")
     structure.GetXaxis().CenterTitle()
     structure.GetYaxis().CenterTitle() 
     structure.GetZaxis().CenterTitle() 
-    structure.GetXaxis().SetTitleSize(0.05)
-    structure.GetYaxis().SetTitleSize(0.05)
-    structure.GetZaxis().SetTitleSize(0.05)
+    structure.GetXaxis().SetTitleOffset(1.2)
+    structure.GetYaxis().SetTitleOffset(1.4)
+    structure.GetZaxis().SetTitleOffset(1.0)
+    structure.GetXaxis().SetLabelSize(0.08)
+    structure.GetYaxis().SetLabelSize(0.08)
+    structure.GetZaxis().SetLabelSize(0.08)
+    structure.GetXaxis().SetTitleSize(0.08)
+    structure.GetYaxis().SetTitleSize(0.08)
+    structure.GetZaxis().SetTitleSize(0.08)
+    structure.GetYaxis().SetNdivisions(5)
+    structure.GetZaxis().SetNdivisions(5)
     structure.Draw("ISO")
+    c1.Update()
 
-    mg = ROOT.TMultiGraph("mg","")
+    mg = ROOT.TMultiGraph("mg","") # graph for page 2
     x_array=array('f')
     y_array=array('f')
     z_array=array('f')
@@ -160,10 +170,41 @@ def draw_drift_path(my_d,my_f,my_current,path):
             del x_array[:]
             del y_array[:]
             del z_array[:]
+    particle_track = my_g4p.p_steps_current[my_g4p.selected_batch_number]
+    n = len(particle_track)
+    if(n>0):
+        x_array.extend([step[0] for step in particle_track])
+        y_array.extend([step[1] for step in particle_track])
+        z_array.extend([step[2] for step in particle_track])
+        gr = ROOT.TPolyLine3D(n,x_array,y_array,z_array)
+        gr.SetLineColor(1)
+        gr.SetLineStyle(1)
+        gr.SetLineWidth(4)
+        gr.Draw("SAME")
+        gr_2D=ROOT.TGraph(n,x_array,z_array)
+        gr_2D.SetMarkerColor(1)
+        gr_2D.SetLineColor(1)
+        gr_2D.SetLineStyle(1)
+        gr_2D.SetLineWidth(4)
+        mg.Add(gr_2D)
+        del x_array[:]
+        del y_array[:]
+        del z_array[:]
     c1.cd(2)
+    ROOT.gPad.SetMargin(0.15, 0.1, 0.2, 0.1)
+    mg.GetXaxis().SetTitle("x axis [\mum]")
+    mg.GetYaxis().SetTitle("z axis [\mum]")
+    mg.GetXaxis().CenterTitle()
+    mg.GetYaxis().CenterTitle() 
+    mg.GetXaxis().SetTitleOffset(1.2)
+    mg.GetYaxis().SetTitleOffset(0.8)
+    mg.GetXaxis().SetLabelSize(0.08)
+    mg.GetYaxis().SetLabelSize(0.08)
+    mg.GetXaxis().SetTitleSize(0.08)
+    mg.GetYaxis().SetTitleSize(0.08)
+    mg.GetYaxis().SetNdivisions(5)
+    c1.Update()
     mg.Draw("APL")
-    mg.GetXaxis().SetTitle("x axis")
-    mg.GetYaxis().SetTitle("z axis")
     c1.SaveAs(path+'/'+my_d.det_model+"_drift_path.pdf")
     c1.SaveAs(path+'/'+my_d.det_model+"_drift_path.root")
     del c1
@@ -179,13 +220,13 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
     @Modify:
         2021/08/31
     """
-    c=ROOT.TCanvas("c","canvas1",1000,1000)
+    c=ROOT.TCanvas("c","canvas1",1600,1300)
     c.cd()
     c.Update()
-    c.SetLeftMargin(0.12)
+    c.SetLeftMargin(0.25)
     # c.SetTopMargin(0.12)
-    c.SetRightMargin(0.12)
-    c.SetBottomMargin(0.14)
+    c.SetRightMargin(0.15)
+    c.SetBottomMargin(0.17)
     ROOT.gStyle.SetOptStat(ROOT.kFALSE)
     ROOT.gStyle.SetOptStat(0)
 
@@ -201,10 +242,13 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
     #my_current.sum_cu.GetYaxis().CenterTitle() 
     my_current.sum_cu[read_ele_num].GetXaxis().SetTitle("Time [s]")
     my_current.sum_cu[read_ele_num].GetYaxis().SetTitle("Current [A]")
-    my_current.sum_cu[read_ele_num].GetXaxis().SetLabelSize(0.05)
-    my_current.sum_cu[read_ele_num].GetXaxis().SetTitleSize(0.05)
-    my_current.sum_cu[read_ele_num].GetYaxis().SetLabelSize(0.05)
-    my_current.sum_cu[read_ele_num].GetYaxis().SetTitleSize(0.05)
+    my_current.sum_cu[read_ele_num].GetXaxis().SetLabelSize(0.08)
+    my_current.sum_cu[read_ele_num].GetXaxis().SetTitleSize(0.08)
+    my_current.sum_cu[read_ele_num].GetYaxis().SetLabelSize(0.08)
+    my_current.sum_cu[read_ele_num].GetYaxis().SetTitleSize(0.08)
+    my_current.sum_cu[read_ele_num].GetYaxis().SetTitleOffset(1.2)
+    my_current.sum_cu[read_ele_num].SetTitle("")
+    my_current.sum_cu[read_ele_num].SetNdivisions(5)
     my_current.sum_cu[read_ele_num].Draw("HIST")
     my_current.positive_cu[read_ele_num].Draw("SAME HIST")
     my_current.negative_cu[read_ele_num].Draw("SAME HIST")
@@ -236,7 +280,7 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
         n_scale = ROOT.gPad.GetUymin() / rightmax
     else:
         n_scale = ROOT.gPad.GetUymax() / rightmax
-
+    """ 
     ele_current[read_ele_num].Scale(n_scale)
     ele_current[read_ele_num].Draw("SAME HIST")
     ele_current[read_ele_num].SetLineWidth(2)   
@@ -258,18 +302,18 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
     axis.SetTitleFont(40)
     axis.SetTitleOffset(1.2)
     #axis.CenterTitle()
-    axis.Draw("SAME HIST")
+    axis.Draw("SAME HIST") """
 
-    legend = ROOT.TLegend(0.5, 0.3, 0.8, 0.6)
+    legend = ROOT.TLegend(0.5, 0.2, 0.8, 0.5)
     legend.AddEntry(my_current.negative_cu[read_ele_num], "electron", "l")
     legend.AddEntry(my_current.positive_cu[read_ele_num], "hole", "l")
-    legend.AddEntry(my_current.gain_negative_cu[read_ele_num], "gain electron", "l")
-    legend.AddEntry(my_current.gain_positive_cu[read_ele_num], "gain hole", "l")
+    #legend.AddEntry(my_current.gain_negative_cu[read_ele_num], "gain electron", "l")
+    #legend.AddEntry(my_current.gain_positive_cu[read_ele_num], "gain hole", "l")
     legend.AddEntry(my_current.sum_cu[read_ele_num], "e+h", "l")
     #legend.AddEntry(ele_current, "electronics", "l")
     legend.SetBorderSize(0)
     #legend.SetTextFont(43)
-    #legend.SetTextSize(42)
+    legend.SetTextSize(0.08)
     legend.Draw("same")
     c.Update()
     c.SaveAs(path+'/'+model+my_d.det_model+tag+"No_"+str(read_ele_num+1)+"electrode"+"_basic_infor.pdf")

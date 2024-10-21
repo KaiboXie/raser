@@ -30,6 +30,7 @@ class CarrierListFromG4P:
             for j in range(len(my_g4p.p_steps_current)):
                 if(len(my_g4p.p_steps_current[j])>((total_step/particle_number)*0.5)):
                     self.batch_def(my_g4p,j)
+                    my_g4p.selected_batch_number=j
                     break
             if particle_number > 0:
                 batch=1
@@ -58,6 +59,7 @@ class CarrierListFromG4P:
                             try_p=0
                     if try_p==1:
                         self.batch_def(my_g4p,j)
+                        my_g4p.selected_batch_number=j
                         batch = 1
                         break
         else:
