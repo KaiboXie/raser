@@ -51,51 +51,9 @@ class loop_section():
 
         print("=====================\nDriftDiffusion initialize successfully\n======================")
         print("=========RASER info =========\nAll initialization successfully\n=========info========== ")    
-    
-    def save_values(self, v_current):
-        path = output(__file__, self.device, "temp_data")
-        Holes_values = devsim.get_node_model_values(device=self.device, region=self.region, name="Holes")
-        Electrons_values = devsim.get_node_model_values(device=self.device, region=self.region, name="Electrons")
-        Potential_values = devsim.get_node_model_values(device=self.device, region=self.region, name="Potential")
-        with open(os.path.join(path,'Holes_{}.pkl'.format(v_current),), 'wb') as file:
-            file.truncate(0)
-        with open(os.path.join(path,'Holes_{}.pkl'.format(v_current),), 'wb') as file:
-            pickle.dump(Holes_values, file)
-        with open(os.path.join(path,'Electrons_{}.pkl'.format(v_current),), 'wb') as file:
-            file.truncate(0)
-        with open(os.path.join(path,'Electrons_{}.pkl'.format(v_current),), 'wb') as file:
-            pickle.dump(Electrons_values, file)
-        with open(os.path.join(path,'Potential_{}.pkl'.format(v_current),), 'wb') as file:
-            file.truncate(0)
-        with open(os.path.join(path,'Potential_{}.pkl'.format(v_current),), 'wb') as file:
-            pickle.dump(Potential_values, file)
-    
-    def load_values(self, values, v_current):
-        path = output(__file__, self.device, "temp_data")
-        if values=="Holes":
-            with open(os.path.join(path,'Holes_{}.pkl'.format(v_current),), 'rb') as file:
-                return pickle.load(file)
-        elif values=="Electrons":
-            with open(os.path.join(path,'Electrons_{}.pkl'.format(v_current),), 'rb') as file:
-                return pickle.load(file)
-        elif values=="Potential":
-            with open(os.path.join(path,'Potential_{}.pkl'.format(v_current),), 'rb') as file:
-                return pickle.load(file)
-        
-    def set_values(self, v_current):
-        for i in ("Holes","Electrons","Potential"):
-            value = self.load_values(i, v_current)
-            devsim.set_node_values(device=self.device, region=self.region, name=i, values=value)
 
     @memory_decorator
     def loop_solver(self, circuit_contact, v_current, area_factor):
-        if self.solve_model =="step":
-            if v_current == 0:
-                pass
-            else:
-                print("=================RASER info==================\n Load last voltage successfully\n===============info===================")
-                self.set_values(v_current)
-
         self.voltage.append(v_current)
         devsim.set_parameter(device=self.device, name=physics_drift_diffusion.GetContactBiasName(circuit_contact), value=v_current)
         devsim.solve(type="dc", absolute_error=self.paras['absolute_error_VoltageSteps'], relative_error=self.paras['relative_error_VoltageSteps'], maximum_iterations=self.paras['maximum_iterations_VoltageSteps'])
@@ -104,9 +62,6 @@ class loop_section():
             electron_current = devsim.get_contact_current(device=self.device, contact=circuit_contact, equation="ElectronContinuityEquation")
             hole_current     = devsim.get_contact_current(device=self.device, contact=circuit_contact, equation="HoleContinuityEquation")
             total_current    = electron_current + hole_current
-            if(abs(total_current/area_factor)>105e-6): 
-                print("==========RASER info===========\nCurrent is too large !\n==============Warning==========")
-                # break
             self.current.append(total_current)
             if self.solve_model == "cv":
                 devsim.circuit_alter(name="V1", value=v_current)
@@ -117,7 +72,6 @@ class loop_section():
                 devsim.solve(type="noise", frequency=self.paras["frequency"],output_node="V1.I")
                 noise=devsim.get_circuit_node_value(node="V1.I")
                 self.noise.append(noise)
-            self.save_values(v_current)  
 
     def get_voltage_values(self):
         return self.voltage
