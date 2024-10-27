@@ -24,3 +24,9 @@ def main(kwargs):
     if label == 'GetEdep':
         from . import energy_deposition
         energy_deposition.getedep()
+    if label == 'RootPlot_1D':
+        from . import RootPlot_1D
+        RootPlot_1D.RootPlot_1D()
+    if label == 'GetTimeSignal':
+        from . import TimeSignal
+        TimeSignal.TimeSignal()

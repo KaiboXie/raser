@@ -6,24 +6,24 @@ import os
 import array
 import time
 import subprocess
-import re
-import json
-
 import ROOT
-ROOT.gROOT.SetBatch(True)
-import numpy
 
 from gen_signal import build_device as bdv
 from . import cflm
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec.set_pwl_input import set_pwl_input as pwlin
+
 from util.output import output
 
+import json
+
+import re
+import numpy
 
 def get_signal():
 
-    geant4_json = "./raser/cflm/cflm.json"
+    geant4_json = "./setting/absorber/cflm.json"
     with open(geant4_json) as f:
          g4_dic = json.load(f)
 
@@ -41,17 +41,21 @@ def get_signal():
     print(my_d.device)
     print(voltage)
     
-    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact, my_d.irradiation_flux)
+    my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, det_dic['read_out_contact'], 0)
 
     my_g4p = cflm.cflmG4Particles(my_d)
+    print(f'***************************************************** {my_g4p.HitFlag} ************************************************')
+    if my_g4p.HitFlag == 0:
+       print("No secondary particlees hit the detector")
+    else:
+        my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
 
-    my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+        if 'ngspice' in amplifier:
+            save_current(my_d, my_current, g4_dic, my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, det_dic['read_out_contact'], 0))
 
-    if 'ngspice' in amplifier:
-        save_current(my_d, my_current, g4_dic, len(my_d.read_out_contact))
-        pwlin(f"raser/cflm/output/{g4_dic['CurrentName'].split('.')[0]}_pwl_current.txt", 'raser/cflm/ucsc.cir', 'raser/cflm/output/')
-        subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/ucsc_tmp.cir"], shell=True)
-    
+            pwlin(f"raser/cflm/output/{g4_dic['CurrentName'].split('.')[0]}_pwl_current.txt", 'raser/cflm/ucsc.cir', 'raser/cflm/output/')
+            subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/ucsc_tmp.cir"], shell=True)
+        
     del my_f
     end = time.time()
     print("total_time:%s"%(end-start))

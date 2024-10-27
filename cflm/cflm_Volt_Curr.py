@@ -45,9 +45,6 @@ def getVolCur():
 
     file_name_v = g4_dic['CurrentName'].split('.')[0] + '.raw'
     file_name_c = g4_dic['CurrentName'].split('.')[0] + '_pwl_current.txt'
-    
-    com_name_v = file_name_v.split('.')[0]
-    com_name_c = file_name_c.split('.')[0]
 
     time_v, volt, time_c, curr = [], [], [], []
 

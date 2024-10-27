@@ -13,3 +13,10 @@ change:
        "CurrentName"  : "Current_10particles.root"
 
 *********************************
+
+time: 2024.10.27
+goal: to simulate particle at differenr time, every time a particle is incident, the time interval of incidence is 355ns.
+change:
+      "NumofGun": 1
+
+*********************************

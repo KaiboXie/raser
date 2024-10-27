@@ -1,13 +1,11 @@
-import json
-
 import ROOT
-ROOT.gROOT.SetBatch(True)
+import json
 
 def getedep():
 
-    up = 25
+    up = 70
     low = 0
-    nbins = 25
+    nbins = 70
 
     geant4_json = "./setting/absorber/cflm.json"
     with open(geant4_json) as f:
