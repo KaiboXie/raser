@@ -1,7 +1,7 @@
 import ROOT
 import json
 
-def getedep():
+def main():
 
     up = 70
     low = 0

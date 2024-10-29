@@ -21,7 +21,7 @@ import json
 import re
 import numpy
 
-def get_signal():
+def main():
 
     geant4_json = "./setting/absorber/cflm.json"
     with open(geant4_json) as f:
@@ -44,9 +44,9 @@ def get_signal():
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, det_dic['read_out_contact'], 0)
 
     my_g4p = cflm.cflmG4Particles(my_d)
-    print(f'***************************************************** {my_g4p.HitFlag} ************************************************')
+
     if my_g4p.HitFlag == 0:
-       print("No secondary particlees hit the detector")
+       print("No secondary particles hit the detector")
     else:
         my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
 

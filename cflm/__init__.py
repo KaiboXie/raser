@@ -17,16 +17,20 @@ def main(kwargs):
         cflm.main()
     if label == 'GetSignal':
         from . import get_signal
-        get_signal.get_signal()
+        get_signal.main()
     if label == 'GetVolCur':
-        from . import cflm_Volt_Curr
-        cflm_Volt_Curr.getVolCur()
+        from . import volt_current
+        volt_current.main()
     if label == 'GetEdep':
         from . import energy_deposition
-        energy_deposition.getedep()
+        energy_deposition.main()
     if label == 'RootPlot_1D':
-        from . import RootPlot_1D
-        RootPlot_1D.RootPlot_1D()
+        from . import sparticles_plot_1d
+        sparticles_plot_1d.main()
     if label == 'GetTimeSignal':
-        from . import TimeSignal
-        TimeSignal.TimeSignal()
+        from . import time_signal
+        time_signal.main()
+    if label == 'PossionGen':
+         from . import possion_generator
+         possion_generator.main()
+    
