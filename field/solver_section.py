@@ -15,8 +15,6 @@ from .create_parameter import create_parameter, delete_init
 from . import save_milestone
 from . import loop_section
 from . import physics_drift_diffusion
-from . import initial
-from . import restart
 from util.output import output
 from .devsim_draw import *
 
@@ -28,19 +26,15 @@ noise = []
 
 paras = {
     "absolute_error_Initial" : 1e10, 
-    "relative_error_Initial" : 1e-10, 
+    "relative_error_Initial" : 1e-5, 
     "maximum_iterations_Initial" : 1000,
 
-    "absolute_error_DriftDiffusion" : 1e10, 
-    "relative_error_DriftDiffusion" : 1e-10, 
-    "maximum_iterations_DriftDiffusion" : 1000,
-
     "absolute_error_VoltageSteps" : 1e10, 
-    "relative_error_VoltageSteps" : 1e-10, 
+    "relative_error_VoltageSteps" : 1e-5, 
     "maximum_iterations_VoltageSteps" : 1000,
 
     "milestone_mode" : True,
-    "milestone_step" : 10,
+    "milestone_step" : 10.0,
 
     "voltage_step" : 0.1,
     "acreal" : 1.0, 
@@ -179,19 +173,6 @@ def main (kwargs):
                 devsim_device = os.path.join(path, str(v_current)+'V.devsim')
                 devsim.write_devices(file=dd, type="tecplot")
                 devsim.write_devices(file=devsim_device, type="devsim")
-                # # flush devsim memory
-                # devsim.reset_devsim()
-                # # Resume solver settings
-                # devsim.load_devices(file=devsim_device)
-                # create_parameter(MyDetector, device, region)
-                # circuit_contacts = MyDetector.device_dict['bias']['electrode']
-                # devsim.circuit_element(name="V1", n1=physics_drift_diffusion.GetContactBiasName(circuit_contacts), n2=0,
-                #                        value=0.0, acreal=paras['acreal'], acimag=paras['acimag'])
-                # restart.PotentialOnlyRestartSolution(device, region, paras, circuit_contacts=circuit_contacts, set_contact_type=None)
-                # devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
-                # restart.DriftDiffusionRestartSolution(device, region, paras, irradiation_model=irradiation_model, irradiation_flux=irradiation_flux, impact_model=impact_model, circuit_contacts=circuit_contacts, set_contact_type=None)
-                # devsim.solve(type="dc", absolute_error=paras['absolute_error_Initial'], relative_error=paras['relative_error_Initial'], maximum_iterations=paras['maximum_iterations_Initial'])
-                # delete_init(device, region)
 
             i += 1
             v_current = voltage_step*i

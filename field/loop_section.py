@@ -8,7 +8,6 @@ import devsim
 import numpy as np
 
 from . import initial
-from . import restart
 from . import physics_drift_diffusion
 from .create_parameter import delete_init
 from util.output import output
