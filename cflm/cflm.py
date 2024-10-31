@@ -19,6 +19,8 @@ class cflmG4Particles:
         global s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps
         s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps = [],[],[],[]
 
+        self.geant4_model = "cflm"
+
         geant4_json = "./setting/absorber/cflm.json"
         with open(geant4_json) as f:
              g4_dic = json.load(f)
@@ -60,7 +62,17 @@ class cflmG4Particles:
 
         self.energy_steps=s_energy_steps
         self.edep_devices=s_edep_devices
+        self.HitFlag = 0
 
+        print(f'The edep of detector: {self.edep_devices[0]}')
+
+        with open("raser/cflm/output/TimeSignalEdep.txt", "a") as TimeSignalEdep:
+             TimeSignalEdep.write(str(self.edep_devices[0])+'\n')
+             
+
+        if len(s_p_steps[0]) != 1:
+            self.HitFlag = 1
+        
         del s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps
 
     def __del__(self):
@@ -189,37 +201,22 @@ class cflmPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
         particleDefinition = g4b.G4ParticleTable.GetParticleTable().FindParticle(par_type)
         self.fParticleGun.SetParticleDefinition(particleDefinition)
         self.directions = []
-        self.position = par_in
-        '''
-        self.fParticleGun.SetParticleMomentumDirection(g4b.G4ThreeVector(par_direct[0],
-                                                                         par_direct[1],
-                                                                         par_direct[2]))
-        
-        for i in range(nofParticles):
-            self.fParticleGun.SetParticleMomentumDirection(g4b.G4ThreeVector(par_direct[i][0],
-                                                                         par_direct[i][1],
-                                                                         par_direct[i][2]))
-            self.fParticleGun.SetParticleEnergy(par_energy*g4b.GeV)
-            
-            self.position = par_in
-        
-        self.fParticleGun.SetParticleEnergy(par_energy*g4b.GeV)
-        self.position = par_in
-        '''
-
-        self.fParticleGun.SetParticleEnergy(par_energy*g4b.GeV)    
+        self.par_in = []
+        self.energy = []    
 
         self.directions = [g4b.G4ThreeVector(direction[0], direction[1], direction[2]) for direction in par_direct]
+        self.par_in = [g4b.G4ThreeVector(position[0], position[1], position[2]) for position in par_in]
+        self.energy.append(par_energy)
 
     def GeneratePrimaries(self, anEvent):
-
-        self.fParticleGun.SetParticlePosition(g4b.G4ThreeVector(self.position[0]*g4b.mm,
-                                                                self.position[1]*g4b.mm,
-                                                                self.position[2]*g4b.mm))
         
         for i in range(self.nofParticles):
        
+            self.fParticleGun.SetParticlePosition(self.par_in[i])
             self.fParticleGun.SetParticleMomentumDirection(self.directions[i])
+
+            self.fParticleGun.SetParticleEnergy(self.energy[i][0]*g4b.GeV) 
+            
             self.fParticleGun.GeneratePrimaryVertex(anEvent)
 
 class cflmaSteppingAction(g4b.G4UserSteppingAction):
