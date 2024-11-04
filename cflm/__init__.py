@@ -30,7 +30,7 @@ def main(kwargs):
     if label == 'GetTimeSignal':
         from . import time_signal
         time_signal.main()
-    if label == 'PossionGen':
+    if label == 'PoissionGen':
          from . import possion_generator
          possion_generator.main()
     
