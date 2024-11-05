@@ -9,7 +9,7 @@ def main(kwargs):
     os.makedirs('output/elec/{}'.format(name), exist_ok=True)
 
     if label == 'trans':
-        subprocess.run(['ngspice -b param_file/circuit/{}.cir'.format(name)], shell=True)
+        subprocess.run(['ngspice -b setting/electronics/{}.cir'.format(name)], shell=True)
     elif label == 'get_fig':
         from . import ngspice_get_fig
         file_path = output(__file__)

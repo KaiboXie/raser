@@ -319,7 +319,7 @@ def main():
 
     UImanager = g4b.G4UImanager.GetUIpointer()
 
-    UImanager.ApplyCommand("/control/execute param_file/g4macro/init_vis.mac")#初始化可视化配置
+    UImanager.ApplyCommand("/control/execute setting/g4macro/init_vis.mac")#初始化可视化配置
 
     UImanager.ApplyCommand('/run/initialize')#初始化运行，准备开始模拟
     UImanager.ApplyCommand("/gun/particle ion")
