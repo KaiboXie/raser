@@ -1,7 +1,7 @@
 import shutil
 import os
 
-def set_pwl_input(pwl_file, cir_file, output_folder):
+def set_pwl_input(pwl_file, cir_file, output_folder, output_filename = 'default'):
     
     
     string_list=[]
@@ -22,13 +22,20 @@ def set_pwl_input(pwl_file, cir_file, output_folder):
                 lines[i] = lines[i].strip().replace(' ', ',') + ','
                 string_list.append(lines[i])
     with open(new_cir_file, 'r') as f:
-         replacement_line = 'I1 2 0 PWL(' + ''.join(string_list) + ')'
-         output_lines = f.readlines()
-         for i in range(len(output_lines)):
-             if 'I1' in output_lines[i]:
-                 output_lines[i] = replacement_line + '\n'
+        replacement_line = 'I1 2 0 PWL(' + ''.join(string_list) + ')'
+        output_lines = f.readlines()
+        if output_filename == 'default':
+            for i in range(len(output_lines)):
+                if 'I1' in output_lines[i]:
+                    output_lines[i] = replacement_line + '\n'
+        else:
+            for i in range(len(output_lines)):
+                if 'I1' in output_lines[i]:
+                    output_lines[i] = replacement_line + '\n'
+                if 'wrdata' in output_lines[i]:
+                    output_lines[i] = f"wrdata {os.path.join(output_folder, output_filename)} v(out)" + '\n'
     with open(new_cir_file, 'w') as f:
-         f.writelines(output_lines)
+        f.writelines(output_lines)
     
     print('Temporary circuit file has been modified')
 

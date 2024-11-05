@@ -73,6 +73,10 @@ parser_tct.add_argument('-vol', '--voltage', type=str, help='bias voltage')
 parser_tct.add_argument('-amp', '--amplifier', type=str, help='amplifier')
 parser_tct.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
 
+parser_bmos = subparsers.add_parser('bmos', help='Beam Monitor Online System')
+parser_bmos.add_argument('label', help='LABEL to identify BMOS simulations')
+parser_bmos.add_argument('-v', '--verbose', help='VERBOSE level', 
+                          action='count', default=0)
 
 args = parser.parse_args()
 
@@ -82,7 +86,7 @@ if len(sys.argv) == 1:
 
 kwargs = vars(args)
 
-submodules = ['asic', 'cce', 'cflm', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'spaceres', 'tct', 'timeres']
+submodules = ['asic', 'cce', 'cflm', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'spaceres', 'tct', 'timeres', 'bmos']
 
 submodule = kwargs['subparser_name']
 if submodule not in submodules:
