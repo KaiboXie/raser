@@ -37,6 +37,12 @@ def main(destination_subfolder, command, batch_number, args):
                 + BINDPATH + " " \
                 + IMGFILE + " " \
                 + "python3 raser"
+    if "-umf" in command:
+        command = command.replace("-umf", "")
+        raser_shell = "/usr/bin/apptainer exec --env-file cfg/env -B" + " " \
+                + BINDPATH + " " \
+                + IMGFILE + " " \
+                + "python3 -mdevsim.umfpack.umfshim raser/__main__.py"
     gen_job(jobfile_name, run_code=raser_shell+' '+command)
     submit_job(jobfile_name, destination_subfolder, group, mem, test=test)
 

@@ -63,7 +63,7 @@ class cflmG4Particles:
         self.energy_steps=s_energy_steps
         self.edep_devices=s_edep_devices
         self.HitFlag = 0
-
+        print(self.p_steps)
         print(f'The edep of detector: {self.edep_devices[0]}')
 
         with open("raser/cflm/output/TimeSignalEdep.txt", "a") as TimeSignalEdep:
@@ -206,7 +206,7 @@ class cflmPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
 
         self.directions = [g4b.G4ThreeVector(direction[0], direction[1], direction[2]) for direction in par_direct]
         self.par_in = [g4b.G4ThreeVector(position[0], position[1], position[2]) for position in par_in]
-        self.energy.append(par_energy)
+        self.energy = par_energy
 
     def GeneratePrimaries(self, anEvent):
         
@@ -215,7 +215,7 @@ class cflmPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
             self.fParticleGun.SetParticlePosition(self.par_in[i])
             self.fParticleGun.SetParticleMomentumDirection(self.directions[i])
 
-            self.fParticleGun.SetParticleEnergy(self.energy[i][0]*g4b.GeV) 
+            self.fParticleGun.SetParticleEnergy(self.energy[i]*g4b.GeV) 
             
             self.fParticleGun.GeneratePrimaryVertex(anEvent)
 
@@ -417,7 +417,7 @@ def main():
    
     if g4_dic['vis']:
 
-         UImanager.ApplyCommand("/control/execute paras/g4macro/init_vis.mac")
+         UImanager.ApplyCommand("/control/execute param_file/g4macro/init_vis.mac")
     
     UImanager.ApplyCommand('/run/initialize')
     UImanager.ApplyCommand('/tracking/verbose 2')
@@ -431,10 +431,10 @@ def main():
          UImanager.ApplyCommand('/vis/ogl/set/printSize 2000 600')#可视化打印尺寸为2000*2000
          UImanager.ApplyCommand('/vis/ogl/set/printFilename output/cflm/image.pdf')
          UImanager.ApplyCommand('/vis/ogl/export')
-    
+         
          for i in range(1000):
              UImanager.ApplyCommand("/vis/viewer/refresh")
-
+             
 if __name__ == '__main__':
     main()
 

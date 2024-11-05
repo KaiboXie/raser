@@ -44,6 +44,7 @@ parser_field.add_argument('-cv', help='CV simulation', action="store_true")
 parser_field.add_argument("-wf", help="WeightField Simulation", action="store_true")
 parser_field.add_argument("-v_current", help="Current voltage for step-by-step simulation", type=float)
 parser_field.add_argument("-noise", help="Detector Noise simulation", action="store_true")
+parser_field.add_argument('-umf', help='use umf solver', action="store_true")
 
 
 parser_fpga = subparsers.add_parser('fpga', help='FPGA design')
