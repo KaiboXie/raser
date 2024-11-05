@@ -417,7 +417,7 @@ def main():
    
     if g4_dic['vis']:
 
-         UImanager.ApplyCommand("/control/execute param_file/g4macro/init_vis.mac")
+         UImanager.ApplyCommand("/control/execute setting/g4macro/init_vis.mac")
     
     UImanager.ApplyCommand('/run/initialize')
     UImanager.ApplyCommand('/tracking/verbose 2')
