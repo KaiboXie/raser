@@ -34,3 +34,15 @@ def main(kwargs):
          from . import possion_generator
          possion_generator.main()
     
+    if label == 'GetPixelPrep':
+        from . import cflm_pixel_area
+        cflm_pixel_area.main()
+    if label == 'GetPixelCurrent':
+        from . import get_pixel_area_current
+        get_pixel_area_current.main()
+    if label == 'GetPixelEdep':
+        from . import get_pixel_area_edep
+        get_pixel_area_edep.main()
+    if label == 'GetPixelMaxCurrent':
+        from . import get_pixel_area_maxcurrent
+        get_pixel_area_maxcurrent.main()
