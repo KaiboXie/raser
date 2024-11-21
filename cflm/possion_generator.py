@@ -11,9 +11,10 @@ from gen_signal import build_device as bdv
 from elec.set_pwl_input import set_pwl_input as pwlin
 import random
 import array
+import math
 
 def main():
-    
+    '''
     random.seed(3020122)
     
     rand = ROOT.TRandom3()
@@ -109,8 +110,9 @@ def main():
         TotalHitInfo.append([pos_sel[k], mom_sel[k], energy_sel[k]])
     
     random.shuffle(TotalHitInfo)
-    
+    '''
     sampleNumber = 10
+    '''
     randomhit = random.sample(hitnumber, sampleNumber)
     
     nCount = 0
@@ -122,12 +124,13 @@ def main():
                   randomHitInfo = random.sample(TotalHitInfo, randomhit[i])
                   PossionHitFile.write(f'{randomhit[i]} {randomHitInfo} {nCount*10}\n')
              nCount+=1
-        
+       
     def worker_function_II(queue, lock, j):
         try:
             print(f"运行 loop_solver:{j}")
             result_message = "Execution completed successfully"
-            get_signal.main()
+            #get_signal.main()
+            cflm.main()
         except Exception as e:
             result_message = f"Error: {e}"
         with lock:
@@ -160,7 +163,8 @@ def main():
                             g4_dic['par_in']      = pos
                             g4_dic['par_direct']  = mom
                             g4_dic['par_energy']  = energy
-                            g4_dic['CurrentName'] = f"PossionTimeSignal_{hitTime}_tmp.root"     
+                            g4_dic['CurrentName'] = f"PossionTimeSignal_{hitTime}_tmp.root"
+                            g4_dic['PosBaseName'] = f"SecondaryParticle_{hitTime}.txt"     
                             updated_g4_dic = json.dumps(g4_dic, indent=4)
                 
                    with open('./setting/absorber/cflm.json', 'w') as file:
@@ -191,12 +195,12 @@ def main():
         with open(current_path, 'w') as file_newtxt:
             for line in new_lines:
                 file_newtxt.write(line + '\n')
-    
+    '''
     output_path = "raser/cflm/output"
     pattern = re.compile(r"PossionTimeSignal_(\d+)_tmp_pwl_current.txt")
-
+    '''
     HitNo, time_tmp, current = [], [], []
-
+    
     for filename in os.listdir(output_path):
         if pattern.match(filename):
            j = int(pattern.match(filename).group(1))
@@ -237,3 +241,28 @@ def main():
                                  'raser/cflm/output/PossionTimeSignalVoltage.pdf',
                                  1e9
                               )
+    '''
+
+    time_interval = 600
+    time_window = time_interval * sampleNumber
+    total_number_time_window = 480*1e-6/(time_window*1e-9)  # 480us / xxx ns
+    
+    nsig_time_window = 0
+   
+    for filename in os.listdir(output_path):
+        current = []
+        if pattern.match(filename):
+           with open(os.path.join(output_path, filename), 'r') as time_cuurrent_file:
+               lines = time_cuurrent_file.readlines()
+               for line in lines:
+                   current.append(float(line.split(' ')[1].strip()))
+           if  all( ele == 0 for ele in current ):
+               pass
+           else:
+               nsig_time_window+=1
+
+    N = total_number_time_window * nsig_time_window * 1.7
+    prec = 1/math.sqrt(N)
+
+    print('The precision in 1ms:', prec)
+               
