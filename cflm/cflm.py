@@ -7,10 +7,7 @@ import json
 
 #G4AnalysisManager = g4b.G4RootAnalysisManager
 
-X_position = []
-Z_position = []
-Y_position = []
-Particle = []
+X_position, Z_position,  Y_position, Particle = [], [], [], []
 
 class cflmG4Particles:
 
@@ -29,7 +26,7 @@ class cflmG4Particles:
         UImanager = g4b.G4UImanager.GetUIpointer()
 
         physicsList = g4b.FTFP_BERT()
-        physicsList.SetVerboseLevel(1)
+        physicsList.SetVerboseLevel(0)
         physicsList.RegisterPhysics(g4b.G4StepLimiterPhysics())
         runManager.SetUserInitialization(physicsList)
 
@@ -50,11 +47,10 @@ class cflmG4Particles:
         UImanager = g4b.G4UImanager.GetUIpointer()
         UImanager.ApplyCommand('/run/initialize')
 
-
         runManager.BeamOn(int(g4_dic['BeamOn']))
 
         self.p_steps=s_p_steps
-        self.init_tz_device = -31.05
+        self.init_tz_device = -31
         self.p_steps_current=[[[-single_step[1] + my_d.l_x/2,                                                                                  ### *1000: mm---->um
                                 single_step[2] - g4_dic['object']['binary_compounds']['detector']['position_z']*1000 + my_d.l_y/2,
                                 self.init_tz_device*1000 - single_step[0]]\
@@ -63,7 +59,6 @@ class cflmG4Particles:
         self.energy_steps=s_energy_steps
         self.edep_devices=s_edep_devices
         self.HitFlag = 0
-        print(self.p_steps)
         print(f'The edep of detector: {self.edep_devices[0]}')
 
         with open("raser/cflm/output/TimeSignalEdep.txt", "a") as TimeSignalEdep:
@@ -190,6 +185,7 @@ class cflmDetectorConstruction(g4b.G4VUserDetectorConstruction):
         self.logical[name].SetVisAttributes(visual)
 
     def Construct(self): 
+        self.fStepLimit.SetMaxAllowedStep(self.maxStep)       
         return self.physical['world']
 
 class cflmPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
@@ -236,17 +232,17 @@ class cflmaSteppingAction(g4b.G4UserSteppingAction):
         edep = step.GetTotalEnergyDeposit()
         point_in = step.GetPreStepPoint().GetPosition()
 
-
         if volume_pre != self.fDetConstruction.physical['detector']  and volume_post == self.fDetConstruction.physical['detector']:
             self.X_position.append(step.GetPostStepPoint().GetPosition().getX())
             self.Z_position.append(step.GetPostStepPoint().GetPosition().getZ())
             self.Y_position.append(step.GetPostStepPoint().GetPosition().getY())
             self.Particle.append(step.GetTrack().GetDefinition().GetParticleName())
-
+        
         if volume_pre == self.fDetConstruction.physical['pipe']:
             self.fEventAction.AddPipe(edep)
-
+        
         if volume_pre == self.fDetConstruction.physical['detector']:
+
             self.fEventAction.AddDetector(edep)
             self.fEventAction.RecordDetector(edep, point_in)    
 
@@ -395,6 +391,7 @@ def main():
     runManager = g4b.G4RunManagerFactory.CreateRunManager(g4b.G4RunManagerType.Serial)
     
     physicsList = g4b.FTFP_BERT()
+    physicsList.RegisterPhysics(g4b.G4StepLimiterPhysics())
     runManager.SetUserInitialization(physicsList)
 
     detConstruction = cflmDetectorConstruction(g4_dic)
@@ -420,14 +417,14 @@ def main():
          UImanager.ApplyCommand("/control/execute param_file/g4macro/init_vis.mac")
     
     UImanager.ApplyCommand('/run/initialize')
-    UImanager.ApplyCommand('/tracking/verbose 2')
+    UImanager.ApplyCommand('/tracking/verbose 0')
     
     UImanager.ApplyCommand(f"/run/beamOn {g4_dic['BeamOn']}")
     
     if g4_dic['vis']:
       
          UImanager.ApplyCommand('/vis/ogl/set/printMode vectored')
-         UImanager.ApplyCommand("/vis/viewer/set/background 0.5 0.5 0.5")
+         UImanager.ApplyCommand("/vis/viewer/set/background 0 0 0")
          UImanager.ApplyCommand('/vis/ogl/set/printSize 2000 600')#可视化打印尺寸为2000*2000
          UImanager.ApplyCommand('/vis/ogl/set/printFilename output/cflm/image.pdf')
          UImanager.ApplyCommand('/vis/ogl/export')
