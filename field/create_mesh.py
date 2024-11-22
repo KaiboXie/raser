@@ -1,7 +1,7 @@
 import os
 
 import devsim
-import matplotlib
+import matplotlib.pyplot as plt
 
 from gen_signal.build_device import Detector
 from util.output import output
@@ -122,16 +122,20 @@ class DevsimMesh():
         devsim.edge_from_node_model(device=self.device, region=self.region, node_model="Donors")
 
     def drawDoping(self, path):
-        fig1=matplotlib.pyplot.figure(num=1,figsize=(4,4))
-        x=devsim.get_node_model_values(device=self.device, region=self.region, name="x")
-        fields = ("Donors", "Acceptors")
+        if self.dimension == 1:
+            fig1=plt.figure(num=1,figsize=(4,4))
+            x=devsim.get_node_model_values(device=self.device, region=self.region, name="x")
+            fields = ("Donors", "Acceptors")
 
-        for i in fields:
-            y=devsim.get_node_model_values(device=self.device, region=self.region, name=i)
-            matplotlib.pyplot.semilogy(x, y)
-        
-        matplotlib.pyplot.xlabel('x (cm)')
-        matplotlib.pyplot.ylabel('Density (#/cm^3)')
-        matplotlib.pyplot.legend(fields)
-        matplotlib.pyplot.savefig(os.path.join(path, "Doping"))
-
+            for i in fields:
+                y=devsim.get_node_model_values(device=self.device, region=self.region, name=i)
+                plt.semilogy(x, y)
+            
+            plt.xlabel('x (cm)')
+            plt.ylabel('Density (#/cm^3)')
+            plt.legend(fields)
+            plt.savefig(os.path.join(path, "Doping"))
+        elif self.dimension == 2:
+            pass
+        elif self.dimension == 3:
+            pass

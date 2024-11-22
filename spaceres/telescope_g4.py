@@ -619,14 +619,14 @@ def main(batchMac = None):
     # Process macro or start UI session
     if ui == None:
         # batch mode
-        command = "/control/execute ./param_file/g4macro/"
+        command = "/control/execute ./setting/g4macro/"
         fileName = batchMac
         UImanager.ApplyCommand(command+fileName)
     else:
         # interactive mode
-        UImanager.ApplyCommand("/control/execute ./param_file/g4macro/init_vistelescope.mac")
+        UImanager.ApplyCommand("/control/execute ./setting/g4macro/init_vistelescope.mac")
         if ui.IsGUI():
-            UImanager.ApplyCommand("/control/execute ./param_file/g4macro/gui.mac")
+            UImanager.ApplyCommand("/control/execute ./setting/g4macro/gui.mac")
         ui.SessionStart()
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import re
 def ngspice_set_tmp_cir(input_c, det_name, ele_name, label=None):
     if label is None:
         label = ''
-    with open('./param_file/circuit/{}.cir'.format(ele_name), 'r') as f:
+    with open('./setting/electronics/{}.cir'.format(ele_name), 'r') as f:
         lines = f.readlines()
         for i in range(len(lines)):
             if lines[i].startswith('I1'):

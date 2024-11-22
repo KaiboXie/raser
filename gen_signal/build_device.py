@@ -2,15 +2,6 @@
 # -*- encoding: utf-8 -*-
 
 import json
-import os
-
-import devsim
-import matplotlib.pyplot
-import numpy as np
-
-from field import model_create
-from util.output import output
-from util.math import *
 
 class Detector:
     """
