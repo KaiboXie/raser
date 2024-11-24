@@ -37,12 +37,12 @@ def main(kwargs):
     if label == 'GetPixelPrep':
         from . import cflm_pixel_area
         cflm_pixel_area.main()
-    if label == 'GetPixelCurrent':
-        from . import get_pixel_area_current
-        get_pixel_area_current.main()
     if label == 'GetPixelEdep':
         from . import get_pixel_area_edep
         get_pixel_area_edep.main()
-    if label == 'GetPixelMaxCurrent':
-        from . import get_pixel_area_maxcurrent
-        get_pixel_area_maxcurrent.main()
+    if label == 'GetPixelSignal':
+        from . import get_pixel_area_siganl
+        get_pixel_area_siganl.main()  
+    if label == 'GetPixelMaxSignal':
+        from . import get_pixel_area_maxsignal
+        get_pixel_area_maxsignal.main()
