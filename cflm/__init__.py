@@ -33,6 +33,12 @@ def main(kwargs):
     if label == 'PoissionGen':
          from . import possion_generator
          possion_generator.main()
+    if label == 'GetSignalDsides':
+         from . import get_signal_dsides
+         get_signal_dsides.main()
+    if label == 'PoiGenDsides':
+         from . import poission_generator_dsides
+         poission_generator_dsides.main()
     
     if label == 'GetPixelPrep':
         from . import cflm_pixel_area
