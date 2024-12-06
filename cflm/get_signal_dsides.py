@@ -51,17 +51,20 @@ def main():
                  print(f"No secondary particles hit the detector{i}")
               else: 
                  my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+                 if 'ngspice' in amplifier:
+                      save_current(my_current, g4_dic, det_dic['read_out_contact'], i)
+                      pwlin(f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}_Current_{i}.txt", 'raser/cflm/ucsc.cir', f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}_Voltage_{i}.raw", 'raser/cflm/output/dSides/')
+                      subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/dSides/ucsc_tmp.cir"], shell=True)
            if i == 'II':
               hit_flag = my_g4p.HitFlagII
               if hit_flag == 0:
                   print(f"No secondary particles hit the detector{i}")
               else: 
                   my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-
-           if 'ngspice' in amplifier:
-               save_current(my_current, g4_dic, det_dic['read_out_contact'], i)
-               pwlin(f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}Current_{i}.txt", 'raser/cflm/ucsc.cir', f'raser/cflm/output/dSides/dSidesVoltage_{i}.raw', 'raser/cflm/output/dSides/')
-               subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/dSides/ucsc_tmp.cir"], shell=True)
+                  if 'ngspice' in amplifier:
+                      save_current(my_current, g4_dic, det_dic['read_out_contact'], i)
+                      pwlin(f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}_Current_{i}.txt", 'raser/cflm/ucsc.cir', f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}_Voltage_{i}.raw", 'raser/cflm/output/dSides/')
+                      subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/dSides/ucsc_tmp.cir"], shell=True)
         
        except Exception as e:
            result_message = f"Error: {e}"
@@ -83,20 +86,21 @@ def main():
                 print("警告: worker_function 返回了 None,可能发生了错误!")
         
         time_signal.TimeSignalPlot(
-                                    f'raser/cflm/output/dSides/PossionTimeSignal_dSidesCurrent_{i}.txt',
-                                    f'raser/cflm/output/dSides/dSidesVoltage_{i}.raw',
-                                    f'raser/cflm/output/dSides/PossionTimeSignal_dSidesCurrent_{i}.pdf',
-                                    f'raser/cflm/output/dSides/dSidesVoltage_{i}.pdf',
+                                    f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}_Current_{i}.txt",
+                                    f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}_Voltage_{i}.txt",
+                                    f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}_Current_{i}.pdf",
+                                    f"raser/cflm/output/dSides/{g4_dic['CurrentName'].split('.')[0]}_Voltage_{i}.pdf",
                                     1e9,
                                     10,
                                     800,
                                     600
                                   )
-
+        
 def save_current(my_current, g4_dic, read_ele_num, k):
 
     time = array.array('d', [999.])
     current = array.array('d', [999.])
+    print(os.path.join("raser/cflm/output/dSides/", g4_dic['CurrentName'].split('.')[0])  + ".root")
     fout = ROOT.TFile(os.path.join("raser/cflm/output/dSides/", g4_dic['CurrentName'].split('.')[0])  + ".root", "RECREATE")
     t_out = ROOT.TTree("tree", "signal")
     t_out.Branch("time", time, "time/D")
@@ -112,7 +116,7 @@ def save_current(my_current, g4_dic, read_ele_num, k):
     file = ROOT.TFile(os.path.join("raser/cflm/output/dSides", g4_dic['CurrentName'].split('.')[0])  + ".root", "READ")
     tree = file.Get("tree")
 
-    pwl_file = open(os.path.join("raser/cflm/output/dSides", f"{g4_dic['CurrentName'].split('.')[0]}Current_{k}.txt"), "w")
+    pwl_file = open(os.path.join("raser/cflm/output/dSides", f"{g4_dic['CurrentName'].split('.')[0]}_Current_{k}.txt"), "w")
 
     for i in range(tree.GetEntries()):
        tree.GetEntry(i)
