@@ -20,7 +20,7 @@ class CarrierListFromG4P:
         elif (material == "Si"):
             self.energy_loss = 3.6 #ev
 
-        if batch == 0 and my_g4p.geant4_model == "time_resolution":
+        if batch == 0 and (my_g4p.geant4_model == "time_resolution" or my_g4p.geant4_model == "bmos"):
             total_step=0
             particle_number=0
             for p_step in my_g4p.p_steps_current:   # selecting particle with long enough track

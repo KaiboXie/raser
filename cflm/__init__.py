@@ -17,10 +17,32 @@ def main(kwargs):
         cflm.main()
     if label == 'GetSignal':
         from . import get_signal
-        get_signal.get_signal()
+        get_signal.main()
     if label == 'GetVolCur':
-        from . import cflm_Volt_Curr
-        cflm_Volt_Curr.getVolCur()
+        from . import volt_current
+        volt_current.main()
     if label == 'GetEdep':
         from . import energy_deposition
-        energy_deposition.getedep()
+        energy_deposition.main()
+    if label == 'RootPlot_1D':
+        from . import sparticles_plot_1d
+        sparticles_plot_1d.main()
+    if label == 'GetTimeSignal':
+        from . import time_signal
+        time_signal.main()
+    if label == 'PoissionGen':
+         from . import possion_generator
+         possion_generator.main()
+    
+    if label == 'GetPixelPrep':
+        from . import cflm_pixel_area
+        cflm_pixel_area.main()
+    if label == 'GetPixelEdep':
+        from . import get_pixel_area_edep
+        get_pixel_area_edep.main()
+    if label == 'GetPixelSignal':
+        from . import get_pixel_area_siganl
+        get_pixel_area_siganl.main()  
+    if label == 'GetPixelMaxSignal':
+        from . import get_pixel_area_maxsignal
+        get_pixel_area_maxsignal.main()

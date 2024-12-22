@@ -36,7 +36,7 @@ def read_file_current(file_path,file_name):
     return time_c, curr
 
 
-def getVolCur():
+def main():
     file_path = './raser/cflm/output'
     
     geant4_json = "./setting/absorber/cflm.json"

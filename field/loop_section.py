@@ -8,7 +8,6 @@ import devsim
 import numpy as np
 
 from . import initial
-from . import restart
 from . import physics_drift_diffusion
 from .create_parameter import delete_init
 from util.output import output
@@ -56,7 +55,13 @@ class loop_section():
     def loop_solver(self, circuit_contact, v_current, area_factor):
         self.voltage.append(v_current)
         devsim.set_parameter(device=self.device, name=physics_drift_diffusion.GetContactBiasName(circuit_contact), value=v_current)
-        devsim.solve(type="dc", absolute_error=self.paras['absolute_error_VoltageSteps'], relative_error=self.paras['relative_error_VoltageSteps'], maximum_iterations=self.paras['maximum_iterations_VoltageSteps'])
+        try:
+            devsim.solve(type="dc", absolute_error=self.paras['absolute_error_VoltageSteps'], relative_error=self.paras['relative_error_VoltageSteps'], maximum_iterations=self.paras['maximum_iterations_VoltageSteps'])
+        except devsim.error as msg:
+            path = output(__file__, self.device)
+            devsim.write_devices(file=os.path.join(path, "last_solvable.dd"), type="tecplot")
+            raise
+        
         if self.solve_model !="wf":     
             physics_drift_diffusion.PrintCurrents(device=self.device, contact=circuit_contact)
             electron_current = devsim.get_contact_current(device=self.device, contact=circuit_contact, equation="ElectronContinuityEquation")

@@ -47,7 +47,7 @@ class SiITk:
             visManager = g4b.G4VisExecutive()
             visManager.Initialize()
             UImanager = g4b.G4UImanager.GetUIpointer()
-            UImanager.ApplyCommand('/control/execute param_file/g4macro/init_vis.mac')
+            UImanager.ApplyCommand('/control/execute setting/g4macro/init_vis.mac')
         else:
             UImanager = g4b.G4UImanager.GetUIpointer()
             UImanager.ApplyCommand('/run/initialize')

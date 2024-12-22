@@ -1,15 +1,11 @@
-#!/usr/bin/env python3
-# -*- encoding: utf-8 -*-
-
-import sys
 import os
 import array
 import time
-import subprocess
+import multiprocessing
 import ROOT
 
 from gen_signal import build_device as bdv
-from . import cflm
+from . import cflm_pixel_area
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec.set_pwl_input import set_pwl_input as pwlin
@@ -18,11 +14,8 @@ from util.output import output
 
 import json
 
-import re
-import numpy
-
 def main():
-
+    
     geant4_json = "./setting/absorber/cflm.json"
     with open(geant4_json) as f:
          g4_dic = json.load(f)
@@ -40,28 +33,51 @@ def main():
 
     print(my_d.device)
     print(voltage)
-    
+
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, det_dic['read_out_contact'], 0)
 
-    my_g4p = cflm.cflmG4Particles(my_d)
+    def worker_function(queue, lock, i, j):
+       
+       try:
+           result_message = "Execution completed successfully"
+           print('DetectorID(Y,Z):       ', (i, j))
+           my_g4p = cflm_pixel_area.cflmDevidedG4Particles(my_d, i, j)
 
-    if my_g4p.HitFlag == 0:
-       print("No secondary particles hit the detector")
-    else:
-        my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-
-        if 'ngspice' in amplifier:
-            save_current(my_current, g4_dic, det_dic['read_out_contact'])
-
-            pwlin(f"raser/cflm/output/{g4_dic['CurrentName'].split('.')[0]}_pwl_current.txt", 'raser/cflm/ucsc.cir', 'raser/cflm/output/')
-            subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/ucsc_tmp.cir"], shell=True)
-        
+           if my_g4p.HitFlag == 0:
+               print("No secondary particles hit the detector")
+           else:
+                my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+                if 'ngspice' in amplifier:
+                    save_current(my_current, g4_dic, det_dic['read_out_contact'], i, j)
+       except Exception as e:
+           result_message = f"Error: {e}"
+       with lock:
+           queue.put(result_message)
+  
+    lock = multiprocessing.Lock()
+    queue = multiprocessing.Queue()
+    
+    dividedAreaZIndex = []
+    for k in range(40):
+        dividedAreaZIndex.append(k)
+    dividedAreaYIndex = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]
+    
+    for i in dividedAreaYIndex:  
+        for j in dividedAreaZIndex:
+            p = multiprocessing.Process(target=worker_function, args=(queue, lock, i, j))
+            p.start()
+            p.join()
+            while not queue.empty():
+                output_info = queue.get() 
+                print("队列输出:", output_info)
+                if output_info is None:
+                    print("警告: worker_function 返回了 None,可能发生了错误!")   
     del my_f
     end = time.time()
     print("total_time:%s"%(end-start))
     
-def save_current(my_current, g4_dic, read_ele_num):
-
+def save_current(my_current, g4_dic, read_ele_num, p, q):
+ 
     time = array.array('d', [999.])
     current = array.array('d', [999.])
     fout = ROOT.TFile(os.path.join("raser/cflm/output/", g4_dic['CurrentName'].split('.')[0])  + ".root", "RECREATE")
@@ -79,7 +95,7 @@ def save_current(my_current, g4_dic, read_ele_num):
     file = ROOT.TFile(os.path.join("raser/cflm/output/", g4_dic['CurrentName'].split('.')[0])  + ".root", "READ")
     tree = file.Get("tree")
 
-    pwl_file = open(os.path.join("raser/cflm/output/", f"{g4_dic['CurrentName'].split('.')[0]}_pwl_current.txt"), "w")
+    pwl_file = open(f"raser/cflm/output/pixelArea/DevidedAreaCurrent_{p}_{q}.txt", "w")
 
     for i in range(tree.GetEntries()):
        tree.GetEntry(i)
