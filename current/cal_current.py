@@ -21,6 +21,7 @@ from .model import Material
 from particle.carrier_list import CarrierListFromG4P
 from util.math import Vector, signal_convolution
 from util.output import output
+import csv
 
 t_bin = 50e-12
 # resolution of oscilloscope
@@ -322,6 +323,12 @@ class CalCurrentGain(CalCurrent):
         cal_coefficient = Material(my_d.material).cal_coefficient
         gain_rate = self.gain_rate(my_d,my_f,cal_coefficient)
         print("gain_rate="+str(gain_rate))
+        path = output(__file__, my_d.det_name)
+        f_gain_rate = open(path+'/votage-gain_rate.csv', "a")
+        writer_gain_rate = csv.writer(f_gain_rate)
+        writer_gain_rate.writerow([str(my_f.voltage),str(gain_rate)])
+        with open(path+'/Votage-gain_rate.txt', 'a') as file:
+            file.write(str(my_f.voltage)+' -- '+str(gain_rate)+ '\n')
         # assuming gain layer at d>0
         if my_d.voltage<0 : # p layer at d=0, holes multiplicated into electrons
             for hole in my_current.holes:
@@ -445,6 +452,11 @@ class CalCurrentG4P(CalCurrent):
         G4P_carrier_list = CarrierListFromG4P(my_d.material, my_g4p, batch)
         super().__init__(my_d, my_f, G4P_carrier_list.ionized_pairs, G4P_carrier_list.track_position)
 
+class CalCurrentStrip(CalCurrent):
+    def __init__(self, my_d, my_f, my_g4p, batch):
+        G4P_carrier_list = StripCarrierListFromG4P(my_d.material, my_g4p, batch)
+        self.read_ele_num = my_f.read_ele_num
+        super().__init__(my_d, my_f, G4P_carrier_list.ionized_pairs, G4P_carrier_list.track_position)
 
 
 class CalCurrentLaser(CalCurrent):
@@ -483,3 +495,63 @@ class CalCurrentLaser(CalCurrent):
             self.gain_negative_cu[i] = convolved_gain_negative_cu
             self.sum_cu[i] = convolved_sum_cu
 
+class StripCarrierListFromG4P:
+    def __init__(self, material, my_g4p, batch):
+        if (material == "SiC"):
+            self.energy_loss = 8.4 #ev
+        elif (material == "Si"):
+            self.energy_loss = 3.6 #ev
+
+        if batch == 0:
+            h1 = ROOT.TH1F("Edep_device", "Energy deposition in Detector", 100, 0, max(my_g4p.edep_devices)*1.1)
+            for i in range (len(my_g4p.edep_devices)):
+                h1.Fill(my_g4p.edep_devices[i])
+            max_event_bin=h1.GetMaximumBin()
+            bin_wide=max(my_g4p.edep_devices)*1.1/100
+            for j in range (len(my_g4p.edep_devices)):
+                #compare to experimental data
+                if (my_g4p.edep_devices[j]<0.084 and my_g4p.edep_devices[j]>0.083):
+                    try_p=1
+                    for single_step in my_g4p.p_steps_current[j]:
+                        if abs(single_step[0]-my_g4p.p_steps_current[j][0][0])>5:
+                            try_p=0
+                    if try_p==1:
+                        self.batch_def(my_g4p,j)
+                        batch = 1
+                        break
+
+            if batch == 0:
+                print("the sensor didn't have particles hitted")
+                raise ValueError
+        else:
+            self.batch_def(my_g4p,batch)
+
+    def batch_def(self,my_g4p,j):
+        self.beam_number = j
+        self.track_position = [[single_step[0],single_step[1],single_step[2],1e-9] for single_step in my_g4p.p_steps_current[j]]
+        self.tracks_step = my_g4p.energy_steps[j]
+        self.tracks_t_energy_deposition = my_g4p.edep_devices[j] #为什么不使用？
+        self.ionized_pairs = [step*1e6/self.energy_loss for step in self.tracks_step]
+
+# TODO: change this to a method of CalCurrent
+def save_current(my_d,my_l,my_current,my_f,key):
+    if "planar3D" in my_d.det_model or "planarRing" in my_d.det_model:
+        path = os.path.join('output', 'pintct', my_d.det_name, )
+    elif "lgad3D" in my_d.det_model:
+        path = os.path.join('output', 'lgadtct', my_d.det_name, )
+    create_path(path) 
+    L = eval("my_l.{}".format(key))
+    #L is defined by different keys
+    time = array('d', [999.])
+    current = array('d', [999.])
+    fout = ROOT.TFile(os.path.join(path, "sim-TCT-current") + str(L) + ".root", "RECREATE")
+    t_out = ROOT.TTree("tree", "signal")
+    t_out.Branch("time", time, "time/D")
+    for i in range(my_f.read_ele_num):
+        t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
+        for j in range(my_current.n_bin):
+            current[0]=my_current.sum_cu[i].GetBinContent(j)
+            time[0]=j*my_current.t_bin
+            t_out.Fill()
+        t_out.Write()
+        fout.Close()

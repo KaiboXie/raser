@@ -28,15 +28,15 @@ noise = []
 
 paras = {
     "absolute_error_Initial" : 1e10, 
-    "relative_error_Initial" : 1e-10, 
+    "relative_error_Initial" : 1e-4, 
     "maximum_iterations_Initial" : 1000,
 
     "absolute_error_DriftDiffusion" : 1e10, 
-    "relative_error_DriftDiffusion" : 1e-10, 
+    "relative_error_DriftDiffusion" : 1e-4, 
     "maximum_iterations_DriftDiffusion" : 1000,
 
     "absolute_error_VoltageSteps" : 1e10, 
-    "relative_error_VoltageSteps" : 1e-10, 
+    "relative_error_VoltageSteps" : 1e-3, 
     "maximum_iterations_VoltageSteps" : 1000,
 
     "milestone_mode" : True,

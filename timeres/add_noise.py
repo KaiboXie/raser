@@ -21,7 +21,9 @@ ROOT.gROOT.SetBatch(True)
 from util.output import output
 
 noise_avg = -0.001
-noise_rms = 0.01
+noise_rms_c = 0.0005
+noise_rms_a = 0.03
+# noise_rms = c+a*幅值最大值
 
 # ROOT file parameters difinition
 Events=array('i',[0])
@@ -170,12 +172,21 @@ class AddNoise:
         """
         ROOT.gRandom.SetSeed(0)
         random_gauss = ROOT.gRandom.Gaus
+        ampl_signal_list = []
         for j in range (0,len(list_c)):
-            time= float(list(filter(None,list_c[j].split(",")))[0])
-            # noise_height=random_gauss(noise_avg,noise_rms)
-            noise_height=0
-            ampl_nps=-float(list(filter(None,list_c[j].split(",")))[1])+noise_height
-            ampl_s=-float(list(filter(None,list_c[j].split(",")))[1])
+            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[0]))
+            ampl_signal_list.append(ampl_s)
+        max_signal_height=max(ampl_signal_list)
+        noise_rms = noise_rms_c + noise_rms_a*max_signal_height
+        # noise_rms = noise_rms_a*max_signal_height
+        # noise_rms = noise_rms_c
+        print(noise_rms)
+        for j in range (0,len(list_c)):
+            time= float(list(filter(None,list_c[j].split(",")))[1])
+            noise_height=random_gauss(noise_avg,noise_rms)
+            # noise_height=0
+            ampl_nps=abs(float(list(filter(None,list_c[j].split(",")))[0]))+noise_height
+            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[0]))
             self.time_list.append(time)
             self.noise_height_list.append(noise_height)
             self.ampl_nps_list.append(ampl_nps)
@@ -753,25 +764,47 @@ def save_gain_efficiency(input_file, max_voltage, error_max_voltage, current_int
 # Loop and add noise in the raser
 def loop_addNoise(input_file,rset,tree_class):
     for root,dirs,files in os.walk(input_file):
-        for file in files:    
-            if rset.effective_event_number<100000:    
-                print("................events:%s..............."%(Events[0])) 
-                print("................Save events:%s..............."%rset.effective_event_number)
-                path = os.path.join(input_file, file)
-                Events[0]+=1
+        for file in files:
+            if 'strip' in input_file:
+                if ('.csv' in file) and ('No_1' in file):
+                    if rset.effective_event_number<100000:    
+                        print("................events:%s..............."%(Events[0])) 
+                        print("................Save events:%s..............."%rset.effective_event_number)
+                        path = os.path.join(input_file, file)
+                        Events[0]+=1
 
-                addNoise = AddNoise() 
-                rset.write_list(path,addNoise.list_c)
-                if len(addNoise.list_c)>5:
-                    addNoise.add_n(addNoise.list_c)
-                    judge_threshold(addNoise,rset,tree_class) 
-                    tree_class.fill_vector(rset,addNoise) 
-                    #if addNoise.CFD_time_r>0:      
-                    tree_class.tree_out.Fill()
-                    rset.effective_event_number += 1
-                    tree_class.init_parameter()
+                        addNoise = AddNoise() 
+                        rset.write_list(path,addNoise.list_c)
+                        if len(addNoise.list_c)>5:
+                            addNoise.add_n(addNoise.list_c)
+                            judge_threshold(addNoise,rset,tree_class) 
+                            tree_class.fill_vector(rset,addNoise) 
+                            #if addNoise.CFD_time_r>0:      
+                            tree_class.tree_out.Fill()
+                            rset.effective_event_number += 1
+                            tree_class.init_parameter()
+                    else:
+                        break
             else:
-                break
+                if ('.csv' in file):
+                    if rset.effective_event_number<100000:    
+                        print("................events:%s..............."%(Events[0])) 
+                        print("................Save events:%s..............."%rset.effective_event_number)
+                        path = os.path.join(input_file, file)
+                        Events[0]+=1
+
+                        addNoise = AddNoise() 
+                        rset.write_list(path,addNoise.list_c)
+                        if len(addNoise.list_c)>5:
+                            addNoise.add_n(addNoise.list_c)
+                            judge_threshold(addNoise,rset,tree_class) 
+                            tree_class.fill_vector(rset,addNoise) 
+                            #if addNoise.CFD_time_r>0:      
+                            tree_class.tree_out.Fill()
+                            rset.effective_event_number += 1
+                            tree_class.init_parameter()
+                    else:
+                        break
     efficiency = rset.effective_event_number / Events[0]
     return efficiency
 
@@ -780,7 +813,8 @@ def main(kwargs):
     # Outfilename and init_parameter
     rset = NoiseSetting()
     output_path = output(__file__, model)
-    input_file = "output/gen_signal/" + model + "/batch"
+    # input_file = "output/gen_signal/" + model + "/batch"
+    input_file = "output/tct/" + model + "/top_TCT"
     # Root defined
     out_root_f=ROOT.TFile(output_path+"/out.root","RECREATE")
     tree_class=RootFile()
