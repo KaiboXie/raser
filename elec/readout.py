@@ -10,6 +10,7 @@ Description:
 '''
 
 import math
+import csv
 import json
 from array import array
 import os
@@ -209,8 +210,8 @@ class Amplifier:
         if key == None:
             key = ""
         for j in range(self.read_ele_num):
-            volt = array('d', [999.])
-            time = array('d', [999.])
+            volt = array('d', [0.])
+            time = array('d', [0.])
             if self.read_ele_num==1:
                 fout = ROOT.TFile(os.path.join(path, "amplified-current") + str(key) + ".root", "RECREATE")
             else:
@@ -224,6 +225,32 @@ class Amplifier:
                 t_out.Fill()
             t_out.Write()
             fout.Close()
+        for j in range(self.read_ele_num):
+            if self.read_ele_num==1:
+                # 打开 ROOT 文件
+                root_file = ROOT.TFile(os.path.join(path, "amplified-current") + str(key) + ".root", "READ")
+                # 创建 CSV 文件名
+                csv_file_name = os.path.join(path, "amplified-current") + str(key) + ".csv"
+            else:
+                # 打开 ROOT 文件
+                root_file = ROOT.TFile(os.path.join(path, "amplified-current") + str(key)+"No_"+str(j)+".root", "READ")
+                # 创建 CSV 文件名
+                csv_file_name = os.path.join(path, "amplified-current") + str(key)+"No_"+str(j) + ".csv"
+            # 获取 ROOT 文件中的 TTree
+            tree = root_file.Get("tree")
+            if tree:
+                print(tree)
+                print(tree.GetListOfBranches())
+            # 打开 CSV 文件，使用 'w' 模式表示写入
+            with open(csv_file_name, mode='w', newline='') as file:
+                writer = csv.writer(file)  # 创建 CSV writer 对象
+                # 写入 CSV 文件的表头（字段名）
+                header = [branch.GetName() for branch in tree.GetListOfBranches()]
+                writer.writerow(header)
+                # 遍历 TTree 中的数据，将数据写入 CSV 文件
+                for event in tree:
+                    data = [event.GetLeaf(branch.GetName()).GetValue() for branch in tree.GetListOfBranches()]
+                    writer.writerow(data)
 
 def main(label):
     '''main function for readout.py to test the output of the given amplifier'''

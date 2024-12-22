@@ -116,7 +116,8 @@ def draw_noise(device,V,noise,path):
 
 def draw_cv(device,V,C,path):
     fig3=matplotlib.pyplot.figure(num=4,figsize=(4,4))
-    matplotlib.pyplot.plot(V, C)
+    # matplotlib.pyplot.plot(V, C)
+    matplotlib.pyplot.semilogy(V, C,'.')
     matplotlib.pyplot.xlabel('Voltage (V)')
     matplotlib.pyplot.ylabel('Capacitance (pF)')
     #matplotlib.pyplot.axis([-200, 0, 0, 20])
@@ -250,16 +251,39 @@ def draw1D(x,y,title,xtitle,ytitle,v,path):
     canvas.SaveAs(os.path.join(path, title+"{}_1d.png".format(v)))
 
 def draw2D(x,y,value,title,v,path):
+    # graph = ROOT.TGraph2D()
+    # for i in range(len(x)):
+    #     graph.SetPoint(i, y[i]*1e4, x[i]*1e4, value[i]) 
+    # canvas = ROOT.TCanvas("canvas", title, 1700, 1000)
+    # graph.Draw("CONT4Z")
+    # canvas.Draw()
+    # graph.GetXaxis().SetTitle("x [um]")
+    # graph.GetYaxis().SetTitle("z [um]")
+    
+    # graph.SetTitle(title)
+    # canvas.SaveAs(os.path.join(path, title+"{}_2d.png".format(v)))
+    # canvas.SaveAs(os.path.join(path, title+"{}_2d.root".format(v)))
     graph = ROOT.TGraph2D()
+    graph_1d = ROOT.TGraph()
+    j = 0
     for i in range(len(x)):
         graph.SetPoint(i, y[i]*1e4, x[i]*1e4, value[i]) 
+        if abs(y[i]*1e4 - 100.0) < 0.1 :
+            graph_1d.SetPoint(j, x[i]*1e4,v-value[i])
+            j=j+1
     canvas = ROOT.TCanvas("canvas", title, 1700, 1000)
     graph.Draw("CONT4Z")
     canvas.Draw()
     graph.GetXaxis().SetTitle("x [um]")
     graph.GetYaxis().SetTitle("z [um]")
-    
     graph.SetTitle(title)
     canvas.SaveAs(os.path.join(path, title+"{}_2d.png".format(v)))
     canvas.SaveAs(os.path.join(path, title+"{}_2d.root".format(v)))
 
+    canvas1 = ROOT.TCanvas("canvas1", title, 1700, 1000)
+    graph_1d.Draw("AL")
+    canvas1.Draw()
+    graph_1d.GetXaxis().SetTitle("z [um]")
+    graph_1d.GetYaxis().SetTitle("Potential")
+    canvas1.SaveAs(os.path.join(path, title+"{}_1d.png".format(v)))
+    canvas1.SaveAs(os.path.join(path, title+"{}_1d.root".format(v)))
