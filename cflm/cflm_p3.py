@@ -6,14 +6,12 @@ import ROOT
 import geant4_pybind as g4b
 import json
 
-dividedAreaZIndex = []
-for i in range(40):
-    dividedAreaZIndex.append(i)
-dividedAreaYIndex = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]
+pixelZIndex = []
+for i in range(30):
+    pixelZIndex.append(i)
+pixelYIndex = [-3, -2, -1, 0, 1, 2]
 
-X_position, Z_position,  Y_position, Particle = [], [], [], []
-
-class cflmDevidedG4Particles:
+class cflmPixelG4Particles:
 
     def __init__(self, my_d, i, j):
 
@@ -25,16 +23,16 @@ class cflmDevidedG4Particles:
 
         self.geant4_model = "cflm"
 
-        for m in dividedAreaYIndex:
-            for n in dividedAreaZIndex:
+        for m in pixelYIndex:
+            for n in pixelZIndex:
                 s_eventIDs[f'{m}_{n}'] = []
                 s_edep_devices[f'{m}_{n}'] = []
                 s_p_steps[f'{m}_{n}'] = []
                 s_energy_steps[f'{m}_{n}'] = []
         
-        json_s_p_steps_path = 'raser/cflm/output/pixelArea/s_p_steps.json'
-        json_s_energy_steps_path = 'raser/cflm/output/pixelArea/s_energy_steps.json'
-        json_s_edep_devices_path = 'raser/cflm/output/pixelArea/s_edep_devices.json'
+        json_s_p_steps_path = 'raser/cflm/output/p3/s_p_steps.json'
+        json_s_energy_steps_path = 'raser/cflm/output/p3/s_energy_steps.json'
+        json_s_edep_devices_path = 'raser/cflm/output/p3/s_edep_devices.json'
                                         
         if os.path.exists(json_s_p_steps_path) and os.path.exists(json_s_energy_steps_path) and os.path.exists(json_s_edep_devices_path):
 
@@ -60,17 +58,13 @@ class cflmDevidedG4Particles:
                                    my_d.l_y/2 + single_step[2] - z_position*1000,
                                    self.init_tz_device*1000 - single_step[0]]\
                 for single_step in p_step] for p_step in self.p_steps]
-           
-           print(len(self.p_steps_current[0]))
-           print(len(self.energy_steps[0]))
-           print(self.edep_devices)
 
            self.HitFlag = 0
         
            if len(self.p_steps[0]) != 1:
               self.HitFlag = 1
         else:
-           geant4_json = "./setting/absorber/cflm.json"
+           geant4_json = "./setting/absorber/cflm_p3.json"
            with open(geant4_json) as f:
                 g4_dic = json.load(f)
 
@@ -93,8 +87,7 @@ class cflmDevidedG4Particles:
                                                             g4_dic['par_direct'],
                                                             g4_dic['par_type'],
                                                             g4_dic['par_energy'],
-                                                            g4_dic['NumofGun'],
-                                                            g4_dic['PosBaseName']
+                                                            g4_dic['NumofGun']
                                                             )
            runManager.SetUserInitialization(actionInitialization)
             
@@ -144,8 +137,8 @@ class cflmDetectorConstruction(g4b.G4VUserDetectorConstruction):
 
         self.fStepLimit = g4b.G4UserLimits(self.maxStep)
         
-        for i in dividedAreaYIndex:  
-            for j in dividedAreaZIndex:
+        for i in pixelYIndex:  
+            for j in pixelZIndex:
                 self.logical[f'detector_{i}_{j}'].SetUserLimits(self.fStepLimit)
 
     def create_world(self,world_type):
@@ -203,8 +196,8 @@ class cflmDetectorConstruction(g4b.G4VUserDetectorConstruction):
             self.logical['pipe'].SetVisAttributes(visual)                                                                                                                                  
     
     def SiCdetector(self, object):
-        for i in dividedAreaYIndex: 
-            for j in dividedAreaZIndex:
+        for i in pixelYIndex: 
+            for j in pixelZIndex:
                 name = f"detector_{i}_{j}"
                 if i>=0:
                     y_position = (i * 5 + 2.5) * g4b.mm
@@ -278,31 +271,21 @@ class cflmPrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
 
 class cflmaSteppingAction(g4b.G4UserSteppingAction):
 
-    def __init__(self, detectorConstruction, eventAction, X_position, Z_position, Y_position, Particle):
+    def __init__(self, detectorConstruction, eventAction):
         super().__init__()
         self.fDetConstruction = detectorConstruction
         self.fEventAction = eventAction
-        self.X_position = X_position
-        self.Z_position = Z_position
-        self.Y_position = Y_position
-        self.Particle = Particle
 
     def UserSteppingAction(self, step):
         volume_pre = step.GetPreStepPoint().GetTouchable().GetVolume()
-        volume_post = step.GetPostStepPoint().GetTouchable().GetVolume()
         edep = step.GetTotalEnergyDeposit()
         point_in = step.GetPreStepPoint().GetPosition()
 
         if volume_pre == self.fDetConstruction.physical['pipe']:
             self.fEventAction.AddPipe(edep)
         
-        for i in dividedAreaYIndex:
-            for j in dividedAreaZIndex:
-                if volume_pre != self.fDetConstruction.physical[f'detector_{i}_{j}']  and volume_post == self.fDetConstruction.physical[f'detector_{i}_{j}']:
-                    self.X_position.append(step.GetPostStepPoint().GetPosition().getX())
-                    self.Z_position.append(step.GetPostStepPoint().GetPosition().getZ())
-                    self.Y_position.append(step.GetPostStepPoint().GetPosition().getY())
-                    self.Particle.append(step.GetTrack().GetDefinition().GetParticleName())
+        for i in pixelYIndex:
+            for j in pixelZIndex:
                 if volume_pre == self.fDetConstruction.physical[f'detector_{i}_{j}']:
                     self.fEventAction.RecordDetector(edep, point_in, i, j) 
 
@@ -312,27 +295,27 @@ class cflmaEventAction(g4b.G4UserEventAction):
         self.edepSingleArea = {}
         self.p_stepSingleArea = {}
         self.edepStepSingleArea = {}
-        for m in dividedAreaYIndex:
-            for n in dividedAreaZIndex:
+        for m in pixelYIndex:
+            for n in pixelZIndex:
                 self.edepSingleArea[f'{m}_{n}'] = 0
                 self.p_stepSingleArea[f'{m}_{n}'] = []
                 self.edepStepSingleArea[f'{m}_{n}'] = []
         self.totalSingleEdep = 0
         self.fEnergyPipe = 0       
-        self.dividedAreaIndex = []
+        self.pixelIndex = []
 
     def EndOfEventAction(self, event):
         
         eventID = event.GetEventID()  
-        for i in dividedAreaYIndex:
-            for j in dividedAreaZIndex:
+        for i in pixelYIndex:
+            for j in pixelZIndex:
                 save_geant4_events(eventID, self.edepSingleArea[f'{i}_{j}'], self.p_stepSingleArea[f'{i}_{j}'], self.edepStepSingleArea[f'{i}_{j}'], i, j)
         printModulo = g4b.G4RunManager.GetRunManager().GetPrintProgress()
         if printModulo > 0 and eventID % printModulo == 0:
             print("---> End of event:", eventID)
             print("Pipe: total energy:", g4b.G4BestUnit(self.fEnergyPipe, "Energy"))
-            for i in dividedAreaYIndex:
-                for j in dividedAreaZIndex:
+            for i in pixelYIndex:
+                for j in pixelZIndex:
                     detectorID.append([i, j])
                     singleAreaEdep.append(self.edepSingleArea[f'{i}_{j}'])
                     self.totalSingleEdep += self.edepSingleArea[f'{i}_{j}']
@@ -351,10 +334,9 @@ class cflmaEventAction(g4b.G4UserEventAction):
         
 class cflmRunAction(g4b.G4UserRunAction):
 
-    def __init__(self, PosBaseName):
+    def __init__(self):
         super().__init__()
 
-        self.PosBaseName = PosBaseName
         g4b.G4RunManager.GetRunManager().SetPrintProgress(1)
 
         analysisManager = g4b.G4AnalysisManager.Instance()
@@ -374,16 +356,11 @@ class cflmRunAction(g4b.G4UserRunAction):
         else:
             print("End of run for the local thread \n")
 
-        PosName = f"raser/cflm/output/pixelArea/{self.PosBaseName}"
-        with open(PosName, 'w') as file:  
-             for i in range(len(Particle)):
-                file.write(f"{Particle[i]} {X_position[i]} {Z_position[i]} {Y_position[i]}\n")
-
-        dividedAreaEdep(detectorID, singleAreaEdep)
+        pixelAreaEdep(detectorID, singleAreaEdep)
 
 class cflmaActionInitialization(g4b.G4VUserActionInitialization):
 
-    def __init__(self, detConstruction, par_in, par_direct, par_type, par_energy, numofgun, PosBaseName):
+    def __init__(self, detConstruction, par_in, par_direct, par_type, par_energy, numofgun):
         super().__init__()
         self.fDetConstruction = detConstruction
         self.par_in = par_in
@@ -391,21 +368,19 @@ class cflmaActionInitialization(g4b.G4VUserActionInitialization):
         self.par_type=par_type
         self.par_energy=par_energy
         self.numofgun = numofgun
-        self.PosBaseName = PosBaseName
 
     def BuildForMaster(self):
         self.SetUserAction(cflmRunAction(self.PosBaseName))
-
     def Build(self):
         self.SetUserAction(cflmPrimaryGeneratorAction(self.par_in,
                                                       self.par_direct,
                                                       self.par_type,
                                                       self.par_energy,
                                                       self.numofgun))
-        self.SetUserAction(cflmRunAction(self.PosBaseName))
+        self.SetUserAction(cflmRunAction())
         eventAction = cflmaEventAction()
         self.SetUserAction(eventAction)
-        self.SetUserAction(cflmaSteppingAction(self.fDetConstruction, eventAction, X_position, Z_position, Y_position, Particle))
+        self.SetUserAction(cflmaSteppingAction(self.fDetConstruction, eventAction))
 
 def save_geant4_events(eventID,edep_device,p_step,energy_step, i, j):
     key = f'{i}_{j}'
@@ -420,11 +395,11 @@ def save_geant4_events(eventID,edep_device,p_step,energy_step, i, j):
         s_p_steps[key].append([[0,0,0]])
         s_energy_steps[key].append([0]) 
 
-def dividedAreaEdep(detectorID, singleAreaEdep): 
+def pixelAreaEdep(detectorID, singleAreaEdep): 
    
     i_value, j_value, valueEdep = array.array('d',[999.]), array.array('d',[999.]), array.array('d',[999.])
     
-    file = ROOT.TFile("raser/cflm/output/pixelArea/dividedAreaEdep.root", "RECREATE")
+    file = ROOT.TFile("raser/cflm/output/p3/pixelAreaEdep.root", "RECREATE")
     tree = ROOT.TTree("DetectorID", "DetectorID")
 
     tree.Branch("i", i_value, 'i/D')
@@ -447,10 +422,10 @@ def SaveJson(dic, dicFile):
     print(f'{dicFile} has been created successfully!')
 
 def main():
-
+   
    from gen_signal import build_device as bdv
    
-   geant4_json = "./setting/absorber/cflm.json"
+   geant4_json = "./setting/absorber/cflm_p3.json"
    with open(geant4_json) as f:
          g4_dic = json.load(f)
 
@@ -461,8 +436,8 @@ def main():
    det_name = det_dic['det_name']
    my_d = bdv.Detector(det_name)
    
-   my_g4p = cflmDevidedG4Particles(my_d, i=0, j=0)
-             
+   my_g4p = cflmPixelG4Particles(my_d, i=0, j=0)    
+
 if __name__ == '__main__':
     main()
 

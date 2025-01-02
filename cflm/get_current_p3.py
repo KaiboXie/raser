@@ -5,18 +5,16 @@ import multiprocessing
 import ROOT
 
 from gen_signal import build_device as bdv
-from . import cflm_pixel_area
+from . import cflm_p3
 from field import devsim_field as devfield
 from current import cal_current as ccrt
-from elec.set_pwl_input import set_pwl_input as pwlin
 
 from util.output import output
-
 import json
 
 def main():
     
-    geant4_json = "./setting/absorber/cflm.json"
+    geant4_json = "./setting/absorber/cflm_p3.json"
     with open(geant4_json) as f:
          g4_dic = json.load(f)
 
@@ -41,14 +39,13 @@ def main():
        try:
            result_message = "Execution completed successfully"
            print('DetectorID(Y,Z):       ', (i, j))
-           my_g4p = cflm_pixel_area.cflmDevidedG4Particles(my_d, i, j)
+           my_g4p = cflm_p3.cflmPixelG4Particles(my_d, i, j)
 
            if my_g4p.HitFlag == 0:
                print("No secondary particles hit the detector")
            else:
-                my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-                if 'ngspice' in amplifier:
-                    save_current(my_current, g4_dic, det_dic['read_out_contact'], i, j)
+               my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+               save_current(my_current, g4_dic, det_dic['read_out_contact'], i, j)
        except Exception as e:
            result_message = f"Error: {e}"
        with lock:
@@ -58,9 +55,9 @@ def main():
     queue = multiprocessing.Queue()
     
     dividedAreaZIndex = []
-    for k in range(40):
+    for k in range(30):
         dividedAreaZIndex.append(k)
-    dividedAreaYIndex = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]
+    dividedAreaYIndex = [-3, -2, -1, 0, 1, 2]
     
     for i in dividedAreaYIndex:  
         for j in dividedAreaZIndex:
@@ -80,7 +77,7 @@ def save_current(my_current, g4_dic, read_ele_num, p, q):
  
     time = array.array('d', [999.])
     current = array.array('d', [999.])
-    fout = ROOT.TFile(os.path.join("raser/cflm/output/", g4_dic['CurrentName'].split('.')[0])  + ".root", "RECREATE")
+    fout = ROOT.TFile(os.path.join("raser/cflm/output/p3", g4_dic['CurrentName'].split('.')[0])  + ".root", "RECREATE")
     t_out = ROOT.TTree("tree", "signal")
     t_out.Branch("time", time, "time/D")
     for i in range(len(read_ele_num)):
@@ -92,10 +89,10 @@ def save_current(my_current, g4_dic, read_ele_num, p, q):
     t_out.Write()
     fout.Close()
    
-    file = ROOT.TFile(os.path.join("raser/cflm/output/", g4_dic['CurrentName'].split('.')[0])  + ".root", "READ")
+    file = ROOT.TFile(os.path.join("raser/cflm/output/p3", g4_dic['CurrentName'].split('.')[0])  + ".root", "READ")
     tree = file.Get("tree")
 
-    pwl_file = open(f"raser/cflm/output/pixelArea/DevidedAreaCurrent_{p}_{q}.txt", "w")
+    pwl_file = open(os.path.join("raser/cflm/output/p3", f"{g4_dic['CurrentName'].split('.')[0]}_{p}_{q}.txt"), "w")
 
     for i in range(tree.GetEntries()):
        tree.GetEntry(i)

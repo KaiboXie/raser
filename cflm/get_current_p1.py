@@ -3,19 +3,17 @@ import array
 import time
 import re
 import multiprocessing
-import subprocess
 import ROOT
 from gen_signal import build_device as bdv
-from . import cflm_pixel_area
+from . import cflm_p1
 from field import devsim_field as devfield
 from current import cal_current as ccrt
-from elec.set_pwl_input import set_pwl_input as pwlin
 from util.output import output
 import json
 
 def main():
     
-    geant4_json = "./setting/absorber/cflm.json"
+    geant4_json = "./setting/absorber/cflm_p1.json"     #
     with open(geant4_json) as f:
          g4_dic = json.load(f)
 
@@ -28,26 +26,23 @@ def main():
     det_name = det_dic['det_name']
     my_d = bdv.Detector(det_name)
     voltage = det_dic['bias']['voltage']
-    amplifier = det_dic['amplifier']
 
     print(my_d.device)
     print(voltage)
 
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, det_dic['read_out_contact'], 0)
 
-    def worker_function(queue, lock, i, j):
+    def worker_function(queue, lock, i, j, l):
        
        try:
            result_message = "Execution completed successfully"
-           print('DetectorID(Y,Z):       ', (i, j))
-           my_g4p = cflm_pixel_area.cflmDevidedG4Particles(my_d, i, j)
-
+           my_g4p = cflm_p1.cflmPixelG4Particles(my_d, i, j, l)
            if my_g4p.HitFlag == 0:
                print("No secondary particles hit the detector")
            else:
+                print(f'detector_{l}_{i}_{j}')
                 my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-                if 'ngspice' in amplifier:
-                    save_current(my_current, g4_dic, det_dic['read_out_contact'], i, j)
+                save_current(my_current, g4_dic, det_dic['read_out_contact'], i, j, l)
        except Exception as e:
            result_message = f"Error: {e}"
        with lock:
@@ -61,35 +56,24 @@ def main():
         dividedAreaZIndex.append(k)
     dividedAreaYIndex = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]
     
-    for i in dividedAreaYIndex:  
-        for j in dividedAreaZIndex:
-            p = multiprocessing.Process(target=worker_function, args=(queue, lock, i, j))
-            p.start()
-            p.join()
-            while not queue.empty():
-                output_info = queue.get() 
-                print("队列输出:", output_info)
-                if output_info is None:
-                    print("警告: worker_function 返回了 None,可能发生了错误!")   
+    for l in ('I', 'II'):
+        for i in dividedAreaYIndex:  
+            for j in dividedAreaZIndex:
+                p = multiprocessing.Process(target=worker_function, args=(queue, lock, i, j, l))
+                p.start()
+                p.join()
+                while not queue.empty():
+                    output_info = queue.get() 
+                    print("队列输出:", output_info)
+                    if output_info is None:
+                        print("警告: worker_function 返回了 None,可能发生了错误!")   
     del my_f
     
-    output_path = "raser/cflm/output/pixelArea/1/"
-    pattern = re.compile(r"DevidedAreaCurrent_(-?\d+)_(\d+).txt")
-    for filename in os.listdir(output_path):
-        if pattern.match(filename):
-           m = int(pattern.match(filename).group(1))
-           n = int(pattern.match(filename).group(2))
-           pwlin(os.path.join(output_path, filename), 'raser/cflm/ucsc.cir', os.path.join(output_path, f'PixelVoltage_{m}_{n}.raw'), 'raser/cflm/output/pixelArea/')
-           subprocess.run([f"ngspice -b -r ./xxx.raw raser/cflm/output/pixelArea/ucsc_tmp.cir"], shell=True)
-    
-    end = time.time()
-    print("total_time:%s"%(end-start))
-    
-def save_current(my_current, g4_dic, read_ele_num, p, q):
+def save_current(my_current, g4_dic, read_ele_num, p, q, n):
  
     time = array.array('d', [999.])
     current = array.array('d', [999.])
-    fout = ROOT.TFile(os.path.join("raser/cflm/output/", g4_dic['CurrentName'].split('.')[0])  + ".root", "RECREATE")
+    fout = ROOT.TFile(os.path.join("raser/cflm/output/dSides/pixel", g4_dic['CurrentName']), "RECREATE")
     t_out = ROOT.TTree("tree", "signal")
     t_out.Branch("time", time, "time/D")
     for i in range(len(read_ele_num)):
@@ -101,10 +85,10 @@ def save_current(my_current, g4_dic, read_ele_num, p, q):
     t_out.Write()
     fout.Close()
    
-    file = ROOT.TFile(os.path.join("raser/cflm/output/", g4_dic['CurrentName'].split('.')[0])  + ".root", "READ")
+    file = ROOT.TFile(os.path.join("raser/cflm/output/dSides/pixel", g4_dic['CurrentName']), "READ")
     tree = file.Get("tree")
 
-    pwl_file = open(f"raser/cflm/output/pixelArea/DevidedAreaCurrent_{p}_{q}.txt", "w")
+    pwl_file = open(os.path.join("raser/cflm/output/dSides/pixel", f"{g4_dic['CurrentName'].split('.')[0]}_{n}_{p}_{q}.txt"), "w")
 
     for i in range(tree.GetEntries()):
        tree.GetEntry(i)
