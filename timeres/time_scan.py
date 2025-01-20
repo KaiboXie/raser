@@ -90,13 +90,13 @@ def draw_scan(input,index,model,eff):
             for row in reader:
                 if is_number(row[index]):
                     x_list.append(abs(float(row[index])))
-                    y_list.append(float(row[5]))# CSA time resolution
-                    z_list.append(float(row[6]))# BB time resolution
+                    y_list.append(float(row[5]))# Charge_Sensitive time resolution
+                    z_list.append(float(row[6]))# Broad_Band time resolution
                     z1_list.append(float(row[10]))# jitter
                     z2_list.append(float(row[11]))# Landau timing
                     x_error_list.append(0)
-                    y_error_list.append(float(row[7]))# CSA time resolution error
-                    z_error_list.append(float(row[8]))# BB time resolution error
+                    y_error_list.append(float(row[7]))# Charge_Sensitive time resolution error
+                    z_error_list.append(float(row[8]))# Broad_Band time resolution error
                     z1_error_list.append(0)
                     z2_error_list.append(0)
         x_list, y_list, z_list, z1_list, z2_list, x_error_list, y_error_list, z_error_list, z1_error_list, z2_error_list\
@@ -114,7 +114,7 @@ def draw_scan(input,index,model,eff):
 
         gr3 = ROOT.TGraphErrors(len(xa_axis), xa_axis, ya_axis, xa_error, ya_error)
         gr3 = graph_set_time_resolution(gr3,model,eff)
-        gr3.SetTitle("CSA")   
+        gr3.SetTitle("Charge_Sensitive")   
         gr4 = ROOT.TGraphErrors(len(xa_axis), xa_axis, za_axis, xa_error, za_error)
         gr4 = graph_set_time_resolution(gr4,model,eff)    
         gr4.SetTitle("") 
@@ -202,11 +202,11 @@ def draw_scan_gain(input,index,model,eff):
             for row in reader:
                 if is_number(row[index]):
                     x_list.append(abs(float(row[index])))
-                    y_list.append(float(row[5]))# CSA max voltage
-                    z_list.append(float(row[7]))# BB current integral
+                    y_list.append(float(row[5]))# Charge_Sensitive max voltage
+                    z_list.append(float(row[7]))# Broad_Band current integral
                     x_error_list.append(0)
-                    y_error_list.append(float(row[6]))# CSA max voltage error
-                    z_error_list.append(float(row[8]))# BB current integral error
+                    y_error_list.append(float(row[6]))# Charge_Sensitive max voltage error
+                    z_error_list.append(float(row[8]))# Broad_Band current integral error
         x_list, y_list, z_list, x_error_list, y_error_list, z_error_list\
             = zip(*sorted(zip(x_list, y_list, z_list, x_error_list, y_error_list, z_error_list)))
         xa_axis.extend(x_list)
@@ -218,10 +218,10 @@ def draw_scan_gain(input,index,model,eff):
 
         gr3 = ROOT.TGraphErrors(len(xa_axis), xa_axis, ya_axis, xa_error, ya_error)
         gr3 = graph_set_gain_efficiency(gr3,model,eff)
-        gr3.SetTitle("CSA")   
+        gr3.SetTitle("Charge_Sensitive")   
         gr4 = ROOT.TGraphErrors(len(xa_axis), xa_axis, za_axis, xa_error, za_error)
         gr4 = graph_set_gain_efficiency(gr4,model,eff)    
-        gr4.SetTitle("BB") 
+        gr4.SetTitle("Broad_Band") 
 
     c1 = ROOT.TCanvas("c1", "c1",200,10,1200,1600)
     ROOT.gStyle.SetOptStat(0)
@@ -231,9 +231,9 @@ def draw_scan_gain(input,index,model,eff):
     c1.SetBottomMargin(0.16)
     gr3.Draw("APL")
 
-    c1.SaveAs(out_file+"_CSA.pdf")
-    c1.SaveAs(out_file+"_CSA.C")
-    c1.SaveAs(out_file+"_CSA.root")
+    c1.SaveAs(out_file+"_Charge_Sensitive.pdf")
+    c1.SaveAs(out_file+"_Charge_Sensitive.C")
+    c1.SaveAs(out_file+"_Charge_Sensitive.root")
 
     c2 = ROOT.TCanvas("c2", "c2",200,10,1200,1600)
     ROOT.gStyle.SetOptStat(0)
@@ -243,9 +243,9 @@ def draw_scan_gain(input,index,model,eff):
     c2.SetBottomMargin(0.16)
     gr4.Draw("APL")
 
-    c2.SaveAs(out_file+"_BB.pdf")
-    c2.SaveAs(out_file+"_BB.C")
-    c2.SaveAs(out_file+"_BB.root")
+    c2.SaveAs(out_file+"_Broad_Band.pdf")
+    c2.SaveAs(out_file+"_Broad_Band.C")
+    c2.SaveAs(out_file+"_Broad_Band.root")
 
 def graph_set_time_resolution(gr,model,eff):
     gr.SetMarkerStyle(8)
