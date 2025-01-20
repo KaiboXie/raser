@@ -104,7 +104,7 @@ class Amplifier:
                 """ CSA scale function"""
                 trans_imp = self.amplifier_parameters['trans_imp']
                 Ci = 3.5e-11  #fF
-                Qfrac = 1.0/(1.0+self.CDet*1e-12/Ci)
+                Qfrac = 1.0/(1.0+CDet*1e-12/Ci)
 
                 if output_Q_max == 0.0:
                     return 0.0
