@@ -98,28 +98,32 @@ class NoiseSetting:
             os.makedirs(path, exist_ok=True)
 
     @contextlib.contextmanager
-    def open_func(self,file_name):
+    def open_func(self, file_name):
         """
-        @description: Open file with context manager
-         
-        @param:
-            None
-        @Returns:
-            None
-        @Modify:
-            2021/08/31
-        """
-        # print('open file:', file_name, 'in __enter__')
-        file_handler = open(file_name, 'r')
+        Open a file with context manager to ensure it is properly closed after use.
 
+        Args:
+            file_name (str): The name of the file to open.
+
+        Yields:
+            file_handler: A file object for the opened file.
+
+        Raises:
+            FileNotFoundError: If the specified file does not exist.
+            IOError: If an I/O error occurs while handling the file.
+        """
         try:
-            yield file_handler
-        except Exception as exc:
-            print('the exception was thrown')
-        finally:
-            # print('close file:', file_name, 'in __exit__')
-            file_handler.close()
-        return
+            with open(file_name, 'r') as file_handler: 
+                yield file_handler
+        except FileNotFoundError as e:
+            print(f"Error: The file '{file_name}' was not found.")
+            raise e  
+        except IOError as e:
+            print(f"Error: Unable to open the file '{file_name}'. An I/O error occurred.")
+            raise e 
+        except Exception as e:
+            print('An unexpected error occurred:', e)
+            raise e  
 
     def write_list(self,path,list_c):
         """
@@ -174,19 +178,19 @@ class AddNoise:
         random_gauss = ROOT.gRandom.Gaus
         ampl_signal_list = []
         for j in range (0,len(list_c)):
-            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[0]))
+            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[1]))
             ampl_signal_list.append(ampl_s)
         max_signal_height=max(ampl_signal_list)
         noise_rms = noise_rms_c + noise_rms_a*max_signal_height
         # noise_rms = noise_rms_a*max_signal_height
         # noise_rms = noise_rms_c
-        print(noise_rms)
+        print("*********Raser info***************\n","signal_height = {}\n".format(max_signal_height))
+        print("noise_rms = {}\n".format(noise_rms),"*********************************\n")
         for j in range (0,len(list_c)):
-            time= float(list(filter(None,list_c[j].split(",")))[1])
+            time= float(list(filter(None,list_c[j].split(",")))[0])
             noise_height=random_gauss(noise_avg,noise_rms)
-            # noise_height=0
-            ampl_nps=abs(float(list(filter(None,list_c[j].split(",")))[0]))+noise_height
-            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[0]))
+            ampl_nps=abs(float(list(filter(None,list_c[j].split(",")))[1]))+noise_height
+            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[1]))
             self.time_list.append(time)
             self.noise_height_list.append(noise_height)
             self.ampl_nps_list.append(ampl_nps)
@@ -813,8 +817,8 @@ def main(kwargs):
     # Outfilename and init_parameter
     rset = NoiseSetting()
     output_path = output(__file__, model)
-    # input_file = "output/gen_signal/" + model + "/batch"
-    input_file = "output/tct/" + model + "/top_TCT"
+    input_file = "output/gen_signal/" + model + "/batch"
+    #input_file = "output/tct/" + model + "/top_TCT"
     # Root defined
     out_root_f=ROOT.TFile(output_path+"/out.root","RECREATE")
     tree_class=RootFile()
