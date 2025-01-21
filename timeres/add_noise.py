@@ -14,16 +14,12 @@ import os
 import sys
 import re
 import math
+import json
 
 import ROOT
 ROOT.gROOT.SetBatch(True)
 
 from util.output import output
-
-noise_avg = -0.001
-noise_rms_c = 0.0005
-noise_rms_a = 0.03
-# noise_rms = c+a*幅值最大值
 
 # ROOT file parameters difinition
 Events=array('i',[0])
@@ -144,7 +140,7 @@ class NoiseSetting:
 
 # Add noise in the wavefroms and save the data in dictionaries
 class AddNoise:
-    def __init__(self):
+    def __init__(self, ele_name):
         self.time=0.0
         self.ampl_nps = 0.0
         self.ampl_s = 0.0
@@ -161,6 +157,8 @@ class AddNoise:
         self.noist_height_jitter = 0
         self.per80_20_time = 0
         self.per80_20_dvdt = 0
+
+        self.ele_name = ele_name
 
     def add_n(self,list_c):
         """
@@ -181,14 +179,19 @@ class AddNoise:
             ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[1]))
             ampl_signal_list.append(ampl_s)
         max_signal_height=max(ampl_signal_list)
-        noise_rms = noise_rms_c + noise_rms_a*max_signal_height
-        # noise_rms = noise_rms_a*max_signal_height
-        # noise_rms = noise_rms_c
+
+        # read Gaussian noise data from json
+        ele_json = "./setting/electronics/" + self.ele_name + ".json"
+        with open(ele_json) as f:
+            amplifier_parameters = json.load(f)
+        noise_avg = amplifier_parameters["noise_avg"]
+        noise_rms = amplifier_parameters["noise_rms"]
+
         print("*********Raser info***************\n","signal_height = {}\n".format(max_signal_height))
         print("noise_rms = {}\n".format(noise_rms),"*********************************\n")
         for j in range (0,len(list_c)):
             time= float(list(filter(None,list_c[j].split(",")))[0])
-            noise_height=random_gauss(noise_avg,noise_rms)
+            noise_height=random_gauss(noise_avg,noise_rms) # generate Gaussian noise
             ampl_nps=abs(float(list(filter(None,list_c[j].split(",")))[1]))+noise_height
             ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[1]))
             self.time_list.append(time)
@@ -556,7 +559,7 @@ def draw_2D_CFD_time(CFD_time,out_put,model):
     del c1
     return sigma, error
 
-def draw_max_voltage(max_voltage_list,out_put,model):
+def draw_max_voltage(max_voltage_list,out_put):
     """
     @description: 
         Draw and fit max voltage, mainly for getting gain efficiency
@@ -567,7 +570,7 @@ def draw_max_voltage(max_voltage_list,out_put,model):
     @Modify:
         2022/08/08
     """
-    c1 =  ROOT.TCanvas("c1"+model,"c1"+model,200,10,800,600)
+    c1 =  ROOT.TCanvas("c1","c1",200,10,800,600)
     ROOT.gStyle.SetOptStat(0)
     c1.SetGrid()
     c1.SetLeftMargin(0.2)
@@ -598,12 +601,12 @@ def draw_max_voltage(max_voltage_list,out_put,model):
     # Text set
     root_tex_max_voltage(sigma,error)
     # Save
-    c1.SaveAs(out_put+model+"/max_voltage.pdf")
-    c1.SaveAs(out_put+model+"/max_voltage.C")
+    c1.SaveAs(out_put+"/max_voltage.pdf")
+    c1.SaveAs(out_put+"/max_voltage.C")
     del c1
     return sigma, error
     
-def draw_current_integral(current_integral_list,out_put,model):
+def draw_current_integral(current_integral_list,out_put):
     """
     @description: 
         Draw and fit current integral, mainly for getting gain efficiency
@@ -614,7 +617,7 @@ def draw_current_integral(current_integral_list,out_put,model):
     @Modify:
         2022/08/08
     """
-    c1 =  ROOT.TCanvas("c1"+model,"c1"+model,200,10,800,600)
+    c1 =  ROOT.TCanvas("c1","c1",200,10,800,600)
     ROOT.gStyle.SetOptStat(0)
     c1.SetGrid()
     c1.SetLeftMargin(0.2)
@@ -644,8 +647,8 @@ def draw_current_integral(current_integral_list,out_put,model):
     # Text set
     root_tex_current_integral(sigma,error)
     # Save
-    c1.SaveAs(out_put+"/"+model+"/current_integral.pdf")
-    c1.SaveAs(out_put+"/"+model+"/current_integral.C")
+    c1.SaveAs(out_put+"/current_integral.pdf")
+    c1.SaveAs(out_put+"/current_integral.C")
     del c1
     return sigma, error    
 
@@ -766,7 +769,7 @@ def save_gain_efficiency(input_file, max_voltage, error_max_voltage, current_int
                 + str(current_integral) + ","+ str(error_current_integral) + "\n")
                 
 # Loop and add noise in the raser
-def loop_addNoise(input_file,rset,tree_class):
+def loop_addNoise(input_file,rset,tree_class,ele_name):
     for root,dirs,files in os.walk(input_file):
         for file in files:
             if 'strip' in input_file:
@@ -777,7 +780,7 @@ def loop_addNoise(input_file,rset,tree_class):
                         path = os.path.join(input_file, file)
                         Events[0]+=1
 
-                        addNoise = AddNoise() 
+                        addNoise = AddNoise(ele_name) 
                         rset.write_list(path,addNoise.list_c)
                         if len(addNoise.list_c)>5:
                             addNoise.add_n(addNoise.list_c)
@@ -797,7 +800,7 @@ def loop_addNoise(input_file,rset,tree_class):
                         path = os.path.join(input_file, file)
                         Events[0]+=1
 
-                        addNoise = AddNoise() 
+                        addNoise = AddNoise(ele_name) 
                         rset.write_list(path,addNoise.list_c)
                         if len(addNoise.list_c)>5:
                             addNoise.add_n(addNoise.list_c)
@@ -813,18 +816,23 @@ def loop_addNoise(input_file,rset,tree_class):
     return efficiency
 
 def main(kwargs):
-    model = kwargs['det_name']
+    det_name = kwargs['det_name']
+    device_json = "./setting/detector/" + det_name + ".json"
+    with open(device_json) as f:
+        device_dict = json.load(f)
+        ele_name = device_dict['amplifier']
+        det_model = device_dict['det_model']
     # Outfilename and init_parameter
     rset = NoiseSetting()
-    output_path = output(__file__, model)
-    input_file = "output/gen_signal/" + model + "/batch"
-    #input_file = "output/tct/" + model + "/top_TCT"
+    output_path = output(__file__, det_name)
+    input_file = "output/gen_signal/" + det_name + "/batch"
+    #input_file = "output/tct/" + det_name + "/top_TCT"
     # Root defined
     out_root_f=ROOT.TFile(output_path+"/out.root","RECREATE")
     tree_class=RootFile()
     tree_class.root_define()
     # Add noise
-    efficiency = loop_addNoise(input_file,rset,tree_class)
+    efficiency = loop_addNoise(input_file,rset,tree_class,ele_name)
     # Draw time resolution for constant CFD
     sigma, error=draw_2D_CFD_time(rset.CFD_time,output_path,'time_resolution')
     sigma_jit, error_jit=draw_2D_CFD_time(rset.CFD_jitter,output_path,'jitter')
@@ -833,7 +841,7 @@ def main(kwargs):
     out_root_f.Close()
     save_time_resolution(input_file,sigma,error,efficiency,sigma_jit,Landau_timing)  
 
-    if "lgad3D" in model:
+    if "lgad3D" in det_model:
         # Draw gain efficiency, max voltage and current integral
         max_voltage, error_max_voltage = draw_max_voltage(rset.max_voltage,output_path)
         current_integral, error_current_integral = draw_current_integral(rset.current_integral,output_path)
