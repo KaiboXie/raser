@@ -16,7 +16,7 @@ def get_beam_number(my_g4p,ele_current):
     create_path(path) 
     number = array('d',[999.])
     hittotal = array('d',[999.])
-    number[0] = int(-ele_current.max_BB_height/18.8)
+    number[0] = int(-ele_current.max_Broad_Band_height/18.8)
     hittotal[0]=my_g4p.hittotal
     fout = ROOT.TFile(path + "beam_monitor.root", "RECREATE")
     t_out = ROOT.TTree("tree", "beam_number")

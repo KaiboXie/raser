@@ -62,5 +62,6 @@ def main(elec_name, file_path, key=None):
     c.SaveAs(fig_name)
 
 if __name__ == '__main__':
-    main()
+    import sys
+    main(sys.argv[1], sys.argv[2])
     

@@ -3,7 +3,7 @@
 
 '''
 Description: 
-    Simulate induced current through BB or CSA amplifier 
+    Simulate induced current through Broad_Band or Charge_Sensitive amplifier 
 @Date       : 2024/09/22 15:24:33
 @Author     : tanyuhang, Chenxi Fu
 @version    : 2.0
@@ -81,12 +81,12 @@ class Amplifier:
         if CDet is None:
             CDet = self.amplifier_parameters['CDet']
 
-        if self.amplifier_parameters['ele_name'] == 'CSA':
-            """ CSA parameter initialization"""
+        if self.amplifier_parameters['ele_name'] == 'Charge_Sensitive':
+            """ Current Sensitive Amplifier parameter initialization"""
 
             mode = 0
 
-            def pulse_responce_CSA(t):
+            def pulse_responce_Charge_Sensitive(t):
                 if t < 0: # step function
                     return 0
 
@@ -100,8 +100,8 @@ class Amplifier:
 
                 return tau_fall/(tau_fall+tau_rise) * (math.exp(-t/tau_fall)-math.exp(-t/tau_rise))
 
-            def scale_CSA(output_Q_max, input_Q_tot):
-                """ CSA scale function"""
+            def scale_Charge_Sensitive(output_Q_max, input_Q_tot):
+                """ Current Sensitive Amplifier scale function"""
                 trans_imp = self.amplifier_parameters['trans_imp']
                 Ci = 3.5e-11  #fF
                 Qfrac = 1.0/(1.0+CDet*1e-12/Ci)
@@ -117,20 +117,20 @@ class Amplifier:
 
                 return scale
 
-            self.pulse_responce_list = [pulse_responce_CSA]
-            self.scale = scale_CSA
+            self.pulse_responce_list = [pulse_responce_Charge_Sensitive]
+            self.scale = scale_Charge_Sensitive
 
-        elif self.amplifier_parameters['ele_name'] == 'BB':
-            """ BB parameter initialization"""
+        elif self.amplifier_parameters['ele_name'] == 'Broad_Band':
+            """ Broad Bandwidth Amplifier (Charge Sensitive Amplifier) parameter initialization"""
 
             mode = "scope"
 
-            def pulse_responce_BB(t):
+            def pulse_responce_Broad_Band(t):
                 if t < 0: # step function
                     return 0
                 
-                BB_bandwidth = self.amplifier_parameters['BB_bandwidth']
-                BB_imp       = self.amplifier_parameters['BB_imp']
+                Broad_Band_Bandwidth = self.amplifier_parameters['Broad_Band_Bandwidth']
+                Broad_Band_Imp       = self.amplifier_parameters['Broad_Band_Imp']
                 OscBW        = self.amplifier_parameters['OscBW']   
                 
                 if mode == "scope":
@@ -141,31 +141,31 @@ class Amplifier:
                     return 1/tau_scope * math.exp(-t/tau_scope)
 
                 elif mode == "RC":
-                    tau_BB_RC = 1.0e-12 * BB_imp * CDet     #BB RC
-                    tau_BB_BW = 0.35 / (1.0e9*BB_bandwidth) / 2.2    #BB Tau, Rf*Cf?
-                    tau_BBA = math.sqrt(pow(tau_BB_RC,2)+pow(tau_BB_BW,2))
+                    tau_Broad_Band_RC = 1.0e-12 * Broad_Band_Imp * CDet     #Broad_Band RC
+                    tau_Broad_Band_BW = 0.35 / (1.0e9*Broad_Band_Bandwidth) / 2.2    #Broad_Band Tau, Rf*Cf?
+                    tau_Broad_Band = math.sqrt(pow(tau_Broad_Band_RC,2)+pow(tau_Broad_Band_BW,2))
 
-                    return 1/tau_BBA * math.exp(-t/tau_BBA)
+                    return 1/tau_Broad_Band * math.exp(-t/tau_Broad_Band)
                 
                 else:
                     raise NameError(mode,"mode is not defined")
                 
-            def scale_BB(output_Q_max, input_Q_tot):
-                """ BB scale function"""
+            def scale_Broad_Band(output_Q_max, input_Q_tot):
+                """ Broad Bandwidth Amplifier (Charge Sensitive Amplifier) scale function"""
 
                 if mode == "scope":
                     R_in = 50
                     return R_in
 
                 elif mode == "RC":
-                    BB_Gain = self.amplifier_parameters['BB_Gain'] # kOhm ?
-                    return BB_Gain * 1e3
+                    Broad_Band_Gain = self.amplifier_parameters['Broad_Band_Gain'] # kOhm ?
+                    return Broad_Band_Gain * 1e3
                 
-            self.pulse_responce_list = [pulse_responce_BB]
-            self.scale = scale_BB
+            self.pulse_responce_list = [pulse_responce_Broad_Band]
+            self.scale = scale_Broad_Band
 
         elif self.amplifier_parameters['ele_name'] == 'ABCStar_fe':
-            """ ABCStar_fe parameter initialization"""
+            """ ABCStar Front-end Amplifier parameter initialization"""
 
             def pulse_responce_ABCStar_fe_input(t):
                 if t < 0:
@@ -184,7 +184,7 @@ class Amplifier:
                 return 1/tau_amp * math.exp(-t/tau_f)
             
             def scale_ABCStar_fe(output_Q_max, input_Q_tot):
-                """ ABCStar_fe scale function"""
+                """ ABCStar Front-end Amplifier scale function"""
                 return 1000.0 # V to mV
             
             self.pulse_responce_list = [pulse_responce_ABCStar_fe_input, pulse_responce_ABCStar_fe_RCfeedback]
