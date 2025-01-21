@@ -93,7 +93,7 @@ if submodule not in submodules:
     raise NameError(submodule)
 
 if kwargs['batch'] != 0:
-    batch_number = kwargs['batch']
+    batch_level = kwargs['batch']
     import re
     from util import batchjob
     destination = submodule
@@ -101,7 +101,8 @@ if kwargs['batch'] != 0:
     command = command.replace('--batch ', '')
     for bs in re.findall('-b* ', command):
         command = command.replace(bs, '')
-    batchjob.main(destination, command, batch_number, args)
+    is_test = vars(args)['test'] 
+    batchjob.main(destination, command, batch_level, is_test)
 else:
     submodule = importlib.import_module(submodule)
     submodule.main(kwargs)

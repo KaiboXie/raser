@@ -26,7 +26,6 @@ from . import draw_save
 from util.output import output
 
 
-
 def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_number):
     """
     Description:
@@ -61,7 +60,7 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
     detection_efficiency =  effective_number/(end_n-start_n) 
     print("detection_efficiency=%s"%detection_efficiency)
 
-def job_main(kwargs):
+def main(kwargs):
     det_name = kwargs['det_name']
     my_d = bdv.Detector(det_name)
     
@@ -95,9 +94,3 @@ def job_main(kwargs):
     batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_number)
     del my_g4p
 
-def main(kwargs):
-    scan_number = kwargs['scan']
-    for i in range(scan_number):
-        command = ' '.join(['python3', 'raser', '-b', 'gen_signal', '--job', str(i)] + sys.argv[3:]) # 'raser', '-sh', 'gen_signal'
-        print(command)
-        subprocess.run([command], shell=True)
