@@ -58,7 +58,7 @@ h_noise_height.clear()
 
 # The judge parameter configuration and read data
 class NoiseSetting:
-    def __init__(self):
+    def __init__(self, ele_name):
         """
         @description: The judge parameter configuration
          
@@ -70,7 +70,6 @@ class NoiseSetting:
         @Modify:
             2021/08/31
         """
-        self.thre_vth=18 # mv
         self.CFD=0.5
         self.effective_event_number=0
         self.CFD_time=[]
@@ -78,6 +77,12 @@ class NoiseSetting:
 
         self.max_voltage=[]
         self.current_integral=[]
+
+        self.ele_name=ele_name
+        ele_json = "./setting/electronics/" + self.ele_name + ".json"
+        with open(ele_json) as f:
+            amplifier_parameters = json.load(f)
+            self.thre_vth=amplifier_parameters["threshold"] # mv
         
     def create_outpath(self,path):
         """
@@ -349,9 +354,13 @@ def judge_threshold(addNoise,rset,tree_class):
     @Modify:
         2021/08/31
     """
-    #if (addNoise.ampl_paras[max_height]>rset.thre_vth and addNoise.ampl_paras[max_time]<80):
-    get_CFD_time(addNoise,addNoise.ampl_paras,rset)
-    tree_class.fill_ampl(addNoise,rset,"max_nps_height","max_pulse_time")
+    if (addNoise.ampl_paras["max_s_height"]>rset.thre_vth and addNoise.ampl_paras["max_pulse_time"]<80):
+        # temp set
+        get_CFD_time(addNoise,addNoise.ampl_paras,rset)
+        tree_class.fill_ampl(addNoise,rset,"max_nps_height","max_pulse_time")
+        return True
+    else:
+        return False
 
 def get_CFD_time(addNoise,Ampl_paras,rset):
     """
@@ -769,7 +778,7 @@ def save_gain_efficiency(input_file, max_voltage, error_max_voltage, current_int
                 + str(current_integral) + ","+ str(error_current_integral) + "\n")
                 
 # Loop and add noise in the raser
-def loop_addNoise(input_file,rset,tree_class,ele_name):
+def loop_add_noise(input_file,rset,tree_class,ele_name):
     for root,dirs,files in os.walk(input_file):
         for file in files:
             if 'strip' in input_file:
@@ -784,12 +793,12 @@ def loop_addNoise(input_file,rset,tree_class,ele_name):
                         rset.write_list(path,addNoise.list_c)
                         if len(addNoise.list_c)>5:
                             addNoise.add_n(addNoise.list_c)
-                            judge_threshold(addNoise,rset,tree_class) 
-                            tree_class.fill_vector(rset,addNoise) 
-                            #if addNoise.CFD_time_r>0:      
-                            tree_class.tree_out.Fill()
-                            rset.effective_event_number += 1
-                            tree_class.init_parameter()
+                            if judge_threshold(addNoise,rset,tree_class):
+                                tree_class.fill_vector(rset,addNoise) 
+                                #if addNoise.CFD_time_r>0:      
+                                tree_class.tree_out.Fill()
+                                rset.effective_event_number += 1
+                                tree_class.init_parameter()
                     else:
                         break
             else:
@@ -804,12 +813,12 @@ def loop_addNoise(input_file,rset,tree_class,ele_name):
                         rset.write_list(path,addNoise.list_c)
                         if len(addNoise.list_c)>5:
                             addNoise.add_n(addNoise.list_c)
-                            judge_threshold(addNoise,rset,tree_class) 
-                            tree_class.fill_vector(rset,addNoise) 
-                            #if addNoise.CFD_time_r>0:      
-                            tree_class.tree_out.Fill()
-                            rset.effective_event_number += 1
-                            tree_class.init_parameter()
+                            if judge_threshold(addNoise,rset,tree_class):
+                                tree_class.fill_vector(rset,addNoise) 
+                                #if addNoise.CFD_time_r>0:      
+                                tree_class.tree_out.Fill()
+                                rset.effective_event_number += 1
+                                tree_class.init_parameter()
                     else:
                         break
     efficiency = rset.effective_event_number / Events[0]
@@ -832,7 +841,7 @@ def main(kwargs):
     tree_class=RootFile()
     tree_class.root_define()
     # Add noise
-    efficiency = loop_addNoise(input_file,rset,tree_class,ele_name)
+    efficiency = loop_add_noise(input_file,rset,tree_class,ele_name)
     # Draw time resolution for constant CFD
     sigma, error=draw_2D_CFD_time(rset.CFD_time,output_path,'time_resolution')
     sigma_jit, error_jit=draw_2D_CFD_time(rset.CFD_jitter,output_path,'jitter')

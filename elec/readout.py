@@ -21,6 +21,8 @@ ROOT.gROOT.SetBatch(True)
 from util.math import signal_convolution
 from util.output import output
 
+TIME_BIN_WIDTH = 50e-12 # need to be consistent with the bin width in CalCurrent
+
 class Amplifier:
     """Get current after amplifier with convolution, for each reading electrode
 
@@ -123,7 +125,7 @@ class Amplifier:
         elif self.amplifier_parameters['ele_name'] == 'Broad_Band':
             """ Broad Bandwidth Amplifier (Charge Sensitive Amplifier) parameter initialization"""
 
-            mode = "scope"
+            mode = "RC"
 
             def pulse_responce_Broad_Band(t):
                 if t < 0: # step function
@@ -154,12 +156,13 @@ class Amplifier:
                 """ Broad Bandwidth Amplifier (Charge Sensitive Amplifier) scale function"""
 
                 if mode == "scope":
-                    R_in = 50
-                    return R_in
+                    Broad_Band_Gain = self.amplifier_parameters['Broad_Band_Gain']
+                    return Broad_Band_Gain
 
                 elif mode == "RC":
-                    Broad_Band_Gain = self.amplifier_parameters['Broad_Band_Gain'] # kOhm ?
-                    return Broad_Band_Gain * 1e3
+                    Broad_Band_Gain = self.amplifier_parameters['Broad_Band_Gain']
+                    R_in = 50
+                    return Broad_Band_Gain * R_in
                 
             self.pulse_responce_list = [pulse_responce_Broad_Band]
             self.scale = scale_Broad_Band
@@ -202,7 +205,7 @@ class Amplifier:
     def set_scope_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
             cu = currents[i]
-            input_Q_tot = cu.Integral()
+            input_Q_tot = cu.Integral()*TIME_BIN_WIDTH
             output_Q_max = self.amplified_current[i].GetMaximum()
             self.amplified_current[i].Scale(self.scale(output_Q_max, input_Q_tot))
 
