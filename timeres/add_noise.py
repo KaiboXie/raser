@@ -540,7 +540,8 @@ def draw_2D_CFD_time(CFD_time,out_put,model):
             if CFD_time[i]< 9000:	
                 histo.Fill(CFD_time[i])
     else:
-        step = 0.05
+        #step = 0.05
+        step = 0.025
         x2_min = 4.8
         x2_max = 5.6
         n2_bin = int((x2_max-x2_min)/step)
@@ -832,7 +833,7 @@ def main(kwargs):
         ele_name = device_dict['amplifier']
         det_model = device_dict['det_model']
     # Outfilename and init_parameter
-    rset = NoiseSetting()
+    rset = NoiseSetting(ele_name)
     output_path = output(__file__, det_name)
     input_file = "output/gen_signal/" + det_name + "/batch"
     #input_file = "output/tct/" + det_name + "/top_TCT"
