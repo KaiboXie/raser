@@ -14,6 +14,8 @@ ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 
+TIME_BIN_WIDTH = 50e-12 # need to be consistent with the bin width in CalCurrent
+
 def energy_deposition(my_g4v):
     """
     @description:
@@ -346,13 +348,13 @@ def save_signal_time_resolution(my_d,batch_number,sum_cu,ele_current,my_g4p,star
 
     output_path = output(__file__, my_d.det_name, 'batch')
     for k in range(ele_current.read_ele_num):
-        charge = sum_cu[k].Integral()
+        charge = sum_cu[k].Integral()*TIME_BIN_WIDTH
         charge_str = "_charge=%.2f_"%(charge*1e15)  #fc
         e_dep = "dep=%.5f_"%(my_g4p.edep_devices[batch_number-start_n]) #mv
         output_file = output_path + "/t_" +str(batch_number)+charge_str+e_dep+"events.csv"
 
         f1 = open(output_file,"w")
-        f1.write("time[ns], Amplitude [mV] \n")
+        f1.write("time [ns], Amplitude [mV] \n")
         for i in range(ele_current.amplified_current[k].GetNbinsX()):
             f1.write("%s,%s \n"%(i*ele_current.amplified_current[k].GetBinWidth(0),
                                     ele_current.amplified_current[k][i]))

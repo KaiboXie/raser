@@ -31,7 +31,7 @@ class Detector:
         self.l_y = self.device_dict['ly']  
         self.l_z = self.device_dict['lz'] 
         
-        self.voltage = self.device_dict['bias']['voltage'] 
+        self.voltage = float(self.device_dict['bias']['voltage'])
         self.temperature = self.device_dict['temperature']
         self.material = self.device_dict['material']
 
