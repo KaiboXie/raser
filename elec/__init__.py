@@ -9,10 +9,6 @@ def main(kwargs):
 
     if label == 'trans':
         subprocess.run(['ngspice -b setting/electronics/{}.cir'.format(name)], shell=True)
-    elif label == 'get_fig':
-        from . import ngspice_get_fig
-        file_path = output(__file__)
-        ngspice_get_fig.main(name, file_path)
     elif label == 'readout':
         from . import readout
         readout.main(name)
