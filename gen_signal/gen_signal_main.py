@@ -79,6 +79,7 @@ def main(kwargs):
     my_current.save_current(path)
 
     ele_json = "./setting/electronics/" + amplifier + ".json"
+    ele_cir = "./setting/electronics/" + amplifier + ".cir"
     if os.path.exists(ele_json):
         # use convolution
         ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
@@ -86,7 +87,7 @@ def main(kwargs):
             draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.name, path) # Draw current
         if 'strip' in my_d.det_model:
             cce(my_current, path)
-    else:
+    elif os.path.exists(ele_cir):
         # use ngspice
         from elec import ngspice_set_input
         from elec import ngspice_set_tmp_cir
@@ -96,6 +97,8 @@ def main(kwargs):
         ngspice_set_tmp_cir.ngspice_set_tmp_cir(input_c, path, amplifier)
         subprocess.run(['ngspice -b {}/{}_tmp.cir'.format(path, amplifier)], shell=True)
         ngspice_get_fig.main(amplifier, path)
+    else:
+        raise NameError(amplifier)
     
     del my_f
     end = time.time()

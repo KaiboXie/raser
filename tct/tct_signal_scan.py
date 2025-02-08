@@ -92,6 +92,7 @@ def job_main(kwargs):
     my_current.save_current(path, my_l.model)
 
     ele_json = "./setting/electronics/" + amplifier + ".json"
+    ele_cir = "./setting/electronics/" + amplifier + ".cir"
     if os.path.exists(ele_json):
         # use convolution
         ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
@@ -105,7 +106,7 @@ def job_main(kwargs):
 
             my_l.draw_nocarrier3D(path)
             my_l.draw_nocarrier2D(path)
-    else:
+    elif os.path.exists(ele_cir):
         # use ngspice
         from elec import ngspice_set_input
         from elec import ngspice_set_tmp_cir
@@ -115,6 +116,8 @@ def job_main(kwargs):
         ngspice_set_tmp_cir.ngspice_set_tmp_cir(input_c, path, amplifier, my_l.model)
         subprocess.run(['ngspice -b {}/{}{}_tmp.cir'.format(path, amplifier, my_l.model)], shell=True)
         ngspice_get_fig.main(amplifier, path, my_l.model)
+    else:
+        raise NameError(amplifier)
         
     print('successfully')
 
