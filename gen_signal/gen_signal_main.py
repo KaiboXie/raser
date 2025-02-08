@@ -76,13 +76,26 @@ def main(kwargs):
     #energy_deposition(my_g4p)   # Draw Geant4 depostion distribution
     draw_drift_path(my_d,my_g4p,my_f,my_current,path)
 
-    my_current.save_current(my_d)
-    if 'ngspice' not in amplifier:
+    my_current.save_current(path)
+
+    ele_json = "./setting/electronics/" + amplifier + ".json"
+    if os.path.exists(ele_json):
+        # use convolution
         ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
         for i in range(my_current.read_ele_num):
-            draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.amplified_current_name, path) # Draw current
+            draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.name, path) # Draw current
         if 'strip' in my_d.det_model:
             cce(my_current, path)
+    else:
+        # use ngspice
+        from elec import ngspice_set_input
+        from elec import ngspice_set_tmp_cir
+        from elec import ngspice_get_fig
+        input_p = ngspice_set_input.set_input(path)
+        input_c=','.join(input_p)
+        ngspice_set_tmp_cir.ngspice_set_tmp_cir(input_c, path, amplifier)
+        subprocess.run(['ngspice -b {}/{}_tmp.cir'.format(path, amplifier)], shell=True)
+        ngspice_get_fig.main(amplifier, path)
     
     del my_f
     end = time.time()

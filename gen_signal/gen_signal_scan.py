@@ -55,6 +55,7 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
             effective_number += 1
             my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, event-start_n)
             ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
+            # need to add ngspice branch 
             draw_save.save_signal_time_resolution(my_d,event,my_current.sum_cu,ele_current,my_g4p,start_n)
             del ele_current
     detection_efficiency =  effective_number/(end_n-start_n) 
