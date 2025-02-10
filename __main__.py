@@ -72,6 +72,7 @@ parser_tct.add_argument('laser', help='name of the laser')
 parser_tct.add_argument('-vol', '--voltage', type=str, help='bias voltage')
 parser_tct.add_argument('-amp', '--amplifier', type=str, help='amplifier')
 parser_tct.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
+parser_tct.add_argument('--job', type=int, help='flag of run in job')
 
 parser_bmos = subparsers.add_parser('bmos', help='Beam Monitor Online System')
 parser_bmos.add_argument('label', help='LABEL to identify BMOS simulations')

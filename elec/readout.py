@@ -64,7 +64,7 @@ class Amplifier:
         with open(ele_json) as f:
             self.amplifier_parameters = json.load(f)
 
-        self.amplified_current_name = self.amplifier_parameters['ele_name']
+        self.name = self.amplifier_parameters['ele_name']
         self.read_ele_num = len(currents)
 
         self.amplifier_define(CDet)
@@ -197,7 +197,7 @@ class Amplifier:
     def fill_amplifier_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
             cu = currents[i]
-            self.amplified_current.append(ROOT.TH1F("electronics %s"%(self.amplified_current_name)+str(i+1), "electronics %s"%(self.amplified_current_name),
+            self.amplified_current.append(ROOT.TH1F("electronics %s"%(self.name)+str(i+1), "electronics %s"%(self.name),
                                 cu.GetNbinsX(),cu.GetXaxis().GetXmin(),cu.GetXaxis().GetXmax()))
             self.amplified_current[i].Reset()
             signal_convolution(cu, self.amplified_current[i], self.pulse_responce_list)

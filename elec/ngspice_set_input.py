@@ -6,12 +6,11 @@ ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 
-def set_input(det_name, key=None):
+def set_input(path, key=None):
     current=[]
     time=[]
     if key == None:
         key = ""
-    path = "output/current/{}".format(det_name)
     myFile = ROOT.TFile(os.path.join(path, "sim-current"+str(key))+".root")
 
     myt = myFile.tree
@@ -64,8 +63,7 @@ def set_input(det_name, key=None):
             current[i]=0
     in_put=array("d",[0.])
     t=array("d",[0.])
-    out_path = output(__file__, det_name)
-    fout = ROOT.TFile(os.path.join(out_path, "input"+str(key))+".root", "RECREATE")
+    fout = ROOT.TFile(os.path.join(path, "input"+str(key))+".root", "RECREATE")
     t_out = ROOT.TTree("tree", "signal")
     t_out.Branch("time", t, "time/D")
     t_out.Branch("current", in_put, "current/D")
