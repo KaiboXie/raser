@@ -22,3 +22,8 @@ def create_path(path):
     """ If the path does not exit, create the path"""
     if not os.access(path, os.F_OK):
         os.makedirs(path, exist_ok=True) 
+
+def delete_file(path):
+    """ If the file exists, delete the file"""
+    if os.access(path, os.F_OK):
+        os.remove(path)

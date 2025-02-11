@@ -89,35 +89,18 @@ def job_main(kwargs):
 
     my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
     path = output(__file__, my_d.det_name, my_l.model)
-    my_current.save_current(path, my_l.model)
 
-    ele_json = "./setting/electronics/" + amplifier + ".json"
-    ele_cir = "./setting/electronics/" + amplifier + ".cir"
-    if os.path.exists(ele_json):
-        # use convolution
-        ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
-        if kwargs['scan'] != None: #assume parameter alter
-            # key = my_l.fz_rel
-            key = kwargs['job']
-            ele_current.save_signal_TTree(path, key)
-        else:
-            for i in range(my_current.read_ele_num):
-                draw_save.draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.name, path) # Draw current
-
-            my_l.draw_nocarrier3D(path)
-            my_l.draw_nocarrier2D(path)
-    elif os.path.exists(ele_cir):
-        # use ngspice
-        from elec import ngspice_set_input
-        from elec import ngspice_set_tmp_cir
-        from elec import ngspice_get_fig
-        input_p = ngspice_set_input.set_input(path, my_l.model)
-        input_c=','.join(input_p)
-        ngspice_set_tmp_cir.ngspice_set_tmp_cir(input_c, path, amplifier, my_l.model)
-        subprocess.run(['ngspice -b {}/{}{}_tmp.cir'.format(path, amplifier, my_l.model)], shell=True)
-        ngspice_get_fig.main(amplifier, path, my_l.model)
+    ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
+    if kwargs['scan'] != None: #assume parameter alter
+        # key = my_l.fz_rel
+        tag = kwargs['job']
+        ele_current.save_signal_TTree(path, tag)
     else:
-        raise NameError(amplifier)
+        my_current.draw_currents(path) # Draw current
+        ele_current.draw_waveform(my_current.sum_cu, path) # Draw waveform
+
+        my_l.draw_nocarrier3D(path)
+        my_l.draw_nocarrier2D(path)
         
     print('successfully')
 

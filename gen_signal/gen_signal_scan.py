@@ -22,7 +22,6 @@ from particle import g4_time_resolution as g4t
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec import readout as rdo
-from . import draw_save
 from util.output import output
 
 
@@ -55,9 +54,13 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
             effective_number += 1
             my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, event-start_n)
             ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
+
+            e_dep = "%.5f"%(my_g4p.edep_devices[event-start_n]) #mv
+            tag = "event" + str(event) + "_" + "Edep" + str(e_dep)
             # need to add ngspice branch 
-            draw_save.save_signal_time_resolution(my_d,event,my_current.sum_cu,ele_current,my_g4p,start_n)
+            ele_current.save_signal_TTree(output(__file__, my_d.det_name, 'batch'), tag)
             del ele_current
+
     detection_efficiency =  effective_number/(end_n-start_n) 
     print("detection_efficiency=%s"%detection_efficiency)
 
