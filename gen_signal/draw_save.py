@@ -226,7 +226,7 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
     c.cd()
     c.Update()
     c.SetLeftMargin(0.25)
-    # c.SetTopMargin(0.12)
+    c.SetTopMargin(0.12)
     c.SetRightMargin(0.15)
     c.SetBottomMargin(0.17)
     ROOT.gStyle.SetOptStat(ROOT.kFALSE)
@@ -282,7 +282,7 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
         n_scale = ROOT.gPad.GetUymin() / rightmax
     else:
         n_scale = ROOT.gPad.GetUymax() / rightmax
-    """ 
+    
     ele_current[read_ele_num].Scale(n_scale)
     ele_current[read_ele_num].Draw("SAME HIST")
     ele_current[read_ele_num].SetLineWidth(2)   
@@ -304,7 +304,7 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
     axis.SetTitleFont(40)
     axis.SetTitleOffset(1.2)
     #axis.CenterTitle()
-    axis.Draw("SAME HIST") """
+    axis.Draw("SAME HIST") 
 
     legend = ROOT.TLegend(0.5, 0.2, 0.8, 0.5)
     legend.AddEntry(my_current.negative_cu[read_ele_num], "electron", "l")
@@ -314,7 +314,7 @@ def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag="
     legend.AddEntry(my_current.sum_cu[read_ele_num], "e+h", "l")
     #legend.AddEntry(ele_current, "electronics", "l")
     legend.SetBorderSize(0)
-    #legend.SetTextFont(43)
+    # legend.SetTextFont(43)
     legend.SetTextSize(0.08)
     legend.Draw("same")
     c.Update()
