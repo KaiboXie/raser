@@ -47,7 +47,7 @@ def main():
 
     field = acts.ConstantBField(acts.Vector3(0, 0, 1 * u.T))
 
-    outputDir = Path.cwd() / "output/spaceres/telescope_acts"
+    outputDir = Path.cwd() / "output/telescope/telescope_acts"
     if not outputDir.exists():
         outputDir.mkdir()
     inputDir = Path.cwd() / "setting/acts"

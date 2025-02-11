@@ -16,7 +16,7 @@ from gen_signal import build_device as bdv
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec import readout as rdo
-from .source import TCTTracks
+from .laser import LaserInjection
 from util.output import output, create_path
 from gen_signal.draw_save import draw_current
 
@@ -63,7 +63,7 @@ def main(kwargs):
         amplifier = my_d.amplifier
 
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact, my_d.irradiation_flux)
-    my_l = TCTTracks(my_d, laser_dic)
+    my_l = LaserInjection(my_d, laser_dic)
 
     my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
     path = output(__file__, my_d.det_name, my_l.model)

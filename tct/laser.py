@@ -6,7 +6,7 @@ import numpy as np
 
 from gen_signal.build_device import Detector
 
-class TCTTracks():
+class LaserInjection():
     """
     Description:
         Transfer Carrier Distribution from Laser Coordinate System 
@@ -15,7 +15,7 @@ class TCTTracks():
     ---------
     my_d : R3dDetector
         the Detector
-    laser : dict
+    laser_dic : dict
         the Parameter List of Your Laser
     x_rel,y_rel,z_rel:
         the Normalized Coordinate for Laser Focus 
@@ -24,42 +24,42 @@ class TCTTracks():
     ---------
         2021/09/13
     """
-    def __init__(self, my_d, laser):
+    def __init__(self, my_d: Detector, laser_dic: dict):
         #technique used
-        self.model = laser["laser_model"]
-        self.tech = laser["tech"]
-        self.direction = laser["direction"]
+        self.model = laser_dic["laser_model"]
+        self.tech = laser_dic["tech"]
+        self.direction = laser_dic["direction"]
         #material parameters to certain wavelength of the beam
-        self.refractionIndex = laser["refractionIndex"]
+        self.refractionIndex = laser_dic["refractionIndex"]
         if self.tech == "SPA":
-            self.alpha = laser["alpha"] # m^-1
+            self.alpha = laser_dic["alpha"] # m^-1
         if self.tech == "TPA":
-            self.beta_2 = laser["beta_2"]
+            self.beta_2 = laser_dic["beta_2"]
         #laser parameters
-        self.wavelength = laser["wavelength"]*1e-3 #um
-        self.temporal_FWHM = laser["temporal_FWHM"]
-        self.pulse_energy = laser["pulse_energy"]
-        self.spacial_FWHM = laser["spacial_FWHM"]#um
-        self.central_time = laser["central_time"]
-        if "l_Reyleigh" not in laser:
+        self.wavelength = laser_dic["wavelength"]*1e-3 #um
+        self.temporal_FWHM = laser_dic["temporal_FWHM"]
+        self.pulse_energy = laser_dic["pulse_energy"]
+        self.spacial_FWHM = laser_dic["spacial_FWHM"]#um
+        self.central_time = laser_dic["central_time"]
+        if "l_Reyleigh" not in laser_dic:
             w_0 = self.spacial_FWHM / (2 * np.log(2))**0.5
             self.l_Rayleigh = np.pi*w_0**2*self.refractionIndex/self.wavelength
         else:
-            self.l_Rayleigh = laser["l_Rayleigh"]#um
+            self.l_Rayleigh = laser_dic["l_Rayleigh"]#um
         #the size of the detector
         self.lx = my_d.l_x#um
         self.ly = my_d.l_y
         self.lz = my_d.l_z
         #relative and absolute position of the focus
-        self.fx_rel = laser["fx_rel"]
-        self.fy_rel = laser["fy_rel"]
-        self.fz_rel = laser["fz_rel"]
+        self.fx_rel = laser_dic["fx_rel"]
+        self.fy_rel = laser_dic["fy_rel"]
+        self.fz_rel = laser_dic["fz_rel"]
         self.fx_abs = self.fx_rel * self.lx
         self.fy_abs = self.fy_rel * self.ly
         self.fz_abs = self.fz_rel * self.lz
         #accuracy parameters
-        self.r_step = laser["r_step"]#um
-        self.h_step = laser["h_step"]#um
+        self.r_step = laser_dic["r_step"]#um
+        self.h_step = laser_dic["h_step"]#um
       
         self.mesh_definition(my_d)
 

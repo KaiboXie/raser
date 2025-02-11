@@ -24,7 +24,7 @@ from elec import readout as rdo
 from gen_signal import draw_save
 from util.output import output
 
-from .source import TCTTracks
+from .laser import LaserInjection
 
 
 def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_number):
@@ -85,7 +85,7 @@ def job_main(kwargs):
         amplifier = my_d.amplifier
 
     my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact, my_d.irradiation_flux)
-    my_l = TCTTracks(my_d, laser_dic)
+    my_l = LaserInjection(my_d, laser_dic)
 
     my_current = ccrt.CalCurrentLaser(my_d, my_f, my_l)
     path = output(__file__, my_d.det_name, my_l.model)

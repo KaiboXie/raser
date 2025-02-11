@@ -100,6 +100,7 @@ def get_common_interpolate_3d(data):
     return f
 
 def signal_convolution(signal_original: ROOT.TH1F, signal_convolved: ROOT.TH1F, pulse_responce_function_list: list[Callable[[float],float]]):
+    # assume so and sc share same bin width
     so = signal_original
     sc = signal_convolved
     st = ROOT.TH1F("signal_temp","signal_temp",so.GetNbinsX(),so.GetXaxis().GetXmin(),so.GetXaxis().GetXmax())
