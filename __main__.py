@@ -59,11 +59,11 @@ parser_gen_signal.add_argument('-amp', '--amplifier', type=str, help='amplifier'
 parser_gen_signal.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
 parser_gen_signal.add_argument('--job', type=int, help='flag of run in job')
 
-parser_spaceres = subparsers.add_parser('spaceres', help='space resolution calculation')
-parser_spaceres.add_argument('label', help='LABEL to identify spaceres files')
+parser_telescope = subparsers.add_parser('telescope', help='telescope')
+parser_telescope.add_argument('label', help='LABEL to identify telescope files')
 
-parser_spaceres = subparsers.add_parser('timeres', help='time resolution calculation')
-parser_spaceres.add_argument('det_name', help='name of the detector')
+parser_telescope = subparsers.add_parser('resolution', help='resolution calculation for time, space and energy')
+parser_telescope.add_argument('det_name', help='name of the detector')
 
 parser_tct = subparsers.add_parser('tct', help='TCT simulation')
 parser_tct.add_argument('label', help='LABEL to identify TCT options')
@@ -87,11 +87,7 @@ if len(sys.argv) == 1:
 
 kwargs = vars(args)
 
-submodules = ['asic', 'cce', 'cflm', 'current', 'draw', 'elec', 'field', 'fpga', 'gen_signal', 'particle', 'spaceres', 'tct', 'timeres', 'bmos']
-
 submodule = kwargs['subparser_name']
-if submodule not in submodules:
-    raise NameError(submodule)
 
 if kwargs['batch'] != 0:
     batch_level = kwargs['batch']

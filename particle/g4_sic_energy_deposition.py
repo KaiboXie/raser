@@ -172,7 +172,7 @@ class SiC_LGAD_DetectorConstruction(g4b.G4VUserDetectorConstruction):#是g4b.G4V
         self.fMagFieldMessenger = g4b.G4GlobalMagFieldMessenger(fieldValue)
         self.fMagFieldMessenger.SetVerboseLevel(1)
 #创建粒子初始化信息，包括位置，动量，能量，
-class SIC_LGAD_PrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
+class SiC_LGAD_PrimaryGeneratorAction(g4b.G4VUserPrimaryGeneratorAction):
 
     def __init__(self):
         super().__init__()
@@ -294,7 +294,7 @@ class SiC_LGAD_aActionInitialization(g4b.G4VUserActionInitialization):
         self.SetUserAction(SiC_LGAD_RunAction())
 
     def Build(self):
-        self.SetUserAction(SIC_LGAD_PrimaryGeneratorAction())
+        self.SetUserAction(SiC_LGAD_PrimaryGeneratorAction())
         self.SetUserAction(SiC_LGAD_RunAction())
         eventAction = SiC_LGAD_aEventAction()
         self.SetUserAction(eventAction)

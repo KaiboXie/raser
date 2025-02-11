@@ -769,7 +769,7 @@ def save_time_resolution(input_file,sigma,error,efficiency,sigma_jitter,Landau_t
         f.write(str(sigma) + "," + str(error) + ","
                 + str(efficiency) + "," + str(sigma_jitter) + "," + str(Landau_timing) + "\n")
 
-def save_gain_efficiency(input_file, max_voltage, error_max_voltage, current_integral, error_current_integral):
+def save_charge(input_file, max_voltage, error_max_voltage, current_integral, error_current_integral):
     o_ls=input_file.split("/")[:]
     out_file=output(__file__, o_ls[2])+"/gain_efficiency_scan.csv"
 
@@ -851,11 +851,10 @@ def main(kwargs):
     out_root_f.Close()
     save_time_resolution(input_file,sigma,error,efficiency,sigma_jit,Landau_timing)  
 
-    if "lgad3D" in det_model:
-        # Draw gain efficiency, max voltage and current integral
-        max_voltage, error_max_voltage = draw_max_voltage(rset.max_voltage,output_path)
-        current_integral, error_current_integral = draw_current_integral(rset.current_integral,output_path)
-        save_gain_efficiency(input_file, max_voltage, error_max_voltage, current_integral, error_current_integral)
+    # Draw max voltage and current integral
+    max_voltage, error_max_voltage = draw_max_voltage(rset.max_voltage,output_path)
+    current_integral, error_current_integral = draw_current_integral(rset.current_integral,output_path)
+    save_charge(input_file, max_voltage, error_max_voltage, current_integral, error_current_integral)
 
 if __name__ == '__main__':
     args = sys.argv[1:]

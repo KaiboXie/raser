@@ -136,7 +136,7 @@ class Telescope:
         
         Name = "fit"+str(DUT)
         now = time.strftime("%Y_%m%d_%H%M")
-        path = os.path.join("output/spaceres/taichu_v1", str(now),'' )
+        path = os.path.join("output/telescope/taichu_v1", str(now),'' )
         #print(path)
         
         """ If the path does not exit, create the path"""
@@ -228,7 +228,7 @@ class Telescope:
         label.Draw()
         
         now = time.strftime("%Y_%m%d_%H%M")
-        path = os.path.join("output/spaceres/taichu_v1", str(now),'' )
+        path = os.path.join("output/telescope/taichu_v1", str(now),'' )
         #print(path)
         
         """ If the path does not exit, create the path"""
@@ -528,7 +528,7 @@ def taichu_v2(label=""):
     canvas.Draw()
     Name = "Res vs size"
     now = time.strftime("%Y_%m%d_%H%M")
-    path = os.path.join("output/spaceres/taichu_v2", str(now),'' )
+    path = os.path.join("output/telescope/taichu_v2", str(now),'' )
     """ If the path does not exit, create the path"""
     if not os.access(path, os.F_OK):
         os.makedirs(path) 
