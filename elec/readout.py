@@ -63,6 +63,8 @@ class Amplifier:
     def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None):
         self.amplified_current = []
         self.read_ele_num = len(currents)
+        self.time_unit = currents[0].GetXaxis().GetBinWidth(1)*1e9 # s to ns
+        # TODO: need to set the time unit corresponding to the oscilloscope or the TDC 
 
         ele_json = "./setting/electronics/" + amplifier_name + ".json"
         ele_cir = "./setting/electronics/" + amplifier_name + ".cir"
@@ -78,8 +80,10 @@ class Amplifier:
         elif os.path.exists(ele_cir):
             self.name = amplifier_name
             input_current_strs = self.set_ngspice_input(currents)
-            time_stamp = time.strftime("%Y_%m%d_%H%M%S")
-            tmp_cirs, raws = self.set_tmp_cir(input_current_strs, ele_cir, time_stamp)
+            time_stamp = time.time_ns()
+            pid = os.getpid()
+            # stamp and thread name for avoiding file name conflict
+            tmp_cirs, raws = self.set_tmp_cir(input_current_strs, ele_cir, str(time_stamp)+"_"+str(pid))
             for i in range(self.read_ele_num):
                 subprocess.run(['ngspice -b '+tmp_cirs[i]], shell=True)
             self.read_raw_file(raws)
@@ -334,16 +338,17 @@ class Amplifier:
                     volt.append(float(line.split()[1])*1e3)
 
             self.amplified_current.append(ROOT.TH1F("electronics %s"%(self.name)+str(i+1), "electronics %s"%(self.name),
-                                len(time),0,len(time)))
-            for j in range(len(time)):
+                                int(time[-1]/self.time_unit),0,time[-1]))
+            # the .raw input is not uniform, so we need to slice the time range
+            for j in range(1,len(time)-1):
                 self.amplified_current[i].SetBinContent(j, volt[j])
 
     def save_signal_TTree(self, path, tag=""):
         if tag != "":
             tag = "_" + tag
         for j in range(self.read_ele_num):
-            volt = array('d', [0.])
             time = array('d', [0.])
+            volt = array('d', [0.])
             if self.read_ele_num==1:
                 tree_file_name = os.path.join(path, "amplified-current") + str(tag) + ".root"
                 csv_file_name = os.path.join(path, "amplified-current") + str(tag) + ".csv"
@@ -353,8 +358,8 @@ class Amplifier:
             
             tree_file = ROOT.TFile(tree_file_name, "RECREATE")
             t_out = ROOT.TTree("tree", "signal")
-            t_out.Branch("volt", volt, "volt/D")
-            t_out.Branch("time", time, "time/D")
+            t_out.Branch("time_ns", time, "time_ns/D")
+            t_out.Branch("volt_mV", volt, "volt_mV/D")
 
             for i in range(self.amplified_current[j].GetNbinsX()):
                 time[0]=i*self.amplified_current[j].GetBinWidth(i)
@@ -369,29 +374,72 @@ class Amplifier:
     def draw_waveform(self, currents, path):
         for i in range(self.read_ele_num):
             fig_name = os.path.join(path, self.name+"No."+str(i+1)+'.pdf')  
+            root_name = os.path.join(path, self.name+"No."+str(i+1)+'.root')
             c = ROOT.TCanvas('c','c',700,600)
             c.SetMargin(0.2,0.1,0.2,0.1)
-            self.amplified_current[i].Draw("HIST")
-            self.amplified_current[i].SetLineColor(2)
-            self.amplified_current[i].SetLineWidth(2)
-            self.amplified_current[i].GetXaxis().SetTitle('Time [ns]')
-            self.amplified_current[i].GetXaxis().CenterTitle()
-            self.amplified_current[i].GetXaxis().SetTitleSize(0.08)
-            self.amplified_current[i].GetXaxis().SetLabelSize(0.08)
-            self.amplified_current[i].GetXaxis().SetNdivisions(5)
-            self.amplified_current[i].GetXaxis().SetTitleOffset(1)
+            temp_current = currents[i].Clone()
+            temp_current.Draw("HIST")
+            temp_current.SetLineColor(1)
+            temp_current.SetLineWidth(2)
+            temp_current.GetXaxis().SetTitle('Time [ns]')
+            temp_current.GetXaxis().CenterTitle()
+            temp_current.GetXaxis().SetTitleSize(0.08)
+            temp_current.GetXaxis().SetLabelSize(0.08)
+            temp_current.GetXaxis().SetNdivisions(5)
+            temp_current.GetXaxis().SetTitleOffset(1)
 
-            self.amplified_current[i].GetYaxis().SetTitle('Voltage [mV]')
-            self.amplified_current[i].GetYaxis().CenterTitle()
-            self.amplified_current[i].GetYaxis().SetTitleSize(0.08)
-            self.amplified_current[i].GetYaxis().SetLabelSize(0.08)
-            self.amplified_current[i].GetYaxis().SetNdivisions(5)
-            self.amplified_current[i].GetYaxis().SetTitleOffset(1)
+            temp_current.GetYaxis().SetTitle('Current [A]')
+            temp_current.GetYaxis().CenterTitle()
+            temp_current.GetYaxis().SetTitleSize(0.08)
+            temp_current.GetYaxis().SetLabelSize(0.08)
+            temp_current.GetYaxis().SetNdivisions(5)
+            temp_current.GetYaxis().SetTitleOffset(1)
 
-            currents[i].Draw("SAME HIST")
+            c.Update()
+
+            temp_amplified_current = self.amplified_current[i].Clone()
+
+            if temp_amplified_current.GetMinimum() < 0:
+                rightmax = 1.1*temp_amplified_current.GetMinimum()
+            else:
+                rightmax = 1.1*temp_amplified_current.GetMaximum()
+            if rightmax == 0:
+                n_scale=0
+            elif temp_amplified_current.GetMinimum() <0:
+                n_scale = ROOT.gPad.GetUymin() / rightmax
+            else:
+                n_scale = ROOT.gPad.GetUymax() / rightmax
+            temp_amplified_current.Scale(n_scale)
+            temp_amplified_current.Draw("SAME HIST")
+            temp_amplified_current.SetLineWidth(2)   
+            temp_amplified_current.SetLineColor(8)
+            temp_amplified_current.SetLineColor(2)
+            c.Update()
+
+            axis = ROOT.TGaxis(ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymin(), 
+                            ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymax(), 
+                            min(0,rightmax), max(0,rightmax), 510, "+L")
+            axis.SetLineColor(2)
+            axis.SetTextColor(2)
+            axis.SetTextSize(0.02)
+            axis.SetTextFont(40)
+            axis.SetLabelColor(2)
+            axis.SetLabelSize(0.035)
+            axis.SetLabelFont(42)
+            axis.SetTitle("Ampl [mV]")
+            axis.SetTitleFont(40)
+            axis.SetTitleOffset(1.2)
+            #axis.CenterTitle()
+            axis.Draw("SAME HIST")
+
+            legend = ROOT.TLegend(0.5, 0.3, 0.8, 0.6)
+            legend.AddEntry(temp_current, "original", "l")
+            legend.AddEntry(temp_amplified_current, "electronics", "l")
+            legend.Draw("SAME")
 
             c.cd()
             c.SaveAs(fig_name)
+            c.SaveAs(root_name)
 
 
 def main(label):
