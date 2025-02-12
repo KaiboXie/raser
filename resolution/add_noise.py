@@ -17,9 +17,15 @@ import math
 import json
 
 import ROOT
+import csv
 ROOT.gROOT.SetBatch(True)
 
 from util.output import output
+
+noise_avg = -0.001
+noise_rms_c = 0.0005
+noise_rms_a = 0.03
+# noise_rms = c+a*幅值最大值
 
 # ROOT file parameters difinition
 Events=array('i',[0])
@@ -195,10 +201,19 @@ class AddNoise:
         print("*********Raser info***************\n","signal_height = {}\n".format(max_signal_height))
         print("noise_rms = {}\n".format(noise_rms),"*********************************\n")
         for j in range (0,len(list_c)):
-            time= float(list(filter(None,list_c[j].split(",")))[0])
-            noise_height=random_gauss(noise_avg,noise_rms) # generate Gaussian noise
-            ampl_nps=abs(float(list(filter(None,list_c[j].split(",")))[1]))+noise_height
-            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[1]))
+            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[0]))
+            ampl_signal_list.append(ampl_s)
+        max_signal_height=max(ampl_signal_list)
+        noise_rms = noise_rms_c + noise_rms_a*max_signal_height
+        # noise_rms = noise_rms_a*max_signal_height
+        # noise_rms = noise_rms_c
+        print(noise_rms)
+        for j in range (0,len(list_c)):
+            time= float(list(filter(None,list_c[j].split(",")))[1])
+            noise_height=random_gauss(noise_avg,noise_rms)
+            # noise_height=0
+            ampl_nps=abs(float(list(filter(None,list_c[j].split(",")))[0]))+noise_height
+            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[0]))
             self.time_list.append(time)
             self.noise_height_list.append(noise_height)
             self.ampl_nps_list.append(ampl_nps)
@@ -547,7 +562,7 @@ def draw_2D_CFD_time(CFD_time,out_put,model):
         n2_bin = int((x2_max-x2_min)/step)
         histo=ROOT.TH1F("","",n2_bin,x2_min,x2_max)
         for i in range(0,len(CFD_time)):
-            if CFD_time[i]>0:
+            if CFD_time[i]<50:
                 histo.Fill(CFD_time[i])
     # Fit data
     fit_func_1,sigma,error=fit_data_normal(histo,x2_min,x2_max)# in nanosecond

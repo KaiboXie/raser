@@ -287,3 +287,4 @@ def draw2D(x,y,value,title,v,path):
     graph_1d.GetYaxis().SetTitle("Potential")
     canvas1.SaveAs(os.path.join(path, title+"{}_1d.png".format(v)))
     canvas1.SaveAs(os.path.join(path, title+"{}_1d.root".format(v)))
+
