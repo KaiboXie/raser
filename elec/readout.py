@@ -14,14 +14,17 @@ import csv
 import json
 from array import array
 import os
+import subprocess
+import time
+import re
 
 import ROOT
 ROOT.gROOT.SetBatch(True)
 
 from util.math import signal_convolution
 from util.output import output
-
-TIME_BIN_WIDTH = 50e-12 # need to be consistent with the bin width in CalCurrent
+from util.root_tree_to_csv import root_tree_to_csv as rt2csv
+from util.output import delete_file
 
 class Amplifier:
     """Get current after amplifier with convolution, for each reading electrode
@@ -59,17 +62,34 @@ class Amplifier:
     """
     def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None):
         self.amplified_current = []
-
-        ele_json = "./setting/electronics/" + amplifier_name + ".json"
-        with open(ele_json) as f:
-            self.amplifier_parameters = json.load(f)
-
-        self.name = self.amplifier_parameters['ele_name']
         self.read_ele_num = len(currents)
 
-        self.amplifier_define(CDet)
-        self.fill_amplifier_output(currents)
-        self.set_scope_output(currents)
+        ele_json = "./setting/electronics/" + amplifier_name + ".json"
+        ele_cir = "./setting/electronics/" + amplifier_name + ".cir"
+        if os.path.exists(ele_json):
+            with open(ele_json) as f:
+                self.amplifier_parameters = json.load(f)
+                self.name = self.amplifier_parameters['ele_name']
+
+            self.amplifier_define(CDet)
+            self.fill_amplifier_output(currents)
+            self.set_scope_output(currents)
+
+        elif os.path.exists(ele_cir):
+            self.name = amplifier_name
+            input_current_strs = self.set_ngspice_input(currents)
+            time_stamp = time.strftime("%Y_%m%d_%H%M%S")
+            tmp_cirs, raws = self.set_tmp_cir(input_current_strs, ele_cir, time_stamp)
+            for i in range(self.read_ele_num):
+                subprocess.run(['ngspice -b '+tmp_cirs[i]], shell=True)
+            self.read_raw_file(raws)
+            for tmp_cir in tmp_cirs:
+                delete_file(tmp_cir)
+            for raw in raws:
+                delete_file(raw)
+
+        else:
+            raise NameError("The amplifier file is not found!")
 
     def amplifier_define(self, CDet):
         """
@@ -205,61 +225,179 @@ class Amplifier:
     def set_scope_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
             cu = currents[i]
-            input_Q_tot = cu.Integral()*TIME_BIN_WIDTH
+            input_Q_tot = cu.Integral()*cu.GetBinWidth(0)
             output_Q_max = self.amplified_current[i].GetMaximum()
             self.amplified_current[i].Scale(self.scale(output_Q_max, input_Q_tot))
+    
+    def set_ngspice_input(self, currents: list[ROOT.TH1F]):
+        input_current_strs = []
+        for i in range(self.read_ele_num):
+            cu = currents[i]
+            current = []
+            time = []
+            for j in range(cu.GetNbinsX()):
+                current.append(cu.GetBinContent(j))
+                time.append(j*cu.GetBinWidth(0))
+            input_c = []
+            if abs(min(current))>max(current): #set input signal
+                c_max=min(current)
+                for i in range(0, len(current)):
+                    if current[i] < c_max * 0.01:
+                        input_c.append(str(0))
+                        input_c.append(str(0))
+                        input_c.append(str(time[i]))
+                        input_c.append(str(0))
+                        break
+                    else:
+                        current[i]=0
+                for j in range(i, len(current)):
+                    input_c.append(str(time[j]))
+                    input_c.append(str(current[j]))
+                    if current[j] > c_max * 0.01:
+                        break
+                input_c.append(str(time[j]))
+                input_c.append(str(0))
+                input_c.append(str(time[len(time)-1]))
+                input_c.append(str(0))
+                for k in range(j, len(current)):
+                    current[i]=0
+            else:
+                c_max=max(current)
+                for i in range(0, len(current)):
+                    current[i]=0
+                    if current[i] > c_max * 0.01:
+                        input_c.append(str(0))
+                        input_c.append(str(0))
+                        input_c.append(str(time[i]))
+                        input_c.append(str(0))
+                        break
+                for j in range(i, len(current)):
+                    input_c.append(str(time[j]))
+                    input_c.append(str(current[j]))
+                    if current[j] < c_max * 0.01:
+                        break
+                input_c.append(str(time[j]))
+                input_c.append(str(0))
+                input_c.append(str(time[len(time)-1]))
+                input_c.append(str(0))
+                for k in range(j, len(current)):
+                    current[i]=0
 
-    def save_signal_TTree(self, path, key):
-        if key == None:
-            key = ""
+            input_current_strs.append(','.join(input_c))
+        return input_current_strs
+    
+    def set_tmp_cir(self, input_current_strs, ele_cir, label=None):
+        if label is None:
+            label = ''
+        path = output(__file__, self.name)
+        tmp_cirs = []
+        raws = []
+        with open(ele_cir, 'r') as f_in:
+            lines = f_in.readlines()
+            for j in range(self.read_ele_num):
+                new_lines = lines.copy()
+                input_c = input_current_strs[j]
+                if self.read_ele_num==1:
+                    tmp_cir = "{}/{}_tmp.cir".format(path, label)
+                    raw = "{}/{}.raw".format(path, label)
+                else:
+                    tmp_cir = '{}/{}{}_tmp.cir'.format(path, label, "No."+str(j))
+                    raw = '{}/{}{}.raw'.format(path, label, "No."+str(j))
+
+                tmp_cirs.append(tmp_cir)
+                raws.append(raw)
+
+                for i in range(len(new_lines)):
+                    if new_lines[i].startswith('I1'):
+                        # replace pulse by PWL
+                        new_lines[i] = re.sub(r"pulse" + r".*", 'PWL('+str(input_c)+') \n', new_lines[i], flags=re.IGNORECASE)
+                    if new_lines[i].startswith('wrdata'):
+                        # replace output file name & path
+                        new_lines[i] = re.sub(r".*" + r".raw", "wrdata"+" "+raw, new_lines[i], flags=re.IGNORECASE)
+                with open(tmp_cir, 'w+') as f_out:
+                    f_out.writelines(new_lines)
+                    f_out.close()
+            f_in.close()
+
+        return tmp_cirs, raws
+
+    def read_raw_file(self, raws):
+        for i in range(self.read_ele_num):
+            raw = raws[i]
+            with open(raw, 'r') as f:
+                lines = f.readlines()
+                time,volt = [],[]
+
+                for line in lines:
+                    time.append(float(line.split()[0])*1e9)
+                    volt.append(float(line.split()[1])*1e3)
+
+            self.amplified_current.append(ROOT.TH1F("electronics %s"%(self.name)+str(i+1), "electronics %s"%(self.name),
+                                len(time),0,len(time)))
+            for j in range(len(time)):
+                self.amplified_current[i].SetBinContent(j, volt[j])
+
+    def save_signal_TTree(self, path, tag=""):
+        if tag != "":
+            tag = "_" + tag
         for j in range(self.read_ele_num):
             volt = array('d', [0.])
             time = array('d', [0.])
             if self.read_ele_num==1:
-                fout = ROOT.TFile(os.path.join(path, "amplified-current") + str(key) + ".root", "RECREATE")
+                tree_file_name = os.path.join(path, "amplified-current") + str(tag) + ".root"
+                csv_file_name = os.path.join(path, "amplified-current") + str(tag) + ".csv"
             else:
-                fout = ROOT.TFile(os.path.join(path, "amplified-current") + str(key)+"No_"+str(j)+".root", "RECREATE")
+                tree_file_name = os.path.join(path, "amplified-current") + str(tag)+"No_"+str(j)+".root"
+                csv_file_name = os.path.join(path, "amplified-current") + str(tag)+"No_"+str(j) + ".csv"
+            
+            tree_file = ROOT.TFile(tree_file_name, "RECREATE")
             t_out = ROOT.TTree("tree", "signal")
             t_out.Branch("volt", volt, "volt/D")
             t_out.Branch("time", time, "time/D")
+
             for i in range(self.amplified_current[j].GetNbinsX()):
                 time[0]=i*self.amplified_current[j].GetBinWidth(i)
                 volt[0]=self.amplified_current[j][i]
                 t_out.Fill()
+            
             t_out.Write()
-            fout.Close()
-        for j in range(self.read_ele_num):
-            if self.read_ele_num==1:
-                # 打开 ROOT 文件
-                root_file = ROOT.TFile(os.path.join(path, "amplified-current") + str(key) + ".root", "READ")
-                # 创建 CSV 文件名
-                csv_file_name = os.path.join(path, "amplified-current") + str(key) + ".csv"
-            else:
-                # 打开 ROOT 文件
-                root_file = ROOT.TFile(os.path.join(path, "amplified-current") + str(key)+"No_"+str(j)+".root", "READ")
-                # 创建 CSV 文件名
-                csv_file_name = os.path.join(path, "amplified-current") + str(key)+"No_"+str(j) + ".csv"
-            # 获取 ROOT 文件中的 TTree
-            tree = root_file.Get("tree")
-            if tree:
-                print(tree)
-                print(tree.GetListOfBranches())
-            # 打开 CSV 文件，使用 'w' 模式表示写入
-            with open(csv_file_name, mode='w', newline='') as file:
-                writer = csv.writer(file)  # 创建 CSV writer 对象
-                # 写入 CSV 文件的表头（字段名）
-                header = [branch.GetName() for branch in tree.GetListOfBranches()]
-                writer.writerow(header)
-                # 遍历 TTree 中的数据，将数据写入 CSV 文件
-                for event in tree:
-                    data = [event.GetLeaf(branch.GetName()).GetValue() for branch in tree.GetListOfBranches()]
-                    writer.writerow(data)
+            tree_file.Close()
+
+            rt2csv(csv_file_name, tree_file_name, "tree")
+
+    def draw_waveform(self, currents, path):
+        for i in range(self.read_ele_num):
+            fig_name = os.path.join(path, self.name+"No."+str(i+1)+'.pdf')  
+            c = ROOT.TCanvas('c','c',700,600)
+            c.SetMargin(0.2,0.1,0.2,0.1)
+            self.amplified_current[i].Draw("HIST")
+            self.amplified_current[i].SetLineColor(2)
+            self.amplified_current[i].SetLineWidth(2)
+            self.amplified_current[i].GetXaxis().SetTitle('Time [ns]')
+            self.amplified_current[i].GetXaxis().CenterTitle()
+            self.amplified_current[i].GetXaxis().SetTitleSize(0.08)
+            self.amplified_current[i].GetXaxis().SetLabelSize(0.08)
+            self.amplified_current[i].GetXaxis().SetNdivisions(5)
+            self.amplified_current[i].GetXaxis().SetTitleOffset(1)
+
+            self.amplified_current[i].GetYaxis().SetTitle('Voltage [mV]')
+            self.amplified_current[i].GetYaxis().CenterTitle()
+            self.amplified_current[i].GetYaxis().SetTitleSize(0.08)
+            self.amplified_current[i].GetYaxis().SetLabelSize(0.08)
+            self.amplified_current[i].GetYaxis().SetNdivisions(5)
+            self.amplified_current[i].GetYaxis().SetTitleOffset(1)
+
+            currents[i].Draw("SAME HIST")
+
+            c.cd()
+            c.SaveAs(fig_name)
+
 
 def main(label):
     '''main function for readout.py to test the output of the given amplifier'''
 
     my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 600, 0, 30e-9)
-    # input signal: square pulse
+    # input signal: rect pulse
     for i in range(21, 41):
         my_th1f.SetBinContent(i, 2e-6) # A
 

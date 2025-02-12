@@ -23,7 +23,7 @@ from particle import g4_time_resolution as g4t
 from field import devsim_field as devfield
 from current import cal_current as ccrt
 from elec import readout as rdo
-from .draw_save import energy_deposition, draw_drift_path, draw_current, cce
+from .draw_save import energy_deposition, draw_drift_path, cce
 from util.output import output
 
 
@@ -69,36 +69,17 @@ def main(kwargs):
     g4_seed = random.randint(0,1e7)
     my_g4p = g4t.Particles(my_d, absorber, g4_seed)
     my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-    
+    ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
+
     now = time.strftime("%Y_%m%d_%H%M%S")
     path = output(__file__, my_d.det_name, now)
-
     #energy_deposition(my_g4p)   # Draw Geant4 depostion distribution
     draw_drift_path(my_d,my_g4p,my_f,my_current,path)
-    
-    my_current.save_current(path)
+    my_current.draw_currents(path) # Draw current
+    ele_current.draw_waveform(my_current.sum_cu, path) # Draw waveform
 
-    ele_json = "./setting/electronics/" + amplifier + ".json"
-    ele_cir = "./setting/electronics/" + amplifier + ".cir"
-    if os.path.exists(ele_json):
-        # use convolution
-        ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
-        for i in range(my_current.read_ele_num):
-            draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.name, path) # Draw current
-        if 'strip' in my_d.det_model:
-            cce(my_current, path)
-    elif os.path.exists(ele_cir):
-        # use ngspice
-        from elec import ngspice_set_input
-        from elec import ngspice_set_tmp_cir
-        from elec import ngspice_get_fig
-        input_p = ngspice_set_input.set_input(path)
-        input_c=','.join(input_p)
-        ngspice_set_tmp_cir.ngspice_set_tmp_cir(input_c, path, amplifier)
-        subprocess.run(['ngspice -b {}/{}_tmp.cir'.format(path, amplifier)], shell=True)
-        ngspice_get_fig.main(amplifier, path)
-    else:
-        raise NameError(amplifier)
+    if 'strip' in my_d.det_model:
+        cce(my_current, path)
     
     del my_f
     end = time.time()

@@ -14,8 +14,6 @@ ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 
-TIME_BIN_WIDTH = 50e-12 # need to be consistent with the bin width in CalCurrent
-
 def energy_deposition(my_g4v):
     """
     @description:
@@ -211,117 +209,6 @@ def draw_drift_path(my_d,my_g4p,my_f,my_current,path):
     c1.SaveAs(path+'/'+my_d.det_model+"_drift_path.root")
     del c1
 
-def draw_current(my_d, my_current, ele_current, read_ele_num, model, path, tag=""):
-    """
-    @description:
-        Save current in root file
-    @param:
-        None     
-    @Returns:
-        None
-    @Modify:
-        2021/08/31
-    """
-    c=ROOT.TCanvas("c","canvas1",1600,1300)
-    c.cd()
-    c.Update()
-    c.SetLeftMargin(0.25)
-    c.SetTopMargin(0.12)
-    c.SetRightMargin(0.15)
-    c.SetBottomMargin(0.17)
-    ROOT.gStyle.SetOptStat(ROOT.kFALSE)
-    ROOT.gStyle.SetOptStat(0)
-
-    #my_current.sum_cu.GetXaxis().SetTitleOffset(1.2)
-    #my_current.sum_cu.GetXaxis().SetTitleSize(0.05)
-    #my_current.sum_cu.GetXaxis().SetLabelSize(0.04)
-    my_current.sum_cu[read_ele_num].GetXaxis().SetNdivisions(510)
-    #my_current.sum_cu.GetYaxis().SetTitleOffset(1.1)
-    #my_current.sum_cu.GetYaxis().SetTitleSize(0.05)
-    #my_current.sum_cu.GetYaxis().SetLabelSize(0.04)
-    my_current.sum_cu[read_ele_num].GetYaxis().SetNdivisions(505)
-    #my_current.sum_cu.GetXaxis().CenterTitle()
-    #my_current.sum_cu.GetYaxis().CenterTitle() 
-    my_current.sum_cu[read_ele_num].GetXaxis().SetTitle("Time [s]")
-    my_current.sum_cu[read_ele_num].GetYaxis().SetTitle("Current [A]")
-    my_current.sum_cu[read_ele_num].GetXaxis().SetLabelSize(0.08)
-    my_current.sum_cu[read_ele_num].GetXaxis().SetTitleSize(0.08)
-    my_current.sum_cu[read_ele_num].GetYaxis().SetLabelSize(0.08)
-    my_current.sum_cu[read_ele_num].GetYaxis().SetTitleSize(0.08)
-    my_current.sum_cu[read_ele_num].GetYaxis().SetTitleOffset(1.2)
-    my_current.sum_cu[read_ele_num].SetTitle("")
-    my_current.sum_cu[read_ele_num].SetNdivisions(5)
-    my_current.sum_cu[read_ele_num].Draw("HIST")
-    my_current.positive_cu[read_ele_num].Draw("SAME HIST")
-    my_current.negative_cu[read_ele_num].Draw("SAME HIST")
-    my_current.gain_positive_cu[read_ele_num].Draw("SAME HIST")
-    my_current.gain_negative_cu[read_ele_num].Draw("SAME HIST")
-    my_current.sum_cu[read_ele_num].Draw("SAME HIST")
-
-    my_current.positive_cu[read_ele_num].SetLineColor(877)#kViolet-3
-    my_current.negative_cu[read_ele_num].SetLineColor(600)#kBlue
-    my_current.gain_positive_cu[read_ele_num].SetLineColor(617)#kMagneta+1
-    my_current.gain_negative_cu[read_ele_num].SetLineColor(867)#kAzure+7
-    my_current.sum_cu[read_ele_num].SetLineColor(418)#kGreen+2
-
-    my_current.positive_cu[read_ele_num].SetLineWidth(2)
-    my_current.negative_cu[read_ele_num].SetLineWidth(2)
-    my_current.gain_positive_cu[read_ele_num].SetLineWidth(2)
-    my_current.gain_negative_cu[read_ele_num].SetLineWidth(2)
-    my_current.sum_cu[read_ele_num].SetLineWidth(2)
-    c.Update()
-
-    if abs(ele_current[read_ele_num].GetMinimum()) > abs(ele_current[read_ele_num].GetMaximum()):
-        rightmax = 1.1*ele_current[read_ele_num].GetMinimum()
-    else:
-        rightmax = 1.1*ele_current[read_ele_num].GetMaximum()
-
-    if rightmax == 0.0:
-        n_scale = 0.0
-    elif abs(ele_current[read_ele_num].GetMinimum()) > abs(ele_current[read_ele_num].GetMaximum()):
-        n_scale = ROOT.gPad.GetUymin() / rightmax
-    else:
-        n_scale = ROOT.gPad.GetUymax() / rightmax
-    
-    ele_current[read_ele_num].Scale(n_scale)
-    ele_current[read_ele_num].Draw("SAME HIST")
-    ele_current[read_ele_num].SetLineWidth(2)   
-    ele_current[read_ele_num].SetLineColor(8)
-    ele_current[read_ele_num].SetLineColor(2)
-    c.Update()
-
-    axis = ROOT.TGaxis(ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymin(), 
-                       ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymax(), 
-                       min(0,rightmax), max(0,rightmax), 510, "+L")
-    axis.SetLineColor(2)
-    axis.SetTextColor(2)
-    axis.SetTextSize(0.02)
-    axis.SetTextFont(40)
-    axis.SetLabelColor(2)
-    axis.SetLabelSize(0.035)
-    axis.SetLabelFont(42)
-    axis.SetTitle("Ampl [V]")
-    axis.SetTitleFont(40)
-    axis.SetTitleOffset(1.2)
-    #axis.CenterTitle()
-    axis.Draw("SAME HIST") 
-
-    legend = ROOT.TLegend(0.5, 0.2, 0.8, 0.5)
-    legend.AddEntry(my_current.negative_cu[read_ele_num], "electron", "l")
-    legend.AddEntry(my_current.positive_cu[read_ele_num], "hole", "l")
-    legend.AddEntry(my_current.gain_negative_cu[read_ele_num], "gain electron", "l")
-    legend.AddEntry(my_current.gain_positive_cu[read_ele_num], "gain hole", "l")
-    legend.AddEntry(my_current.sum_cu[read_ele_num], "e+h", "l")
-    #legend.AddEntry(ele_current, "electronics", "l")
-    legend.SetBorderSize(0)
-    # legend.SetTextFont(43)
-    legend.SetTextSize(0.08)
-    legend.Draw("same")
-    c.Update()
-    c.SaveAs(path+'/'+model+my_d.det_model+tag+"No_"+str(read_ele_num+1)+"electrode"+"_basic_infor.pdf")
-    c.SaveAs(path+'/'+model+my_d.det_model+tag+"No_"+str(read_ele_num+1)+"electrode"+"_basic_infor.root")
-    del c
-
 def cce(my_current, path):
     charge=array('d')
     x=array('d')
@@ -343,23 +230,3 @@ def cce(my_current, path):
     c1.SaveAs(path+"/cce.pdf")
     c1.SaveAs(path+"/cce.root")
 
-def save_signal_time_resolution(my_d,batch_number,sum_cu,ele_current,my_g4p,start_n):
-    """ Save induced current after amplification"""
-
-    output_path = output(__file__, my_d.det_name, 'batch')
-    for k in range(ele_current.read_ele_num):
-        charge = sum_cu[k].Integral()*TIME_BIN_WIDTH
-        charge_str = "_charge=%.2f_"%(charge*1e15)  #fc
-        e_dep = "dep=%.5f_"%(my_g4p.edep_devices[batch_number-start_n]) #mv
-        output_file = output_path + "/t_" +str(batch_number)+charge_str+e_dep+"events.csv"
-
-        f1 = open(output_file,"w")
-        f1.write("time [ns], Amplitude [mV] \n")
-        for i in range(ele_current.amplified_current[k].GetNbinsX()):
-            f1.write("%s,%s \n"%(i*ele_current.amplified_current[k].GetBinWidth(0),
-                                    ele_current.amplified_current[k][i]))
-        f1.close()
-
-        print("output_file:%s"%output_file)
-
-    del ele_current

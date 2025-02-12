@@ -294,23 +294,81 @@ class CalCurrent:
                 test_n.Reset()
 
 
-    def save_current(self, path, key=None):
-        if key==None:
-            key = ""
+    def draw_currents(self, path, tag=""):
+        """
+        @description:
+            Save current in root file
+        @param:
+            None     
+        @Returns:
+            None
+        @Modify:
+            2021/08/31
+        """
+        for read_ele_num in range(self.read_ele_num):
+            c=ROOT.TCanvas("c","canvas1",1600,1300)
+            c.cd()
+            c.Update()
+            c.SetLeftMargin(0.25)
+            # c.SetTopMargin(0.12)
+            c.SetRightMargin(0.15)
+            c.SetBottomMargin(0.17)
+            ROOT.gStyle.SetOptStat(ROOT.kFALSE)
+            ROOT.gStyle.SetOptStat(0)
 
-        time = array('d', [999.])
-        current = array('d', [999.])
-        fout = ROOT.TFile(os.path.join(path, "sim-current"+str(key))  + ".root", "RECREATE")
-        t_out = ROOT.TTree("tree", "signal")
-        t_out.Branch("time", time, "time/D")
-        for i in range(self.read_ele_num):
-            t_out.Branch("current"+str(i), current, "current"+str(i)+"/D")
-            for j in range(self.n_bin):
-                current[0]=self.sum_cu[i].GetBinContent(j)
-                time[0]=j*self.t_bin
-                t_out.Fill()
-        t_out.Write()
-        fout.Close()
+            #self.sum_cu.GetXaxis().SetTitleOffset(1.2)
+            #self.sum_cu.GetXaxis().SetTitleSize(0.05)
+            #self.sum_cu.GetXaxis().SetLabelSize(0.04)
+            self.sum_cu[read_ele_num].GetXaxis().SetNdivisions(510)
+            #self.sum_cu.GetYaxis().SetTitleOffset(1.1)
+            #self.sum_cu.GetYaxis().SetTitleSize(0.05)
+            #self.sum_cu.GetYaxis().SetLabelSize(0.04)
+            self.sum_cu[read_ele_num].GetYaxis().SetNdivisions(505)
+            #self.sum_cu.GetXaxis().CenterTitle()
+            #self.sum_cu.GetYaxis().CenterTitle() 
+            self.sum_cu[read_ele_num].GetXaxis().SetTitle("Time [s]")
+            self.sum_cu[read_ele_num].GetYaxis().SetTitle("Current [A]")
+            self.sum_cu[read_ele_num].GetXaxis().SetLabelSize(0.08)
+            self.sum_cu[read_ele_num].GetXaxis().SetTitleSize(0.08)
+            self.sum_cu[read_ele_num].GetYaxis().SetLabelSize(0.08)
+            self.sum_cu[read_ele_num].GetYaxis().SetTitleSize(0.08)
+            self.sum_cu[read_ele_num].GetYaxis().SetTitleOffset(1.2)
+            self.sum_cu[read_ele_num].SetTitle("")
+            self.sum_cu[read_ele_num].SetNdivisions(5)
+            self.sum_cu[read_ele_num].Draw("HIST")
+            self.positive_cu[read_ele_num].Draw("SAME HIST")
+            self.negative_cu[read_ele_num].Draw("SAME HIST")
+            self.gain_positive_cu[read_ele_num].Draw("SAME HIST")
+            self.gain_negative_cu[read_ele_num].Draw("SAME HIST")
+            self.sum_cu[read_ele_num].Draw("SAME HIST")
+
+            self.positive_cu[read_ele_num].SetLineColor(877)#kViolet-3
+            self.negative_cu[read_ele_num].SetLineColor(600)#kBlue
+            self.gain_positive_cu[read_ele_num].SetLineColor(617)#kMagneta+1
+            self.gain_negative_cu[read_ele_num].SetLineColor(867)#kAzure+7
+            self.sum_cu[read_ele_num].SetLineColor(418)#kGreen+2
+
+            self.positive_cu[read_ele_num].SetLineWidth(2)
+            self.negative_cu[read_ele_num].SetLineWidth(2)
+            self.gain_positive_cu[read_ele_num].SetLineWidth(2)
+            self.gain_negative_cu[read_ele_num].SetLineWidth(2)
+            self.sum_cu[read_ele_num].SetLineWidth(2)
+            c.Update()
+
+            legend = ROOT.TLegend(0.5, 0.2, 0.8, 0.5)
+            legend.AddEntry(self.negative_cu[read_ele_num], "electron", "l")
+            legend.AddEntry(self.positive_cu[read_ele_num], "hole", "l")
+            legend.AddEntry(self.gain_negative_cu[read_ele_num], "gain electron", "l")
+            legend.AddEntry(self.gain_positive_cu[read_ele_num], "gain hole", "l")
+            legend.AddEntry(self.sum_cu[read_ele_num], "e+h", "l")
+            legend.SetBorderSize(0)
+            #legend.SetTextFont(43)
+            legend.SetTextSize(0.08)
+            legend.Draw("same")
+            c.Update()
+            c.SaveAs(path+'/'+tag+"No_"+str(read_ele_num+1)+"electrode"+"_basic_infor.pdf")
+            c.SaveAs(path+'/'+tag+"No_"+str(read_ele_num+1)+"electrode"+"_basic_infor.root")
+            del c
 
     
 class CalCurrentGain(CalCurrent):
