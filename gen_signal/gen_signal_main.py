@@ -69,13 +69,13 @@ def main(kwargs):
     g4_seed = random.randint(0,1e7)
     my_g4p = g4t.Particles(my_d, absorber, g4_seed)
     my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-
+    
     now = time.strftime("%Y_%m%d_%H%M%S")
     path = output(__file__, my_d.det_name, now)
 
     #energy_deposition(my_g4p)   # Draw Geant4 depostion distribution
     draw_drift_path(my_d,my_g4p,my_f,my_current,path)
-
+    
     my_current.save_current(path)
 
     ele_json = "./setting/electronics/" + amplifier + ".json"
