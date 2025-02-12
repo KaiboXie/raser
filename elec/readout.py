@@ -230,6 +230,7 @@ class Amplifier:
             self.amplified_current[i].Scale(self.scale(output_Q_max, input_Q_tot))
     
     def set_ngspice_input(self, currents: list[ROOT.TH1F]):
+        # TODO: check the cuts and refine the code
         input_current_strs = []
         for i in range(self.read_ele_num):
             cu = currents[i]
