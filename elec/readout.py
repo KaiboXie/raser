@@ -382,8 +382,8 @@ class Amplifier:
         for i in range(self.read_ele_num):
             fig_name = os.path.join(path, self.name+"No."+str(i+1)+'.pdf')  
             root_name = os.path.join(path, self.name+"No."+str(i+1)+'.root')
-            c = ROOT.TCanvas('c','c',700,600)
-            c.SetMargin(0.2,0.1,0.2,0.1)
+            c = ROOT.TCanvas('c','c',1400,1200)
+            c.SetMargin(0.2,0.2,0.2,0.1)
             temp_amplified_current = self.amplified_currents[i].Clone()
             temp_current = currents[i].Clone()
 
@@ -405,36 +405,35 @@ class Amplifier:
             combined_ymin = min(c_min, a_min_scaled)
             combined_ymax = max(c_max, a_max_scaled)
 
-            temp_current.Draw("HIST")
-            temp_current.SetLineColor(1)
-            temp_current.SetLineWidth(2)
-            temp_current.GetXaxis().SetTitle('Time [s]')
-            temp_current.GetXaxis().CenterTitle()
-            temp_current.GetXaxis().SetTitleSize(0.08)
-            temp_current.GetXaxis().SetLabelSize(0.08)
-            temp_current.GetXaxis().SetNdivisions(5)
-            temp_current.GetXaxis().SetTitleOffset(1)
-
-            temp_current.GetYaxis().SetTitle('Current [A]')
-            temp_current.GetYaxis().CenterTitle()
-            temp_current.GetYaxis().SetTitleSize(0.08)
-            temp_current.GetYaxis().SetLabelSize(0.08)
-            temp_current.GetYaxis().SetNdivisions(5)
-            temp_current.GetYaxis().SetTitleOffset(1)
-
-            c.Update()
-
-            temp_amplified_current.Draw("SAME HIST")
-            temp_amplified_current.SetLineWidth(2)   
-            temp_amplified_current.SetLineColor(2)
-            c.Update()
-
             # 设置直方图显示范围
-            ROOT.gPad.DrawFrame(xmin,combined_ymin,xmax,combined_ymax) 
+            frame = ROOT.gPad.DrawFrame(xmin,combined_ymin,xmax,combined_ymax) 
             ROOT.gPad.Modify()
             ROOT.gPad.Update()
             c.Update()
 
+            temp_current.Draw("SAME HIST")
+
+            temp_current.SetLineColor(1)
+            temp_current.SetLineWidth(2)
+            frame.GetXaxis().SetTitle('Time [s]')
+            frame.GetXaxis().CenterTitle()
+            frame.GetXaxis().SetTitleSize(0.08)
+            frame.GetXaxis().SetLabelSize(0.06)
+            frame.GetXaxis().SetNdivisions(5)
+            frame.GetXaxis().SetTitleOffset(1)
+
+            frame.GetYaxis().SetTitle('Current [A]')
+            frame.GetYaxis().CenterTitle()
+            frame.GetYaxis().SetTitleSize(0.08)
+            frame.GetYaxis().SetLabelSize(0.06)
+            frame.GetYaxis().SetNdivisions(5)
+            frame.GetYaxis().SetTitleOffset(1)
+            c.Update()
+
+            temp_amplified_current.SetLineWidth(2)   
+            temp_amplified_current.SetLineColor(2)
+            temp_amplified_current.Draw("SAME HIST")
+            c.Update()
 
             axis = ROOT.TGaxis(
                 ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymin(),
@@ -442,19 +441,20 @@ class Amplifier:
                 combined_ymin/scale_factor, combined_ymax/scale_factor, 505, "+L")
             axis.SetLineColor(2)
             axis.SetTextColor(2)
-            axis.SetTextSize(0.02)
-            axis.SetTextFont(40)
             axis.SetLabelColor(2)
-            axis.SetLabelSize(0.035)
+            axis.SetTitleColor(2)
             axis.SetLabelFont(42)
+            axis.SetTitleFont(42)
+            axis.CenterTitle()
+            axis.SetTitleSize(0.08)
+            axis.SetLabelSize(0.06)
+            axis.SetNdivisions(5)
+            axis.SetTitleOffset(1)
             axis.SetTitle("Amplitude [mV]")
-            axis.SetTitleFont(40)
-            axis.SetTitleOffset(1.2)
-            #axis.CenterTitle()
             axis.Draw("SAME HIST")
             c.Update()
 
-            legend = ROOT.TLegend(0.6, 0.2, 0.9, 0.4)
+            legend = ROOT.TLegend(0.45, 0.25, 0.75, 0.45)
             legend.AddEntry(temp_current, "original", "l")
             legend.AddEntry(temp_amplified_current, "electronics", "l")
             
