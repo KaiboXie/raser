@@ -42,7 +42,7 @@ class Amplifier:
 
     Attributes
     ---------
-    amplified_current : list[ROOT.TH1F]
+    amplified_currents: list[ROOT.TH1F]
         The list of induced current after amplifier
         
     Methods
@@ -61,9 +61,9 @@ class Amplifier:
         2024/09/14
     """
     def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None):
-        self.amplified_current = []
+        self.amplified_currents = []
         self.read_ele_num = len(currents)
-        self.time_unit = currents[0].GetXaxis().GetBinWidth(1)*1e9 # s to ns
+        self.time_unit = currents[0].GetXaxis().GetBinWidth(1)
         # TODO: need to set the time unit corresponding to the oscilloscope or the TDC 
 
         ele_json = "./setting/electronics/" + amplifier_name + ".json"
@@ -221,17 +221,17 @@ class Amplifier:
     def fill_amplifier_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
             cu = currents[i]
-            self.amplified_current.append(ROOT.TH1F("electronics %s"%(self.name)+str(i+1), "electronics %s"%(self.name),
+            self.amplified_currents.append(ROOT.TH1F("electronics %s"%(self.name)+str(i+1), "electronics %s"%(self.name),
                                 cu.GetNbinsX(),cu.GetXaxis().GetXmin(),cu.GetXaxis().GetXmax()))
-            self.amplified_current[i].Reset()
-            signal_convolution(cu, self.amplified_current[i], self.pulse_responce_list)
+            self.amplified_currents[i].Reset()
+            signal_convolution(cu, self.amplified_currents[i], self.pulse_responce_list)
     
     def set_scope_output(self, currents: list[ROOT.TH1F]):
         for i in range(self.read_ele_num):
             cu = currents[i]
             input_Q_tot = cu.Integral()*cu.GetBinWidth(0)
-            output_Q_max = self.amplified_current[i].GetMaximum()
-            self.amplified_current[i].Scale(self.scale(output_Q_max, input_Q_tot))
+            output_Q_max = self.amplified_currents[i].GetMaximum()
+            self.amplified_currents[i].Scale(self.scale(output_Q_max, input_Q_tot))
     
     def set_ngspice_input(self, currents: list[ROOT.TH1F]):
         # TODO: check the cuts and refine the code
@@ -334,14 +334,21 @@ class Amplifier:
                 time,volt = [],[]
 
                 for line in lines:
-                    time.append(float(line.split()[0])*1e9)
-                    volt.append(float(line.split()[1])*1e3)
+                    time.append(float(line.split()[0]))
+                    volt.append(float(line.split()[1])*1e3) # convert V to mV
 
-            self.amplified_current.append(ROOT.TH1F("electronics %s"%(self.name)+str(i+1), "electronics %s"%(self.name),
+            self.amplified_currents.append(ROOT.TH1F("electronics %s"%(self.name)+str(i+1), "electronics %s"%(self.name),
                                 int(time[-1]/self.time_unit),0,time[-1]))
             # the .raw input is not uniform, so we need to slice the time range
-            for j in range(1,len(time)-1):
-                self.amplified_current[i].SetBinContent(j, volt[j])
+            filled = set()
+            for j in range(len(time)):
+                k = self.amplified_currents[i].FindBin(time[j])
+                self.amplified_currents[i].SetBinContent(k, volt[j])
+                filled.add(k)
+            # fill the empty bins
+            for k in range(1, int(time[-1]/self.time_unit)-1):
+                if k not in filled:
+                    self.amplified_currents[i].SetBinContent(k, self.amplified_currents[i][k-1])
 
     def save_signal_TTree(self, path, tag=""):
         if tag != "":
@@ -361,9 +368,9 @@ class Amplifier:
             t_out.Branch("time_ns", time, "time_ns/D")
             t_out.Branch("volt_mV", volt, "volt_mV/D")
 
-            for i in range(self.amplified_current[j].GetNbinsX()):
-                time[0]=i*self.amplified_current[j].GetBinWidth(i)
-                volt[0]=self.amplified_current[j][i]
+            for i in range(self.amplified_currents[j].GetNbinsX()):
+                time[0]=i*self.amplified_currents[j].GetBinWidth(i)
+                volt[0]=self.amplified_currents[j][i]
                 t_out.Fill()
             
             t_out.Write()
@@ -377,11 +384,31 @@ class Amplifier:
             root_name = os.path.join(path, self.name+"No."+str(i+1)+'.root')
             c = ROOT.TCanvas('c','c',700,600)
             c.SetMargin(0.2,0.1,0.2,0.1)
+            temp_amplified_current = self.amplified_currents[i].Clone()
             temp_current = currents[i].Clone()
+
+            # scale 
+            c_min = temp_current.GetMinimum()
+            a_min = temp_amplified_current.GetMinimum()
+            c_max = temp_current.GetMaximum()
+            a_max = temp_amplified_current.GetMaximum()
+            c_abs_max = max(abs(c_max), abs(c_min))
+            a_abs_max = max(abs(a_max), abs(a_min))
+
+            scale_factor = c_abs_max / a_abs_max
+            temp_amplified_current.Scale(scale_factor)
+            a_min_scaled = temp_amplified_current.GetMinimum()
+            a_max_scaled = temp_amplified_current.GetMaximum()
+
+            xmin = min(temp_current.GetXaxis().GetXmin(), temp_amplified_current.GetXaxis().GetXmin())
+            xmax = max(temp_current.GetXaxis().GetXmax(), temp_amplified_current.GetXaxis().GetXmax())
+            combined_ymin = min(c_min, a_min_scaled)
+            combined_ymax = max(c_max, a_max_scaled)
+
             temp_current.Draw("HIST")
             temp_current.SetLineColor(1)
             temp_current.SetLineWidth(2)
-            temp_current.GetXaxis().SetTitle('Time [ns]')
+            temp_current.GetXaxis().SetTitle('Time [s]')
             temp_current.GetXaxis().CenterTitle()
             temp_current.GetXaxis().SetTitleSize(0.08)
             temp_current.GetXaxis().SetLabelSize(0.08)
@@ -397,28 +424,22 @@ class Amplifier:
 
             c.Update()
 
-            temp_amplified_current = self.amplified_current[i].Clone()
-
-            if temp_amplified_current.GetMinimum() < 0:
-                rightmax = 1.1*temp_amplified_current.GetMinimum()
-            else:
-                rightmax = 1.1*temp_amplified_current.GetMaximum()
-            if rightmax == 0:
-                n_scale=0
-            elif temp_amplified_current.GetMinimum() <0:
-                n_scale = ROOT.gPad.GetUymin() / rightmax
-            else:
-                n_scale = ROOT.gPad.GetUymax() / rightmax
-            temp_amplified_current.Scale(n_scale)
             temp_amplified_current.Draw("SAME HIST")
             temp_amplified_current.SetLineWidth(2)   
-            temp_amplified_current.SetLineColor(8)
             temp_amplified_current.SetLineColor(2)
             c.Update()
 
-            axis = ROOT.TGaxis(ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymin(), 
-                            ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymax(), 
-                            min(0,rightmax), max(0,rightmax), 510, "+L")
+            # 设置直方图显示范围
+            ROOT.gPad.DrawFrame(xmin,combined_ymin,xmax,combined_ymax) 
+            ROOT.gPad.Modify()
+            ROOT.gPad.Update()
+            c.Update()
+
+
+            axis = ROOT.TGaxis(
+                ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymin(),
+                ROOT.gPad.GetUxmax(), ROOT.gPad.GetUymax(),
+                combined_ymin/scale_factor, combined_ymax/scale_factor, 505, "+L")
             axis.SetLineColor(2)
             axis.SetTextColor(2)
             axis.SetTextSize(0.02)
@@ -426,16 +447,19 @@ class Amplifier:
             axis.SetLabelColor(2)
             axis.SetLabelSize(0.035)
             axis.SetLabelFont(42)
-            axis.SetTitle("Ampl [mV]")
+            axis.SetTitle("Amplitude [mV]")
             axis.SetTitleFont(40)
             axis.SetTitleOffset(1.2)
             #axis.CenterTitle()
             axis.Draw("SAME HIST")
+            c.Update()
 
-            legend = ROOT.TLegend(0.5, 0.3, 0.8, 0.6)
+            legend = ROOT.TLegend(0.6, 0.2, 0.9, 0.4)
             legend.AddEntry(temp_current, "original", "l")
             legend.AddEntry(temp_amplified_current, "electronics", "l")
+            
             legend.Draw("SAME")
+            c.Update()
 
             c.cd()
             c.SaveAs(fig_name)
