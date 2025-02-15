@@ -501,7 +501,7 @@ def main(name):
     my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 1000, 0, 10e-9)
     # input signal: triangle pulse
     for i in range(101, 301):
-        my_th1f.SetBinContent(i, 0.05e-6*(300-i)) # A
+        my_th1f.SetBinContent(i, -0.05e-6*(300-i)) # A
 
     ele = Amplifier([my_th1f], name)
     ele.draw_waveform([my_th1f], output(__file__, name))
