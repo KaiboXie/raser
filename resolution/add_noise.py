@@ -22,10 +22,6 @@ ROOT.gROOT.SetBatch(True)
 
 from util.output import output
 
-noise_avg = -0.001
-noise_rms_c = 0.0005
-noise_rms_a = 0.03
-# noise_rms = c+a*幅值最大值
 
 # ROOT file parameters difinition
 Events=array('i',[0])
@@ -201,19 +197,15 @@ class AddNoise:
         print("*********Raser info***************\n","signal_height = {}\n".format(max_signal_height))
         print("noise_rms = {}\n".format(noise_rms),"*********************************\n")
         for j in range (0,len(list_c)):
-            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[0]))
+            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[1]))
             ampl_signal_list.append(ampl_s)
         max_signal_height=max(ampl_signal_list)
-        noise_rms = noise_rms_c + noise_rms_a*max_signal_height
-        # noise_rms = noise_rms_a*max_signal_height
-        # noise_rms = noise_rms_c
-        print(noise_rms)
         for j in range (0,len(list_c)):
-            time= float(list(filter(None,list_c[j].split(",")))[1])
+            time= float(list(filter(None,list_c[j].split(",")))[0])
             noise_height=random_gauss(noise_avg,noise_rms)
             # noise_height=0
-            ampl_nps=abs(float(list(filter(None,list_c[j].split(",")))[0]))+noise_height
-            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[0]))
+            ampl_nps=abs(float(list(filter(None,list_c[j].split(",")))[1])+noise_height)
+            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[1]))
             self.time_list.append(time)
             self.noise_height_list.append(noise_height)
             self.ampl_nps_list.append(ampl_nps)
@@ -369,7 +361,7 @@ def judge_threshold(addNoise,rset,tree_class):
     @Modify:
         2021/08/31
     """
-    if (addNoise.ampl_paras["max_s_height"]>rset.thre_vth and addNoise.ampl_paras["max_pulse_time"]<80):
+    if (addNoise.ampl_paras["max_nps_height"]>rset.thre_vth and addNoise.ampl_paras["max_pulse_time"]<80):
         # temp set
         get_CFD_time(addNoise,addNoise.ampl_paras,rset)
         tree_class.fill_ampl(addNoise,rset,"max_nps_height","max_pulse_time")
@@ -406,13 +398,13 @@ def get_CFD_time(addNoise,Ampl_paras,rset):
     CFD20 = 0
     CFD80 = 0
     for i in range (0,len(time_list)):
-        if abs(Ampl_paras["ampl_nps_list"][i])>=abs(Ampl_paras["max_nps_height"]*rset.CFD) \
+        if abs(Ampl_paras["ampl_s_list"][i])>=abs(Ampl_paras["max_s_height"]*rset.CFD) \
            and time_list[i]<Ampl_paras["max_pulse_time"] and CFD50==0 \
            and time_list[i+3]<Ampl_paras["max_pulse_time"] and time_list[i-3]>1.0e-9 :
             
-            dVdt=(Ampl_paras["ampl_nps_list"][i+3]
-                  -Ampl_paras["ampl_nps_list"][i-3]) \
-                  /(time_list[i+3]-time_list[i-3])/1e9/1.38 # parameterized
+            dVdt=(Ampl_paras["ampl_s_list"][i+3]
+                  -Ampl_paras["ampl_s_list"][i-3]) \
+                  /(time_list[i+3]-time_list[i-3])/1e9 # parameterized
                    
             if (dVdt!=0):
                 jitter=random_gauss(0,addNoise.noise_height_RMS/dVdt)
