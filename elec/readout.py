@@ -60,7 +60,7 @@ class Amplifier:
     ---------
         2024/09/14
     """
-    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None):
+    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None, predefined_noise: list[float] = None, is_cut = False):
         self.amplified_currents = []
         self.read_ele_num = len(currents)
         self.time_unit = currents[0].GetXaxis().GetBinWidth(1)
@@ -76,6 +76,9 @@ class Amplifier:
             self.amplifier_define(CDet)
             self.fill_amplifier_output(currents)
             self.set_scope_output(currents)
+            self.add_noise(predefined_noise)
+            if is_cut:
+                self.judge_threshold_CFD()
 
         elif os.path.exists(ele_cir):
             self.name = amplifier_name
@@ -232,6 +235,30 @@ class Amplifier:
             input_Q_tot = cu.Integral()*cu.GetBinWidth(0)
             output_Q_max = self.amplified_currents[i].GetMaximum()
             self.amplified_currents[i].Scale(self.scale(output_Q_max, input_Q_tot))
+
+    def add_noise(self, predefined_noise):
+        noise_avg = self.amplifier_parameters["noise_avg"]
+        noise_rms = self.amplifier_parameters["noise_rms"]
+        if predefined_noise == None:
+            for i in range(self.read_ele_num):
+                cu = self.amplified_currents[i]
+                for j in range(cu.GetNbinsX()):
+                    noise_height=ROOT.gRandom.Gaus(noise_avg,noise_rms)
+                    cu.SetBinContent(j,cu.GetBinContent(j)+noise_height)
+        else:
+            for i in range(self.read_ele_num):
+                cu = self.amplified_currents[i]
+                cu.Add(self.predefined_noise[i])
+
+    def judge_threshold_CFD(self):
+        threshold = self.amplifier_parameters["threshold"]
+        for i in range(self.read_ele_num):
+            cu = self.amplified_currents[i]
+            amplitude = max(cu.GetMaximum(), abs(min(cu.GetMinimum())))
+            if amplitude > threshold:
+                return
+            else:
+                self.amplified_currents[i].Reset()
     
     def set_ngspice_input(self, currents: list[ROOT.TH1F]):
         # TODO: check the cuts and refine the code
@@ -453,8 +480,10 @@ class Amplifier:
             axis.SetTitle("Amplitude [mV]")
             axis.Draw("SAME HIST")
             c.Update()
-
-            legend = ROOT.TLegend(0.45, 0.25, 0.75, 0.45)
+            if temp_amplified_current.GetMaximum() > abs(temp_amplified_current.GetMinimum()):
+                legend = ROOT.TLegend(0.45, 0.7, 0.75, 0.85)
+            else:
+                legend = ROOT.TLegend(0.45, 0.25, 0.75, 0.4)
             legend.AddEntry(temp_current, "original", "l")
             legend.AddEntry(temp_amplified_current, "electronics", "l")
             

@@ -48,12 +48,34 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
     end_n = (instance_number + 1) * total_events
 
     effective_number = 0
+
+    ele_json = "./setting/electronics/" + amplifier + ".json"
+    ele_cir = "./setting/electronics/" + amplifier + ".cir"
+    if os.path.exists(ele_json):
+        predefined_noise_flag = True
+        ROOT.gRandom.SetSeed(instance_number) # to ensure time resolution result reproducible
+    elif os.path.exists(ele_cir):
+        predefined_noise_flag = False
+
     for event in range(start_n,end_n):
         print("run events number:%s"%(event))
         if len(my_g4p.p_steps[event-start_n]) > 5:
             effective_number += 1
             my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, event-start_n)
-            ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
+
+            if predefined_noise_flag == True:
+                predefined_noise = []
+                for i in range(my_d.read_ele_num):
+                    cu = my_current.sum_cu[i]
+                    predefined_noise.append(ROOT.TH1F("noise %s"%(amplifier)+str(i+1), "noise %s"%(amplifier),
+                                cu.GetNbinsX(),cu.GetXaxis().GetXmin(),cu.GetXaxis().GetXmax()))
+                    predefined_noise[i].Reset()
+                    for j in range(predefined_noise[i].GetNbinsX()):
+                        predefined_noise[i].SetBinContent(j, ROOT.gRandom.Gaus(0, my_d.noise[i]))
+
+                ele_current = rdo.Amplifier(my_current.sum_cu, amplifier, predefined_noise, is_cut=True)
+            else:
+                ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
 
             e_dep = "%.5f"%(my_g4p.edep_devices[event-start_n]) #mv
             tag = "event" + str(event) + "_" + "Edep" + str(e_dep)

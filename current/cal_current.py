@@ -24,11 +24,11 @@ from util.math import Vector, signal_convolution
 from util.output import output
 import csv
 
-t_bin = 50e-12
+t_bin = 10e-12
 # resolution of oscilloscope
 t_end = 10e-9
 t_start = 0
-delta_t = 10e-12
+delta_t = 1e-12
 min_intensity = 1 # V/cm
 
 class Carrier:
