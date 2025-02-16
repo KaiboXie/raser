@@ -346,6 +346,9 @@ class Amplifier:
                     if new_lines[i].startswith('wrdata'):
                         # replace output file name & path
                         new_lines[i] = re.sub(r".*" + r".raw", "wrdata"+" "+raw, new_lines[i], flags=re.IGNORECASE)
+                    if new_lines[i].startswith('noise') or new_lines[i].startswith('setplot') or new_lines[i].endswith('onoise_spectrum\n'):
+                        # skip noise spectrum calculation
+                        new_lines[i] = '* skipped: ' + new_lines[i]
                 with open(tmp_cir, 'w+') as f_out:
                     f_out.writelines(new_lines)
                     f_out.close()
