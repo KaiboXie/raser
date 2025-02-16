@@ -594,7 +594,7 @@ def draw_max_voltage(max_voltage_list,out_put):
     c1.SetTopMargin(0.12)
     c1.SetBottomMargin(0.2)
     # Define lengend th1f and root gstyle
-    leg = ROOT.TLegend(0.25, 0.6, 0.35, 0.8)
+    leg = ROOT.TLegend(0.75, 0.6, 0.85, 0.8)
     x2_min = min(max_voltage_list)
     # Exclude data with great deviation
     x2_max = sorted(max_voltage_list)[int(len(max_voltage_list)*0.95)]
@@ -641,7 +641,7 @@ def draw_current_integral(current_integral_list,out_put):
     c1.SetTopMargin(0.12)
     c1.SetBottomMargin(0.2)
     # Define lengend th1f and root gstyle
-    leg = ROOT.TLegend(0.25, 0.6, 0.35, 0.8)
+    leg = ROOT.TLegend(0.75, 0.6, 0.85, 0.8)
     x2_min = min(current_integral_list)
     # Exclude data with great deviation
     x2_max = sorted(current_integral_list)[int(len(current_integral_list)*0.95)]
@@ -767,7 +767,7 @@ def root_tex_max_voltage(sigma,error):
     tex.SetNDC(1)
     tex.SetTextFont(43)
     tex.SetTextSize(25)
-    tex.DrawLatexNDC(0.65, 0.6, "V_{max}= %.1f #pm %.1f V"%(sigma,error))
+    tex.DrawLatexNDC(0.65, 0.6, "V_{max}= %.3f #pm %.3f V"%(sigma,error))
 
 def root_tex_current_integral(sigma,error):
     """　Latex definition """
@@ -775,7 +775,7 @@ def root_tex_current_integral(sigma,error):
     tex.SetNDC(1)
     tex.SetTextFont(43)
     tex.SetTextSize(25)
-    tex.DrawLatexNDC(0.65, 0.6, "Q = %.2g #pm %.1g a.u."%(sigma,error))
+    tex.DrawLatexNDC(0.65, 0.6, "Q = %.3f #pm %.3f a.u."%(sigma,error))
 
 def root_set():
     """ ROOT gstyle setting"""
