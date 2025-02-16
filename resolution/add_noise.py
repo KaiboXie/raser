@@ -606,7 +606,7 @@ def draw_max_voltage(max_voltage_list,out_put):
         #if max_voltage_list[i]>0:
         histo.Fill(max_voltage_list[i])
     # Fit data
-    fit_func_1,sigma,error=fit_data_normal(histo,x2_min,x2_max)
+    fit_func_1,sigma,error=fit_data_landau(histo,x2_min,x2_max)
     histo=max_voltage_TH1F_define(histo)
     # Legend setting
     leg.AddEntry(fit_func_1,"Fit","L")
@@ -652,7 +652,7 @@ def draw_current_integral(current_integral_list,out_put):
         #if current_integral_list[i]>0:
         histo.Fill(current_integral_list[i])
     # Fit data
-    fit_func_1,sigma,error=fit_data_normal(histo,x2_min,x2_max)
+    fit_func_1,sigma,error=fit_data_landau(histo,x2_min,x2_max)
     histo=current_integral_TH1F_define(histo)
     # Legend setting
     leg.AddEntry(fit_func_1,"Fit","L")
@@ -678,6 +678,22 @@ def fit_data_normal(histo,x_min,x_max):
     print("constant_error:%s"%fit_func_1.GetParError(0))
     print("mean:%s"%fit_func_1.GetParameter(1))
     print("mean_error:%s"%fit_func_1.GetParError(1))
+    print("sigma:%s"%fit_func_1.GetParameter(2))
+    print("sigma_error:%s"%fit_func_1.GetParError(2))
+    sigma=fit_func_1.GetParameter(2)
+    error=fit_func_1.GetParError(2)
+    fit_func_1.SetLineWidth(2)
+    return fit_func_1,sigma,error
+
+def fit_data_landau(histo,x_min,x_max):
+    """ Fit data distribution """
+    fit_func_1 = ROOT.TF1('fit_func_1','landau',x_min,x_max)
+    histo.Fit("fit_func_1","ROQ+","",x_min,x_max)
+
+    print("constant:%s"%fit_func_1.GetParameter(0))
+    print("constant_error:%s"%fit_func_1.GetParError(0))
+    print("mpv:%s"%fit_func_1.GetParameter(1))
+    print("mpv_error:%s"%fit_func_1.GetParError(1))
     print("sigma:%s"%fit_func_1.GetParameter(2))
     print("sigma_error:%s"%fit_func_1.GetParError(2))
     sigma=fit_func_1.GetParameter(2)
