@@ -606,7 +606,7 @@ def draw_max_voltage(max_voltage_list,out_put):
         #if max_voltage_list[i]>0:
         histo.Fill(max_voltage_list[i])
     # Fit data
-    fit_func_1,sigma,error=fit_data_landau(histo,x2_min,x2_max)
+    fit_func_1,mean,mean_error,sigma,sigma_error=fit_data_landau(histo,x2_min,x2_max)
     histo=max_voltage_TH1F_define(histo)
     # Legend setting
     leg.AddEntry(fit_func_1,"Fit","L")
@@ -616,12 +616,12 @@ def draw_max_voltage(max_voltage_list,out_put):
     fit_func_1.Draw("same")
     leg.Draw("same")
     # Text set
-    root_tex_max_voltage(sigma,error)
+    root_tex_max_voltage(mean,sigma)
     # Save
     c1.SaveAs(out_put+"/max_voltage.pdf")
     c1.SaveAs(out_put+"/max_voltage.C")
     del c1
-    return sigma, error
+    return mean, sigma
     
 def draw_current_integral(current_integral_list,out_put):
     """
@@ -652,7 +652,7 @@ def draw_current_integral(current_integral_list,out_put):
         #if current_integral_list[i]>0:
         histo.Fill(current_integral_list[i])
     # Fit data
-    fit_func_1,sigma,error=fit_data_landau(histo,x2_min,x2_max)
+    fit_func_1,mean,mean_error,sigma,sigma_error=fit_data_landau(histo,x2_min,x2_max)
     histo=current_integral_TH1F_define(histo)
     # Legend setting
     leg.AddEntry(fit_func_1,"Fit","L")
@@ -662,12 +662,12 @@ def draw_current_integral(current_integral_list,out_put):
     fit_func_1.Draw("same")
     leg.Draw("same")
     # Text set
-    root_tex_current_integral(sigma,error)
+    root_tex_current_integral(mean,sigma)
     # Save
     c1.SaveAs(out_put+"/current_integral.pdf")
     c1.SaveAs(out_put+"/current_integral.C")
     del c1
-    return sigma, error    
+    return mean, sigma  
 
 def fit_data_normal(histo,x_min,x_max):
     """ Fit data distribution """
@@ -680,10 +680,12 @@ def fit_data_normal(histo,x_min,x_max):
     print("mean_error:%s"%fit_func_1.GetParError(1))
     print("sigma:%s"%fit_func_1.GetParameter(2))
     print("sigma_error:%s"%fit_func_1.GetParError(2))
+    mean=fit_func_1.GetParameter(1)
+    mean_error=fit_func_1.GetParError(1)
     sigma=fit_func_1.GetParameter(2)
-    error=fit_func_1.GetParError(2)
+    sigma_error=fit_func_1.GetParError(2)
     fit_func_1.SetLineWidth(2)
-    return fit_func_1,sigma,error
+    return fit_func_1,mean,mean_error,sigma,sigma_error
 
 def fit_data_landau(histo,x_min,x_max):
     """ Fit data distribution """
@@ -696,10 +698,12 @@ def fit_data_landau(histo,x_min,x_max):
     print("mpv_error:%s"%fit_func_1.GetParError(1))
     print("sigma:%s"%fit_func_1.GetParameter(2))
     print("sigma_error:%s"%fit_func_1.GetParError(2))
+    mean=fit_func_1.GetParameter(1)
+    mean_error=fit_func_1.GetParError(1)
     sigma=fit_func_1.GetParameter(2)
-    error=fit_func_1.GetParError(2)
+    sigma_error=fit_func_1.GetParError(2)
     fit_func_1.SetLineWidth(2)
-    return fit_func_1,sigma,error
+    return fit_func_1,mean,mean_error,sigma,sigma_error
 
 def ToA_TH1F_define(histo):
     """ TH1f definition """
@@ -775,7 +779,7 @@ def root_tex_current_integral(sigma,error):
     tex.SetNDC(1)
     tex.SetTextFont(43)
     tex.SetTextSize(25)
-    tex.DrawLatexNDC(0.65, 0.6, "Q = %.3f #pm %.3f a.u."%(sigma,error))
+    tex.DrawLatexNDC(0.65, 0.6, "Q = %.3g #pm %.2g a.u."%(sigma,error))
 
 def root_set():
     """ ROOT gstyle setting"""
