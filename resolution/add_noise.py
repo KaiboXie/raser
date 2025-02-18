@@ -557,9 +557,9 @@ def draw_2D_CFD_time(CFD_time,out_put,model):
             if CFD_time[i]<50:
                 histo.Fill(CFD_time[i])
     # Fit data
-    fit_func_1,sigma,error=fit_data_normal(histo,x2_min,x2_max)# in nanosecond
+    fit_func_1,_,_,sigma,sigma_error=fit_data_normal(histo,x2_min,x2_max)# in nanosecond
     sigma=sigma*1000 # in picosecond
-    error=error*1000
+    sigma_error=sigma_error*1000
     histo=ToA_TH1F_define(histo)
     # Legend setting
     leg.AddEntry(fit_func_1,"Fit","L")
@@ -569,12 +569,12 @@ def draw_2D_CFD_time(CFD_time,out_put,model):
     fit_func_1.Draw("same")
     leg.Draw("same")
     # Text set
-    root_tex_time_resolution(sigma,error)
+    root_tex_time_resolution(sigma,sigma_error)
     # Save
     c1.SaveAs(out_put+'/'+model+".pdf")
     c1.SaveAs(out_put+'/'+model+".C")
     del c1
-    return sigma, error
+    return sigma, sigma_error
 
 def draw_max_voltage(max_voltage_list,out_put):
     """
