@@ -53,10 +53,8 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
     ele_json = "./setting/electronics/" + amplifier + ".json"
     ele_cir = "./setting/electronics/" + amplifier + ".cir"
     if os.path.exists(ele_json):
-        json_or_cir = "json"
         ROOT.gRandom.SetSeed(instance_number) # to ensure time resolution result reproducible
     elif os.path.exists(ele_cir):
-        json_or_cir = "cir"
         subprocess.run(['ngspice -b '+ele_cir], shell=True)
         noise_raw = "./output/elec/" + amplifier + "/noise.raw" # need to be fixed in the .cir
         try:
@@ -69,27 +67,14 @@ def batch_loop(my_d, my_f, my_g4p, amplifier, g4_seed, total_events, instance_nu
         except FileNotFoundError:
             print("Warning: ngspice .noise experiment is not set.")
             print("Please check the .cir file or make sure you have set an TRNOISE source.")
+        # TODO: fix noise seed, add noise from ngspice .noise spectrum
 
     for event in range(start_n,end_n):
         print("run events number:%s"%(event))
         if len(my_g4p.p_steps[event-start_n]) > 5:
             effective_number += 1
             my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, event-start_n)
-
-            if json_or_cir == "json":
-                predefined_noise = []
-                for i in range(my_d.read_ele_num):
-                    cu = my_current.sum_cu[i]
-                    predefined_noise.append(ROOT.TH1F("noise %s"%(amplifier)+str(i+1), "noise %s"%(amplifier),
-                                cu.GetNbinsX(),cu.GetXaxis().GetXmin(),cu.GetXaxis().GetXmax()))
-                    predefined_noise[i].Reset()
-                    for j in range(predefined_noise[i].GetNbinsX()):
-                        predefined_noise[i].SetBinContent(j, ROOT.gRandom.Gaus(0, my_d.noise[i]))
-
-                ele_current = rdo.Amplifier(my_current.sum_cu, amplifier, predefined_noise, is_cut=True)
-            else:
-                ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
-                # TODO: fix noise seed
+            ele_current = rdo.Amplifier(my_current.sum_cu, amplifier, is_cut=True)
 
             e_dep = "%.5f"%(my_g4p.edep_devices[event-start_n]) #mv
             tag = "event" + str(event) + "_" + "Edep" + str(e_dep)

@@ -60,7 +60,7 @@ class Amplifier:
     ---------
         2024/09/14
     """
-    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None, predefined_noise: list[ROOT.TH1F] = None, is_cut = False):
+    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None, is_cut = False):
         self.amplified_currents = []
         self.read_ele_num = len(currents)
         self.time_unit = currents[0].GetXaxis().GetBinWidth(1)
@@ -76,7 +76,7 @@ class Amplifier:
             self.amplifier_define(CDet)
             self.fill_amplifier_output(currents)
             self.set_scope_output(currents)
-            self.add_noise(predefined_noise)
+            self.add_noise()
             if is_cut:
                 self.judge_threshold_CFD()
 
@@ -236,25 +236,20 @@ class Amplifier:
             output_Q_max = self.amplified_currents[i].GetMaximum()
             self.amplified_currents[i].Scale(self.scale(output_Q_max, input_Q_tot))
 
-    def add_noise(self, predefined_noise):
+    def add_noise(self):
         noise_avg = self.amplifier_parameters["noise_avg"]
         noise_rms = self.amplifier_parameters["noise_rms"]
-        if predefined_noise == None:
-            for i in range(self.read_ele_num):
-                cu = self.amplified_currents[i]
-                for j in range(cu.GetNbinsX()):
-                    noise_height=ROOT.gRandom.Gaus(noise_avg,noise_rms)
-                    cu.SetBinContent(j,cu.GetBinContent(j)+noise_height)
-        else:
-            for i in range(self.read_ele_num):
-                cu = self.amplified_currents[i]
-                cu.Add(self.predefined_noise[i])
+        for i in range(self.read_ele_num):
+            cu = self.amplified_currents[i]
+            for j in range(cu.GetNbinsX()):
+                noise_height=ROOT.gRandom.Gaus(noise_avg,noise_rms)
+                cu.SetBinContent(j,cu.GetBinContent(j)+noise_height)
 
     def judge_threshold_CFD(self):
         threshold = self.amplifier_parameters["threshold"]
         for i in range(self.read_ele_num):
             cu = self.amplified_currents[i]
-            amplitude = max(cu.GetMaximum(), abs(min(cu.GetMinimum())))
+            amplitude = max(cu.GetMaximum(), abs(cu.GetMinimum()))
             if amplitude > threshold:
                 return
             else:

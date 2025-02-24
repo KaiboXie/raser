@@ -141,3 +141,6 @@ def calculate_gradient(function: Callable, component: list, coordinate: list):
             raise ValueError(f"Point {component[i]} might be out of bound")
     
     return gradient
+
+def inversed_fast_fourier_transform():
+    pass
