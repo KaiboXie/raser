@@ -193,13 +193,11 @@ class AddNoise:
             amplifier_parameters = json.load(f)
         noise_avg = amplifier_parameters["noise_avg"]
         noise_rms = amplifier_parameters["noise_rms"]
+        # noise_rms = noise_rms*max_signal_height
 
         print("*********Raser info***************\n","signal_height = {}\n".format(max_signal_height))
         print("noise_rms = {}\n".format(noise_rms),"*********************************\n")
-        for j in range (0,len(list_c)):
-            ampl_s=abs(float(list(filter(None,list_c[j].split(",")))[1]))
-            ampl_signal_list.append(ampl_s)
-        max_signal_height=max(ampl_signal_list)
+
         for j in range (0,len(list_c)):
             time= float(list(filter(None,list_c[j].split(",")))[0])
             noise_height=random_gauss(noise_avg,noise_rms)
@@ -842,8 +840,8 @@ def main(kwargs):
     # Outfilename and init_parameter
     rset = NoiseSetting(ele_name)
     output_path = output(__file__, det_name)
-    input_file = "output/gen_signal/" + det_name + "/batch"
-    #input_file = "output/tct/" + det_name + "/top_TCT"
+    # input_file = "output/gen_signal/" + det_name + "/batch"
+    input_file = "output/tct/" + det_name + "/top_TCT"
     # Root defined
     out_root_f=ROOT.TFile(output_path+"/out.root","RECREATE")
     tree_class=RootFile()
