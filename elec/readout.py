@@ -60,7 +60,7 @@ class Amplifier:
     ---------
         2024/09/14
     """
-    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None):
+    def __init__(self, currents: list[ROOT.TH1F], amplifier_name: str, CDet = None, is_cut = False):
         self.amplified_currents = []
         self.read_ele_num = len(currents)
         self.time_unit = currents[0].GetXaxis().GetBinWidth(1)
@@ -76,6 +76,9 @@ class Amplifier:
             self.amplifier_define(CDet)
             self.fill_amplifier_output(currents)
             self.set_scope_output(currents)
+            self.add_noise()
+            if is_cut:
+                self.judge_threshold_CFD()
 
         elif os.path.exists(ele_cir):
             self.name = amplifier_name
@@ -232,6 +235,25 @@ class Amplifier:
             input_Q_tot = cu.Integral()*cu.GetBinWidth(0)
             output_Q_max = self.amplified_currents[i].GetMaximum()
             self.amplified_currents[i].Scale(self.scale(output_Q_max, input_Q_tot))
+
+    def add_noise(self):
+        noise_avg = self.amplifier_parameters["noise_avg"]
+        noise_rms = self.amplifier_parameters["noise_rms"]
+        for i in range(self.read_ele_num):
+            cu = self.amplified_currents[i]
+            for j in range(cu.GetNbinsX()):
+                noise_height=ROOT.gRandom.Gaus(noise_avg,noise_rms)
+                cu.SetBinContent(j,cu.GetBinContent(j)+noise_height)
+
+    def judge_threshold_CFD(self):
+        threshold = self.amplifier_parameters["threshold"]
+        for i in range(self.read_ele_num):
+            cu = self.amplified_currents[i]
+            amplitude = max(cu.GetMaximum(), abs(cu.GetMinimum()))
+            if amplitude > threshold:
+                return
+            else:
+                self.amplified_currents[i].Reset()
     
     def set_ngspice_input(self, currents: list[ROOT.TH1F]):
         # TODO: check the cuts and refine the code
@@ -319,6 +341,9 @@ class Amplifier:
                     if new_lines[i].startswith('wrdata'):
                         # replace output file name & path
                         new_lines[i] = re.sub(r".*" + r".raw", "wrdata"+" "+raw, new_lines[i], flags=re.IGNORECASE)
+                    if new_lines[i].startswith('noise') or new_lines[i].startswith('setplot') or new_lines[i].endswith('onoise_spectrum\n'):
+                        # skip noise spectrum calculation
+                        new_lines[i] = '* skipped: ' + new_lines[i]
                 with open(tmp_cir, 'w+') as f_out:
                     f_out.writelines(new_lines)
                     f_out.close()
@@ -453,8 +478,10 @@ class Amplifier:
             axis.SetTitle("Amplitude [mV]")
             axis.Draw("SAME HIST")
             c.Update()
-
-            legend = ROOT.TLegend(0.45, 0.25, 0.75, 0.45)
+            if temp_amplified_current.GetMaximum() > abs(temp_amplified_current.GetMinimum()):
+                legend = ROOT.TLegend(0.45, 0.7, 0.75, 0.85)
+            else:
+                legend = ROOT.TLegend(0.45, 0.25, 0.75, 0.4)
             legend.AddEntry(temp_current, "original", "l")
             legend.AddEntry(temp_amplified_current, "electronics", "l")
             
@@ -466,29 +493,16 @@ class Amplifier:
             c.SaveAs(root_name)
 
 
-def main(label):
+def main(name):
     '''main function for readout.py to test the output of the given amplifier'''
 
-    my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 600, 0, 30e-9)
-    # input signal: rect pulse
-    for i in range(21, 41):
-        my_th1f.SetBinContent(i, 2e-6) # A
+    my_th1f = ROOT.TH1F("my_th1f", "my_th1f", 1000, 0, 10e-9)
+    # input signal: triangle pulse
+    for i in range(101, 301):
+        my_th1f.SetBinContent(i, -0.05e-6*(300-i)) # A
 
-    ele = Amplifier([my_th1f], label)
-
-    c=ROOT.TCanvas("c","canvas1",1000,1000)
-    my_th1f.Draw("HIST")
-
-    origin_max = my_th1f.GetMaximum()
-    amp_max = ele.amplified_current[0].GetMaximum()
-    print("amp_max =",amp_max,'mV')
-
-    ratio = origin_max/amp_max
-    ele.amplified_current[0].Scale(ratio)
-    ele.amplified_current[0].Draw("SAME HIST")
-
-    path = output(__file__, label)
-    c.SaveAs(path+'/'+label+'_test.pdf')
+    ele = Amplifier([my_th1f], name)
+    ele.draw_waveform([my_th1f], output(__file__, name))
 
 if __name__ == '__main__':
     import sys
