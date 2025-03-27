@@ -44,7 +44,7 @@ def main():
            if my_g4p.HitFlag == 0:
                print("No secondary particles hit the detector")
            else:
-               my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+               my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, -1)
                save_current(my_current, g4_dic, det_dic['read_out_contact'], i, j)
        except Exception as e:
            result_message = f"Error: {e}"
