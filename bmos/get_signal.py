@@ -45,7 +45,7 @@ def get_signal():
 
     my_g4p = bmos.bmosG4Particles(my_d)
 
-    my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+    my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, -1)
     totalengry = my_g4p.energy_steps
 
     output_path = "raser/bmos/output/"

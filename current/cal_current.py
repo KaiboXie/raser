@@ -19,7 +19,6 @@ ROOT.gROOT.SetBatch(True)
 
 from .model import Material
 from particle.carrier_list import CarrierListFromG4P
-from particle.carrier_list import StripCarrierListFromG4P
 from util.math import Vector, signal_convolution
 from util.output import output
 import csv
@@ -508,12 +507,24 @@ class CalCurrentG4P(CalCurrent):
     def __init__(self, my_d, my_f, my_g4p, batch):
         G4P_carrier_list = CarrierListFromG4P(my_d.material, my_g4p, batch)
         super().__init__(my_d, my_f, G4P_carrier_list.ionized_pairs, G4P_carrier_list.track_position)
-
-class CalCurrentStrip(CalCurrent):
-    def __init__(self, my_d, my_f, my_g4p, batch):
-        G4P_carrier_list = StripCarrierListFromG4P(my_d.material, my_g4p, batch)
-        self.read_ele_num = my_f.read_ele_num
-        super().__init__(my_d, my_f, G4P_carrier_list.ionized_pairs, G4P_carrier_list.track_position)
+        if self.read_ele_num > 1:
+            self.cross_talk()
+            
+    def cross_talk(self):
+        temp_cu = []
+        for i in range(self.read_ele_num):
+            temp_cu.append(self.sum_cu[i].Clone())
+            self.sum_cu[i].Reset()
+        for i in range(self.read_ele_num):
+            if i == 0:
+                pass
+            else:
+                self.sum_cu[i-1].Add(temp_cu[i], 0.1)
+            self.sum_cu[i].Add(temp_cu[i], 0.8)
+            if i == self.read_ele_num-1:
+                pass
+            else:
+                self.sum_cu[i+1].Add(temp_cu[i], 0.1)
 
 
 class CalCurrentLaser(CalCurrent):

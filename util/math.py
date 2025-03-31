@@ -144,3 +144,57 @@ def calculate_gradient(function: Callable, component: list, coordinate: list):
 
 def inversed_fast_fourier_transform():
     pass
+
+def is_number(s):
+    """ 
+    Define the input s is number or not.
+    if Yes, return True, else return False.
+    """ 
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+    return False
+
+def fit_data_normal(histo,x_min,x_max):
+    """ Fit data distribution """
+    fit_func_1 = ROOT.TF1('fit_func_1','gaus',x_min,x_max)
+    histo.Fit("fit_func_1","ROQ+","",x_min,x_max)
+
+    print("constant:%s"%fit_func_1.GetParameter(0))
+    print("constant_error:%s"%fit_func_1.GetParError(0))
+    print("mean:%s"%fit_func_1.GetParameter(1))
+    print("mean_error:%s"%fit_func_1.GetParError(1))
+    print("sigma:%s"%fit_func_1.GetParameter(2))
+    print("sigma_error:%s"%fit_func_1.GetParError(2))
+    mean=fit_func_1.GetParameter(1)
+    mean_error=fit_func_1.GetParError(1)
+    sigma=fit_func_1.GetParameter(2)
+    sigma_error=fit_func_1.GetParError(2)
+    fit_func_1.SetLineWidth(2)
+    return fit_func_1,mean,mean_error,sigma,sigma_error
+
+def fit_data_landau(histo,x_min,x_max):
+    """ Fit data distribution """
+    fit_func_1 = ROOT.TF1('fit_func_1','landau',x_min,x_max)
+    histo.Fit("fit_func_1","ROQ+","",x_min,x_max)
+
+    print("constant:%s"%fit_func_1.GetParameter(0))
+    print("constant_error:%s"%fit_func_1.GetParError(0))
+    print("mpv:%s"%fit_func_1.GetParameter(1))
+    print("mpv_error:%s"%fit_func_1.GetParError(1))
+    print("sigma:%s"%fit_func_1.GetParameter(2))
+    print("sigma_error:%s"%fit_func_1.GetParError(2))
+    mean=fit_func_1.GetParameter(1)
+    mean_error=fit_func_1.GetParError(1)
+    sigma=fit_func_1.GetParameter(2)
+    sigma_error=fit_func_1.GetParError(2)
+    fit_func_1.SetLineWidth(2)
+    return fit_func_1,mean,mean_error,sigma,sigma_error

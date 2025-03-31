@@ -68,7 +68,7 @@ def main(kwargs):
     
     g4_seed = random.randint(0,1e7)
     my_g4p = g4t.Particles(my_d, absorber, g4_seed)
-    my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+    my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, -1)
     ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
 
     now = time.strftime("%Y_%m%d_%H%M%S")

@@ -76,12 +76,7 @@ def main(kwargs):
                 my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, 1, my_d.l_z)
 
             
-            # my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-            if "strip" in det_name:
-                my_current = ccrt.CalCurrentStrip(my_d, my_f, my_g4p, 0)
-            else: 
-                my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
-
+            my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, -1)
             now = time.strftime("%Y_%m%d_%H%M%S")
             path = output(__file__, my_d.det_name, now)
 
@@ -91,8 +86,8 @@ def main(kwargs):
             my_current.save_current(my_d)
             if 'ngspice' not in amplifier:
                 ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
-                for i in range(my_current.read_ele_num):
-                    draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.amplified_current_name, path) # Draw current
+                my_current.draw_currents(path) # Draw current
+                ele_current.draw_waveform(my_current.sum_cu, path) # Draw waveform
                 if 'strip' in my_d.det_model:
                     cce(my_current, path)
             
@@ -124,11 +119,11 @@ def main(kwargs):
             
             my_f = devfield.DevsimField(my_d.device, my_d.dimension, voltage, my_d.read_out_contact, my_d.irradiation_flux)
             
-            my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+            my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, -1)
             # if "strip" in det_name:
             #     my_current = ccrt.CalCurrentStrip(my_d, my_f, my_g4p, 0)
             # else: 
-            #     my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, 0)
+            #     my_current = ccrt.CalCurrentG4P(my_d, my_f, my_g4p, -1)
 
             now = time.strftime("%Y_%m%d_%H%M%S")
             path = output(__file__, my_d.det_name, now)
@@ -139,8 +134,8 @@ def main(kwargs):
             my_current.save_current(my_d)
             if 'ngspice' not in amplifier:
                 ele_current = rdo.Amplifier(my_current.sum_cu, amplifier)
-                for i in range(my_current.read_ele_num):
-                    draw_current(my_d, my_current, ele_current.amplified_current, i, ele_current.amplified_current_name, path) # Draw current
+                my_current.draw_currents(path) # Draw current
+                ele_current.draw_waveform(my_current.sum_cu, path) # Draw waveform
                 if 'strip' in my_d.det_model:
                     cce(my_current, path)
             

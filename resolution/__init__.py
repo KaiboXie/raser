@@ -1,3 +1,3 @@
-from . import add_noise
 def main(kwargs):
-    add_noise.main(kwargs)
+    from . import waveform_stats
+    waveform_stats.main(kwargs)
