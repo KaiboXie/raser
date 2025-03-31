@@ -20,6 +20,11 @@ subparsers = parser.add_subparsers(help='sub-command help', dest="subparser_name
 parser_asic = subparsers.add_parser('asic', help='ASIC design')
 parser_asic.add_argument('label', help='LABEL to identify ASIC design')
 
+parser_bmos = subparsers.add_parser('bmos', help='Beam Monitor Online System')
+parser_bmos.add_argument('label', help='LABEL to identify BMOS simulations')
+parser_bmos.add_argument('-v', '--verbose', help='VERBOSE level', 
+                          action='count', default=0)
+
 parser_cce = subparsers.add_parser('cce', help='Charge Collection Efficiency')
 parser_cce.add_argument('label', help='LABEL to identify CCE experiment')
 
@@ -46,7 +51,6 @@ parser_field.add_argument("-v_current", help="Current voltage for step-by-step s
 parser_field.add_argument("-noise", help="Detector Noise simulation", action="store_true")
 parser_field.add_argument('-umf', help='use umf solver', action="store_true")
 
-
 parser_fpga = subparsers.add_parser('fpga', help='FPGA design')
 parser_fpga.add_argument('label', help='LABEL to identify FPGA design')
 
@@ -59,11 +63,12 @@ parser_gen_signal.add_argument('-amp', '--amplifier', type=str, help='amplifier'
 parser_gen_signal.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
 parser_gen_signal.add_argument('--job', type=int, help='flag of run in job')
 
-parser_telescope = subparsers.add_parser('telescope', help='telescope')
-parser_telescope.add_argument('label', help='LABEL to identify telescope files')
-
 parser_telescope = subparsers.add_parser('resolution', help='resolution calculation for time, space and energy')
 parser_telescope.add_argument('det_name', help='name of the detector')
+parser_telescope.add_argument('-tct', type=str, help='specify TCT signal class')
+
+parser_telescope = subparsers.add_parser('telescope', help='telescope')
+parser_telescope.add_argument('label', help='LABEL to identify telescope files')
 
 parser_tct = subparsers.add_parser('tct', help='TCT simulation')
 parser_tct.add_argument('label', help='LABEL to identify TCT options')
@@ -74,10 +79,6 @@ parser_tct.add_argument('-amp', '--amplifier', type=str, help='amplifier')
 parser_tct.add_argument('-s', '--scan', type=int, help='instance number for scan mode')
 parser_tct.add_argument('--job', type=int, help='flag of run in job')
 
-parser_bmos = subparsers.add_parser('bmos', help='Beam Monitor Online System')
-parser_bmos.add_argument('label', help='LABEL to identify BMOS simulations')
-parser_bmos.add_argument('-v', '--verbose', help='VERBOSE level', 
-                          action='count', default=0)
 
 args = parser.parse_args()
 
