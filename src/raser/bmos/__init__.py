@@ -50,7 +50,7 @@ def main(kwargs):
             beam = int(f[0])
             pulse = int(f[1])
 
-        output_path = os.path.join(output(__file__), 'signal_beamtest', f'beam_{beam}')
+        output_path = os.path.join(output(__file__), 'signal_beamtest', f'beam_{beam}', f'pulse_{pulse}')
         json_path = os.path.join(output(__file__), 'beam_information', f'beam_{beam}')
         create_path(output_path)
 
