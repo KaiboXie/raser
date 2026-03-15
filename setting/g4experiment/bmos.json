@@ -25,12 +25,12 @@
     "world_type"    : "G4_Galactic",
     "world_size"    :   25000,
     
-    "BeamOn"   : 1,
+    "BeamOn"   : 2,
     "maxstep" : 2,
     
-    "par_num" : 3,
+    "par_num" : 10,
     "par_type" : "proton",
-    "par_energy" : 80,
+    "par_energy" : 1600,
     "par_in" : [[-1, 1, -100], [0, 1, -100], [1, 1, -100], [-1, 0, -100], [0, 0, -100], [1, 0, -100], [-1, -1, -100], [-1, -1, -100], [1, -1, -100], [2, 2, -100]],
     "par_direction" : [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
 
@@ -40,6 +40,14 @@
 
     "vis" : 0,
 
-    "CurrentName"  : "Current.root" 
+    "CurrentName"  : "Current.root",
+
+    "BeamInformation" : {
+        "BeamStartNum":9999,
+        "BeamNum":2,
+        "PulesPreBeam":2,
+        "fluence":16,
+        "AreaSideRatioDetectorSide":200
+    }
 
 }

@@ -21,17 +21,36 @@ def main(kwargs):
 
 
     if label == 'GetSignal':
-        from . import get_signal
-        get_signal.get_signal()
+        from . import full_simulation
+        full_simulation.get_signal()
+
+    if label == 'DrawHistogram':
+        from . import draw
+        draw.DrawHistogram()
+
+    if label == 'DrawSignal':
+        from . import draw
+        draw.DrawSignal()
+
+    if label == 'BeamCreate':
+        from . import beam_create
+        beam_create.beam_create()
         
-    if label == 'histogram_signal':
-        from . import histogram_signal
-        histogram_signal.get_signal()
+    if label == 'BeamRun':
+        from . import full_simulation
+        import os
+        from ..util.output import output, create_path
 
-    if label == 'one_histogram':
-        from . import histogram
-        histogram.main("one")
+        with open(os.path.join(output(__file__), 'run_progress.txt')) as f:
+            f = f.readlines()
+            beam = int(f[0])
+            pulse = int(f[1])
 
-    if label == 'all_histogram':
-        from . import histogram
-        histogram.main("all")
+        output_path = os.path.join(output(__file__), 'signal_beamtest', f'beam_{beam}', f'pulse_{pulse}')
+        json_path = os.path.join(output(__file__), 'beam_information', f'beam_{beam}')
+        create_path(output_path)
+
+        geant4_json = os.path.join(json_path, f'pulse_{pulse}.json')
+        print(full_simulation.get_signal(geant4_json, output_path))
+        # beam_run.beam_run()
+    

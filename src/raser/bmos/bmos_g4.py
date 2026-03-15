@@ -26,14 +26,15 @@ Particle = []
 
 class bmosG4Interaction:
 
-    def __init__(self, my_d):
+    def __init__(self, my_d, geant4_json = None):
 
-        global s_eventIDs, s_edep_devices, s_p_steps, s_energy_steps
+        global s_eventIDs, s_edep_devices, s_p_steps, s_energy_steps        
         s_eventIDs, s_edep_devices, s_p_steps, s_energy_steps = [], [], [], []
 
-        geant4_json = os.getenv("RASER_SETTING_PATH")+"/g4experiment/bmos.json"
+        if geant4_json == None:
+            geant4_json = os.getenv("RASER_SETTING_PATH")+"/g4experiment/bmos.json"
         with open(geant4_json) as f:
-             g4_dic = json.load(f)
+            g4_dic = json.load(f)
 
         self.geant4_model = g4_dic["geant4_model"]
 
@@ -60,6 +61,9 @@ class bmosG4Interaction:
 
         UImanager = g4b.G4UImanager.GetUIpointer()
         UImanager.ApplyCommand('/run/initialize')
+        
+        seed = int(time.time() * 1000000) % 10000000
+        g4b.G4Random.setTheSeed(seed)
 
         runManager.BeamOn(int(g4_dic['BeamOn']))
 
@@ -76,8 +80,7 @@ class bmosG4Interaction:
         print("sum edep = ", sum(s_energy_steps[0]))
         # time.sleep(10)
 
-        del s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps
- 
+        del s_eventIDs,s_edep_devices,s_p_steps,s_energy_steps 
 
 class DetectorConstruction(g4b.G4VUserDetectorConstruction):
 
